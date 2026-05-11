@@ -1,0 +1,114 @@
+package br.com.fiap.challengeClyvo.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+
+
+@Entity
+@Table(name = "TB_PET")
+public class Pet {
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "pet_seq")
+    @SequenceGenerator()
+    @Column(name = "ID_PET")
+    private long id;
+
+    @Column(name = "NOME")
+    private String nome;
+
+    @NotBlank(message = "A espécie é obrigatória.")
+    @Column(name = "ESPECIE", nullable = false)
+    private String especie;
+
+    @Column(name = "RACA")
+    private String raca;
+
+    @Column(name = "COR")
+    private String cor;
+
+    @Column(name = "IDADE")
+    private int idade;
+
+    @Positive(message = "O peso deve ser positivo.")
+    @Column(name = "PESO")
+    private double peso;
+
+    //Relacionamento do pet por tutor
+    @ManyToOne
+    @JoinColumn(name = "ID_TUTOR", nullable = false)
+    private Tutor tutor;
+
+    public Pet(long id, String nome, String especie, String raca, String cor, int idade, double peso, Tutor tutor) {
+        this.id = id;
+        this.nome = nome;
+        this.especie = especie;
+        this.raca = raca;
+        this.cor = cor;
+        this.idade = idade;
+        this.peso = peso;
+        this.tutor = tutor;
+    }
+
+    public Pet() {
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEspecie() {
+        return especie;
+    }
+    public void setEspecie(String especie) {
+        this.especie = especie;
+    }
+
+    public String getRaca() {
+        return raca;
+    }
+    public void setRaca(String raca) {
+        this.raca = raca;
+    }
+
+    public String getCor() {
+        return cor;
+    }
+    public void setCor(String cor) {
+        this.cor = cor;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+    public void setIdade(int idade) {
+        this.idade = idade;
+    }
+
+    public double getPeso() {
+        return peso;
+    }
+    public void setPeso(double peso) {
+        this.peso = peso;
+    }
+
+    public Tutor getTutor() {
+        return tutor;
+    }
+    public void setTutor(Tutor tutor) {
+        this.tutor = tutor;
+    }
+}
