@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 
 @Entity
@@ -17,6 +18,8 @@ public class Pet {
     @Column(name = "ID_PET")
     private long id;
 
+    @NotBlank(message = "O nome é OBRIGATÓRIO.")
+    @Size(min = 3, max = 50, message = "O nome deve ter entre 3 e 50 caracteres.")
     @Column(name = "NOME")
     private String nome;
 
@@ -30,8 +33,8 @@ public class Pet {
     @Column(name = "COR")
     private String cor;
 
-    @Positive(message = "A idade não pode ser MENOR que Zero")
-    @NotNull(message = "A idade não pode ser nula, ainda que igual a zero")
+    @Positive(message = "A idade não pode ser MENOR que Zero.")
+    @NotNull(message = "A idade não pode ser nula, ainda que igual a zero.")
     @Column(name = "IDADE")
     private int idade;
 
