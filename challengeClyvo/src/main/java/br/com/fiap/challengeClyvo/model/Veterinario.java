@@ -29,9 +29,10 @@ public class Veterinario {
     // Inicio da Identidade/CRMV | Procurando por maneira de deixar com uma formatacao melhor
     @NotBlank(message = "O CRMV é obrigatório no seguinte formato: CRMV-SP 12345/MV")
     @Column(name = "CRMV", unique = true, nullable = false)
-    private String crmv;
+    @Embedded
+    private Crmv crmv;
 
-    public Veterinario(long id, String nome, String area, String crmv) {
+    public Veterinario(long id, String nome, String area, Crmv crmv) {
         this.id = id;
         this.nome = nome;
         this.area = area;
@@ -62,10 +63,10 @@ public class Veterinario {
         this.area = area;
     }
 
-    public String getCrmv() {
+    public Crmv getCrmv() {
         return crmv;
     }
-    public void setCrmv(String crmv) {
+    public void setCrmv(Crmv crmv) {
         this.crmv = crmv;
     }
 }
