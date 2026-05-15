@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 
 @Entity
 @Table(name = "TB_TUTOR")
@@ -38,6 +40,19 @@ public class Tutor {
     @Size(min = 11, max = 14, message = "O CPF deve ter entre 11 e 14 caracteres.")
     @Column(name = "CPF", unique = true, nullable = false)
     private String cpf;
+
+    @ManyToMany(mappedBy = "Tutores")
+    private List<Pet> pets;
+
+    public Tutor(long id, String nome, int idade, String endereco, String tel, String cpf, List<Pet> pets) {
+        this.id = id;
+        this.nome = nome;
+        this.idade = idade;
+        this.endereco = endereco;
+        this.tel = tel;
+        this.cpf = cpf;
+        this.pets = pets;
+    }
 
     public Tutor(long id, String nome, int idade, String endereco, String tel, String cpf) {
         this.id = id;
@@ -92,6 +107,14 @@ public class Tutor {
     }
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public List<Pet> getPets() {
+        return pets;
+    }
+
+    public void setPets(List<Pet> pets) {
+        this.pets = pets;
     }
 }
 
