@@ -5,9 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 
+
 @Entity
 @Table(name = "TB_CONSULTA")
 public class Consulta {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

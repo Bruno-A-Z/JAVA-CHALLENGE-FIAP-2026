@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
+
 @Entity
 @Table(name = "TB_AGENDAMENTO")
 public class Agendamento {

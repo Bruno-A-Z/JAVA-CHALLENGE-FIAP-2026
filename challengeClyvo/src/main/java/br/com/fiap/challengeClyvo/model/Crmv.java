@@ -1,11 +1,10 @@
 package br.com.fiap.challengeClyvo.model;
 
-
 import br.com.fiap.challengeClyvo.enums.UF;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+
 
 @Embeddable
 public class Crmv {
