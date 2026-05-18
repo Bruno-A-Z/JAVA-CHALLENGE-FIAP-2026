@@ -32,4 +32,46 @@ public class Crmv {
      /*Medico veterinário/ Zootecnista */   MV, ZT
     }
 
+    public Crmv(String prefixo, UF uf, int numeroDeInscricao, SufixoCrmv sufixo) {
+        this.prefixo = prefixo;
+        this.uf = uf;
+        this.numeroDeInscricao = numeroDeInscricao;
+        this.sufixo = sufixo;
+    }
+
+    public Crmv() {
+    }
+
+
+    public String getPrefixo() {
+        return prefixo;
+    }
+
+    public void setPrefixo(String prefixo) {
+        this.prefixo = prefixo;
+    }
+
+    public UF getUf() {
+        return uf;
+    }
+
+    public void setUf(UF uf) {
+        this.uf = uf;
+    }
+
+    public int getNumeroDeInscricao() {
+        return numeroDeInscricao;
+    }
+
+    public void setNumeroDeInscricao(int numeroDeInscricao) {
+        this.numeroDeInscricao = numeroDeInscricao;
+    }
+
+    public SufixoCrmv getSufixo() {
+        return sufixo;
+    }
+
+    public void setSufixo(SufixoCrmv sufixo) {
+        this.sufixo = sufixo;
+    }
 }

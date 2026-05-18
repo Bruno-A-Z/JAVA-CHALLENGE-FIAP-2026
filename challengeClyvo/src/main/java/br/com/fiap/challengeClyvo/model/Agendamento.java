@@ -17,7 +17,7 @@ public class Agendamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_AGENDAMENTO")
-    private Long id;
+    private Long idAgendamento;
 
     @NotNull(message = "A data e hora são obrigatórias.")
     @Future(message = "O agendamento deve ser em uma data futura.")
@@ -46,8 +46,8 @@ public class Agendamento {
     private Consulta consulta;
 
 
-    public Agendamento(Long id, LocalDateTime dataHora, Pet pet, Veterinario veterinario, StatusAgendamento status, String motivo, Consulta consulta) {
-        this.id = id;
+    public Agendamento(Long idAgendamento, LocalDateTime dataHora, Pet pet, Veterinario veterinario, StatusAgendamento status, String motivo, Consulta consulta) {
+        this.idAgendamento = idAgendamento;
         this.dataHora = dataHora;
         this.pet = pet;
         this.veterinario = veterinario;
@@ -60,11 +60,11 @@ public class Agendamento {
     }
 
 
-    public Long getId() {
-        return id;
+    public Long getIdAgendamento() {
+        return idAgendamento;
     }
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdAgendamento(Long idAgendamento) {
+        this.idAgendamento = idAgendamento;
     }
 
     public LocalDateTime getDataHora() {

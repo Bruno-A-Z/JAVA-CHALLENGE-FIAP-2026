@@ -14,7 +14,7 @@ public class Consulta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_CONSULTA")
-    private Long id;
+    private Long idConsulta;
 
     @Column
     @OneToOne
