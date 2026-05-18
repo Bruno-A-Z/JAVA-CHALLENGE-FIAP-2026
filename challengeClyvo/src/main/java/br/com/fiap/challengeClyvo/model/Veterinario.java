@@ -14,7 +14,7 @@ public class Veterinario {
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "vet_seq")
     @SequenceGenerator()
     @Column(name = "ID_VET")
-    private long id;
+    private long idVet;
 
     @NotBlank(message = "O Nome é obrigatorio")
     @Size(min = 3, max = 70, message = "O nome deve ter entre 3 e 70 caracteres")
@@ -32,8 +32,8 @@ public class Veterinario {
     @Embedded
     private Crmv crmv;
 
-    public Veterinario(long id, String nome, String area, Crmv crmv) {
-        this.id = id;
+    public Veterinario(long idVet, String nome, String area, Crmv crmv) {
+        this.idVet = idVet;
         this.nome = nome;
         this.area = area;
         this.crmv = crmv;
@@ -42,11 +42,11 @@ public class Veterinario {
     public Veterinario() {
     }
 
-    public long getId() {
-        return id;
+    public long getIdVet() {
+        return idVet;
     }
-    public void setId(long id) {
-        this.id = id;
+    public void setIdVet(long idVet) {
+        this.idVet = idVet;
     }
 
     public String getNome() {
