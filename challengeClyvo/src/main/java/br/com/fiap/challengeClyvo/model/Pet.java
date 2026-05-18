@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 
 @Entity
 @Table(name = "TB_PET")
@@ -14,7 +16,6 @@ public class Pet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "pet_seq")
-    @SequenceGenerator()
     @Column(name = "ID_PET")
     private long idPet;
 
@@ -43,11 +44,14 @@ public class Pet {
     private double peso;
 
     //Relacionamento do pet por tutor
-    @ManyToOne
-    @JoinColumn(name = "ID_TUTOR", nullable = false)
-    private Tutor tutor;
+    @ManyToMany
+    @JoinTable(name = "TB_PET_TUTOR",
+            joinColumns = @JoinColumn(name = "ID_PET"),
+            inverseJoinColumns = @JoinColumn(name = "ID_TUTOR")
+    )
+    private List<Tutor> tutores;
 
-    public Pet(long idPet, String nome, String especie, String raca, String cor, int idade, double peso, Tutor tutor) {
+    public Pet(long idPet, String nome, String especie, String raca, String cor, int idade, double peso, List<Tutor> tutores) {
         this.idPet = idPet;
         this.nome = nome;
         this.especie = especie;
@@ -55,7 +59,7 @@ public class Pet {
         this.cor = cor;
         this.idade = idade;
         this.peso = peso;
-        this.tutor = tutor;
+        this.tutores = tutores;
     }
 
     public Pet() {
@@ -110,10 +114,10 @@ public class Pet {
         this.peso = peso;
     }
 
-    public Tutor getTutor() {
-        return tutor;
+    public List<Tutor> getTutores() {
+        return tutores;
     }
-    public void setTutor(Tutor tutor) {
-        this.tutor = tutor;
+    public void setTutores(List<Tutor> tutores) {
+        this.tutores = tutores;
     }
 }

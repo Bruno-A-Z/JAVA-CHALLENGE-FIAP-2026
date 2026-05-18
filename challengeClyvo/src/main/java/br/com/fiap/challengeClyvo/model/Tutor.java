@@ -41,7 +41,7 @@ public class Tutor {
     @Column(name = "CPF", unique = true, nullable = false)
     private String cpf;
 
-    @ManyToMany(mappedBy = "Tutores")
+    @ManyToMany(mappedBy = "tutores")
     private List<Pet> pets;
 
     public Tutor(long idTutor, String nome, int idade, String endereco, String tel, String cpf, List<Pet> pets) {
