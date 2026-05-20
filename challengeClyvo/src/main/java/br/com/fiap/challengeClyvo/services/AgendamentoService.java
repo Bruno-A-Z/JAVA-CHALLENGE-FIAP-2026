@@ -2,6 +2,7 @@ package br.com.fiap.challengeClyvo.services;
 
 
 import br.com.fiap.challengeClyvo.enums.StatusAgendamento;
+import br.com.fiap.challengeClyvo.exceptions.EntityNotFoundException;
 import br.com.fiap.challengeClyvo.model.Agendamento;
 import br.com.fiap.challengeClyvo.model.Pet;
 import br.com.fiap.challengeClyvo.model.Veterinario;
@@ -14,8 +15,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Service
 public class AgendamentoService {
+
 
     @Autowired
     private AgendamentoRepository agendamentoRepository;

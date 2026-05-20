@@ -2,6 +2,7 @@ package br.com.fiap.challengeClyvo.services;
 
 
 import br.com.fiap.challengeClyvo.enums.UF;
+import br.com.fiap.challengeClyvo.exceptions.EntityNotFoundException;
 import br.com.fiap.challengeClyvo.model.Veterinario;
 import br.com.fiap.challengeClyvo.repository.VeterinarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;

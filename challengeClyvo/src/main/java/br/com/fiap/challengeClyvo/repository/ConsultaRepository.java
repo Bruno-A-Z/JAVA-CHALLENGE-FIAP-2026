@@ -11,5 +11,6 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
 
     List<Consulta> findByAgendamento(Long idPet);
     List<Consulta> findByAgendamentoVeterinarioId(Long idVet);
+    List<Consulta> findByAgendamentoPetId(Long idPet);
 
 }

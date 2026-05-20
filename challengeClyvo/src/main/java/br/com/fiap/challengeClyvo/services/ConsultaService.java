@@ -1,6 +1,7 @@
 package br.com.fiap.challengeClyvo.services;
 
 import br.com.fiap.challengeClyvo.enums.StatusAgendamento;
+import br.com.fiap.challengeClyvo.exceptions.EntityNotFoundException;
 import br.com.fiap.challengeClyvo.model.Agendamento;
 import br.com.fiap.challengeClyvo.model.Consulta;
 import br.com.fiap.challengeClyvo.repository.AgendamentoRepository;

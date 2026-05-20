@@ -1,6 +1,7 @@
 package br.com.fiap.challengeClyvo.services;
 
 
+import br.com.fiap.challengeClyvo.exceptions.EntityNotFoundException;
 import br.com.fiap.challengeClyvo.model.Pet;
 import br.com.fiap.challengeClyvo.model.Tutor;
 import br.com.fiap.challengeClyvo.repository.PetRepository;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 
 @Service
 public class PetService {
@@ -43,8 +45,8 @@ public class PetService {
         return petRepository.findByEspecie(especie);
     }
 
-    public List<Pet> buscarPorTutor(Long idTutor) {
-        return petRepository.findByTutorId(idTutor);
+    public List<Pet> buscarPorTutor(Long idTutores) {
+        return petRepository.findByTutores(idTutores);
     }
 
     public Pet adicionarTutor(Long idPet, Long idTutor) {

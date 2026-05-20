@@ -1,12 +1,14 @@
 package br.com.fiap.challengeClyvo.services;
 
 
+import br.com.fiap.challengeClyvo.exceptions.EntityNotFoundException;
 import br.com.fiap.challengeClyvo.model.Tutor;
 import br.com.fiap.challengeClyvo.repository.TutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 
 @Service
 public class TutorService {
