@@ -34,8 +34,8 @@ public class Consulta {
     @Column(name = "OBSERVACOES", length = 500)
     private String observacoes;
 
-    public Consulta(Long id, Agendamento agendamento, LocalDateTime dataRealizacao, String diagnostico, String tratamento, String observacoes) {
-        this.id = id;
+    public Consulta(Long idConsulta, Agendamento agendamento, LocalDateTime dataRealizacao, String diagnostico, String tratamento, String observacoes) {
+        this.idConsulta = idConsulta;
         this.agendamento = agendamento;
         this.dataRealizacao = dataRealizacao;
         this.diagnostico = diagnostico;
@@ -46,11 +46,11 @@ public class Consulta {
     public Consulta() {
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdConsulta() {
+        return idConsulta;
     }
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdConsulta(Long idConsulta) {
+        this.idConsulta = idConsulta;
     }
 
     public Agendamento getAgendamento() {
