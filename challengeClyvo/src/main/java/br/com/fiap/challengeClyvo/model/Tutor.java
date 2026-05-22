@@ -1,5 +1,6 @@
 package br.com.fiap.challengeClyvo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -42,6 +43,7 @@ public class Tutor {
     private String cpf;
 
     @ManyToMany(mappedBy = "tutores")
+    @JsonBackReference//ignora a serializacao para evitar repeticao infinita ao relacionar pet ao tutor
     private List<Pet> pets;
 
     public Tutor(Long id, String nome, int idade, String endereco, String tel, String cpf, List<Pet> pets) {

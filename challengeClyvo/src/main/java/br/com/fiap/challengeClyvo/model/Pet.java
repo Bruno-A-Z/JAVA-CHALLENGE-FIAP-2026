@@ -1,5 +1,6 @@
 package br.com.fiap.challengeClyvo.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -49,6 +50,7 @@ public class Pet {
             joinColumns = @JoinColumn(name = "ID_PET"),
             inverseJoinColumns = @JoinColumn(name = "ID_TUTOR")
     )
+    @JsonManagedReference
     private List<Tutor> tutores;
 
     public Pet(Long id, String nome, String especie, String raca, String cor, int idade, double peso, List<Tutor> tutores) {
