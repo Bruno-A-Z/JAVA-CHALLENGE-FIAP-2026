@@ -31,7 +31,7 @@ public class Veterinario {
     @Embedded
     private Crmv crmv;
 
-    public Veterinario(long id, String nome, String area, Crmv crmv) {
+    public Veterinario(Long id, String nome, String area, Crmv crmv) {
         this.id = id;
         this.nome = nome;
         this.area = area;
@@ -41,10 +41,10 @@ public class Veterinario {
     public Veterinario() {
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
-    public void setId(long idVet) {
+    public void setId(Long id) {
         this.id = id;
     }
 

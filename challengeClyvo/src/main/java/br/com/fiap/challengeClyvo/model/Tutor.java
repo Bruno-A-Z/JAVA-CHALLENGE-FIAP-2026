@@ -17,7 +17,7 @@ public class Tutor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_TUTOR")
-    private long id;
+    private Long id;
 
     @NotBlank(message = "O Nome é obrigatório.")
     @Size(min = 3, max = 70, message = "O nome deve ter entre 3 e 70 caracteres.")
@@ -44,7 +44,7 @@ public class Tutor {
     @ManyToMany(mappedBy = "tutores")
     private List<Pet> pets;
 
-    public Tutor(long id, String nome, int idade, String endereco, String tel, String cpf, List<Pet> pets) {
+    public Tutor(Long id, String nome, int idade, String endereco, String tel, String cpf, List<Pet> pets) {
         this.id = id;
         this.nome = nome;
         this.idade = idade;
@@ -58,10 +58,10 @@ public class Tutor {
     }
 
 
-    public long getIdTutor() {
+    public Long getIdTutor() {
         return id;
     }
-    public void setIdTutor(long idTutor) {
+    public void setIdTutor(Long id) {
         this.id = id;
     }
 
