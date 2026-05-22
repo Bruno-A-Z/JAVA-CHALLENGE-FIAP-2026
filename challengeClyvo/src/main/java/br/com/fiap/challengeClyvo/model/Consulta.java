@@ -16,7 +16,6 @@ public class Consulta {
     @Column(name = "ID_CONSULTA")
     private Long idConsulta;
 
-    @Column
     @OneToOne
     @JoinColumn(name = "ID_AGENDAMENTO")
     private Agendamento agendamento;
