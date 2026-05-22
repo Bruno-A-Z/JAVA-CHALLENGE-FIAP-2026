@@ -22,7 +22,7 @@ public class VeterinarioService {
 
 
     public Veterinario salvar(Veterinario veterinario) {
-        if (veterinarioRepository.findByCrmvNumeroInscricao(
+        if (veterinarioRepository.findByCrmvNumeroDeInscricao(
                 veterinario.getCrmv().getNumeroDeInscricao()).isPresent()) {
             throw new IllegalStateException("Já existe um veterinário cadastrado com esse CRMV.");
         }
@@ -42,7 +42,7 @@ public class VeterinarioService {
 
 
     public Veterinario buscarPorCrmv(int numeroDeInscricao) {
-        return veterinarioRepository.findByCrmvNumeroInscricao(numeroDeInscricao)
+        return veterinarioRepository.findByCrmvNumeroDeInscricao(numeroDeInscricao)
                 .orElseThrow(() -> new EntityNotFoundException("Veterinário não encontrado."));
     }
 

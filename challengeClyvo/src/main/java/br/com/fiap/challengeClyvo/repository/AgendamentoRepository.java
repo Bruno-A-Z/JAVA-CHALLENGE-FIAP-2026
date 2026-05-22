@@ -15,8 +15,8 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
 
 
     Page<Agendamento> findByStatus(StatusAgendamento status, Pageable pageable);
-    Page<Agendamento> findByVeterinarioId(Long idVet, Pageable pageable);
-    Page<Agendamento> findByPetId(Long idPet, Pageable pageable);
+    Page<Agendamento> findByVeterinarioId(Long id, Pageable pageable);
+    Page<Agendamento> findByPetId(Long id, Pageable pageable);
     List<Agendamento> findByDataHoraBetween(LocalDateTime inicio, LocalDateTime fim);
-    List<Agendamento> findByVeterinarioIdAndDataHora(long idVet, LocalDateTime dataHora);
+    List<Agendamento> findByVeterinarioIdAndDataHora(long id, LocalDateTime dataHora);
 }

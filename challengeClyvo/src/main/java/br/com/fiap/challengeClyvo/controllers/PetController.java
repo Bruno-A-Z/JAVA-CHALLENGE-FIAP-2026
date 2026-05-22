@@ -61,8 +61,8 @@ public class PetController {
 
     @Operation(summary = "Busca o Pet por Tutor")
     @GetMapping("/tutor/{idTutor}")
-    public ResponseEntity<List<Pet>> buscarPorTutor(@PathVariable Long idTutor) {
-        return ResponseEntity.ok(petService.buscarPorTutor(idTutor));
+    public ResponseEntity<List<Pet>> buscarPorTutor(@PathVariable Long id) {
+        return ResponseEntity.ok(petService.buscarPorTutor(id));
     }
 
     @Operation(summary = "Adiciona um tutor ao Pet")

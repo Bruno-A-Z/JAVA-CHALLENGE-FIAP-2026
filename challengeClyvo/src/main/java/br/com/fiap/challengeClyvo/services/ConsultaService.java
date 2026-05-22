@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @Service
@@ -26,8 +25,8 @@ public class ConsultaService {
     private AgendamentoRepository agendamentoRepository;
 
     // Realiza uma consulta a partir de um agendamento
-    public Consulta realizar(Long idAgendamento, Consulta dadosConsulta) {
-        Agendamento agendamento = agendamentoRepository.findById(idAgendamento)
+    public Consulta realizar(Long id, Consulta dadosConsulta) {
+        Agendamento agendamento = agendamentoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado."));
 
         if (agendamento.getStatus() == StatusAgendamento.CANCELADO) {
@@ -61,13 +60,13 @@ public class ConsultaService {
     }
 
     // Busca histórico médico de um pet
-    public Page<Consulta> buscarPorPet(Long idPet, Pageable pageable) {
-        return consultaRepository.findByAgendamentoPetId(idPet, pageable);
+    public Page<Consulta> buscarPorPet(Long id, Pageable pageable) {
+        return consultaRepository.findByAgendamentoPetId(id, pageable);
     }
 
     // Busca consultas realizadas por um veterinário
-    public Page<Consulta> buscarPorVeterinario(Long idVet, Pageable pageable) {
-        return consultaRepository.findByAgendamentoVeterinarioId(idVet, pageable);
+    public Page<Consulta> buscarPorVeterinario(Long id, Pageable pageable) {
+        return consultaRepository.findByAgendamentoVeterinarioId(id, pageable);
     }
 
     // Atualiza observações de uma consulta

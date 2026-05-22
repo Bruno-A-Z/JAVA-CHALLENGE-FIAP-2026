@@ -16,6 +16,6 @@ public interface VeterinarioRepository extends JpaRepository<Veterinario, Long> 
 
     Page<Veterinario> findByArea(String area, Pageable pageable);
     List<Veterinario> findByCrmvUf(UF uf);
-    Optional<Veterinario> findByCrmvNumeroInscricao(int numeroDeInscricao);
+    Optional<Veterinario> findByCrmvNumeroDeInscricao(int numeroDeInscricao);
 
 }

@@ -47,8 +47,8 @@ public class PetService {
         return petRepository.findByEspecie(especie, pageable);
     }
 
-    public List<Pet> buscarPorTutor(Long idTutores) {
-        return petRepository.findByTutores(idTutores);
+    public List<Pet> buscarPorTutor(Long id) {
+        return petRepository.findByTutores(id);
     }
 
     public Pet adicionarTutor(Long idPet, Long idTutor) {

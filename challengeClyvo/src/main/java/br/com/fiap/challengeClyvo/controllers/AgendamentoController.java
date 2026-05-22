@@ -55,17 +55,17 @@ public class AgendamentoController {
     @Operation(summary = "Busca Agendamento pelo ID do Veterinário")
     @GetMapping("/veterinario/{idVet}")
     public ResponseEntity<Page<Agendamento>> buscarPorVeterinario(
-            @PathVariable Long idVet,
+            @PathVariable Long id,
             @PageableDefault(size = 10, sort = "dataHora") Pageable pageable) {
-        return ResponseEntity.ok(agendamentoService.buscarPorVeterinario(idVet, pageable));
+        return ResponseEntity.ok(agendamentoService.buscarPorVeterinario(id, pageable));
     }
 
     @Operation(summary = "Busca Agendamento pelo ID do Pet")
     @GetMapping("/pet/{idPet}")
     public ResponseEntity<Page<Agendamento>> buscarPorPet(
-            @PathVariable Long idPet,
+            @PathVariable Long id,
             @PageableDefault(size = 10, sort = "dataHora") Pageable pageable) {
-        return ResponseEntity.ok(agendamentoService.buscarPorPet(idPet, pageable));
+        return ResponseEntity.ok(agendamentoService.buscarPorPet(id, pageable));
     }
 
     @Operation(summary = "Cancela um agendaento existente pelo ID")

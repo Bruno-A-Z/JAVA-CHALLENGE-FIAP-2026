@@ -32,15 +32,15 @@ public class AgendamentoService {
     private VeterinarioRepository veterinarioRepository;
 
     public Agendamento salvar(Agendamento agendamento) {
-        Pet pet = petRepository.findById(agendamento.getPet().getIdPet())
+        Pet pet = petRepository.findById(agendamento.getPet().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Pet não encontrado."));
 
-        Veterinario vet = veterinarioRepository.findById(agendamento.getVeterinario().getIdVet())
+        Veterinario vet = veterinarioRepository.findById(agendamento.getVeterinario().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Veterinário não encontrado."));
 
         // Verifica se o vet já tem agendamento no mesmo horário
         List<Agendamento> conflitoHorario = agendamentoRepository
-                .findByVeterinarioIdAndDataHora(vet.getIdVet(), agendamento.getDataHora());
+                .findByVeterinarioIdAndDataHora(vet.getId(), agendamento.getDataHora());
 
         if (!conflitoHorario.isEmpty()) {
             throw new IllegalStateException("Veterinário já possui agendamento nesse horário.");
@@ -56,8 +56,8 @@ public class AgendamentoService {
         return agendamentoRepository.findAll(pageable);
     }
 
-    public Agendamento buscarPorId(Long idAgendamento) {
-        return agendamentoRepository.findById(idAgendamento)
+    public Agendamento buscarPorId(Long id) {
+        return agendamentoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado."));
     }
 
@@ -65,20 +65,20 @@ public class AgendamentoService {
         return agendamentoRepository.findByStatus(status, pageable);
     }
 
-    public Page<Agendamento> buscarPorVeterinario(Long idVet, Pageable pageable) {
-        return agendamentoRepository.findByVeterinarioId(idVet, pageable);
+    public Page<Agendamento> buscarPorVeterinario(Long id, Pageable pageable) {
+        return agendamentoRepository.findByVeterinarioId(id, pageable);
     }
 
-    public Page<Agendamento> buscarPorPet(Long idPet, Pageable pageable) {
-        return agendamentoRepository.findByPetId(idPet, pageable);
+    public Page<Agendamento> buscarPorPet(Long id, Pageable pageable) {
+        return agendamentoRepository.findByPetId(id, pageable);
     }
 
     public List<Agendamento> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim) {
         return agendamentoRepository.findByDataHoraBetween(inicio, fim);
     }
 
-    public Agendamento cancelar(Long idAgendamento) {
-        Agendamento agendamento = buscarPorId(idAgendamento);
+    public Agendamento cancelar(Long id) {
+        Agendamento agendamento = buscarPorId(id);
 
         if (agendamento.getStatus() == StatusAgendamento.REALIZADO) {
             throw new IllegalStateException("Não é possível cancelar uma consulta já realizada.");

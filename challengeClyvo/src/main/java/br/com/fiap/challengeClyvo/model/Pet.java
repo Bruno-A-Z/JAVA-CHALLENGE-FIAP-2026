@@ -17,7 +17,7 @@ public class Pet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "pet_seq")
     @Column(name = "ID_PET")
-    private long idPet;
+    private long id;
 
     @NotBlank(message = "O nome é OBRIGATÓRIO.")
     @Size(min = 3, max = 50, message = "O nome deve ter entre 3 e 50 caracteres.")
@@ -51,8 +51,8 @@ public class Pet {
     )
     private List<Tutor> tutores;
 
-    public Pet(long idPet, String nome, String especie, String raca, String cor, int idade, double peso, List<Tutor> tutores) {
-        this.idPet = idPet;
+    public Pet(long id, String nome, String especie, String raca, String cor, int idade, double peso, List<Tutor> tutores) {
+        this.id = id;
         this.nome = nome;
         this.especie = especie;
         this.raca = raca;
@@ -65,11 +65,11 @@ public class Pet {
     public Pet() {
     }
 
-    public long getIdPet() {
-        return idPet;
+    public long getId() {
+        return id;
     }
-    public void setIdPet(long idPet) {
-        this.idPet = idPet;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getNome() {

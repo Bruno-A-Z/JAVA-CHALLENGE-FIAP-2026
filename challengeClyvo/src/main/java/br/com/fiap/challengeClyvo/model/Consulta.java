@@ -14,7 +14,7 @@ public class Consulta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_CONSULTA")
-    private Long idConsulta;
+    private Long id;
 
     @OneToOne
     @JoinColumn(name = "ID_AGENDAMENTO")
@@ -33,8 +33,8 @@ public class Consulta {
     @Column(name = "OBSERVACOES", length = 500)
     private String observacoes;
 
-    public Consulta(Long idConsulta, Agendamento agendamento, LocalDateTime dataRealizacao, String diagnostico, String tratamento, String observacoes) {
-        this.idConsulta = idConsulta;
+    public Consulta(Long id, Agendamento agendamento, LocalDateTime dataRealizacao, String diagnostico, String tratamento, String observacoes) {
+        this.id = id;
         this.agendamento = agendamento;
         this.dataRealizacao = dataRealizacao;
         this.diagnostico = diagnostico;
@@ -45,11 +45,11 @@ public class Consulta {
     public Consulta() {
     }
 
-    public Long getIdConsulta() {
-        return idConsulta;
+    public Long getId() {
+        return id;
     }
-    public void setIdConsulta(Long idConsulta) {
-        this.idConsulta = idConsulta;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Agendamento getAgendamento() {
