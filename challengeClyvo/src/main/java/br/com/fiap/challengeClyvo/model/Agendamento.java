@@ -2,6 +2,8 @@ package br.com.fiap.challengeClyvo.model;
 
 
 import br.com.fiap.challengeClyvo.enums.StatusAgendamento;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
@@ -27,14 +29,15 @@ public class Agendamento {
     @NotNull(message = "O pet é obrigatório.")
     @ManyToOne
     @JoinColumn(name = "ID_PET", nullable = false)
+    @JsonIgnoreProperties(value = {"nome", "especie", "raca", "cor", "idade", "peso", "tutores", "hibernateLazyInitializer", "handler"})
     private Pet pet;
 
     @NotNull(message = "O veterinário é obrigatório.")
     @ManyToOne
     @JoinColumn(name = "ID_VET", nullable = false)
+    @JsonIgnoreProperties(value = {"nome", "area", "crmv", "hibernateLazyInitializer", "handler"})
     private Veterinario veterinario;
 
-    @NotNull(message = "O status é obrigatório.")
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS", nullable = false)
     private StatusAgendamento status = StatusAgendamento.AGENDADO; // status padrão
@@ -43,6 +46,7 @@ public class Agendamento {
     private String motivo;
 
     @OneToOne(mappedBy = "agendamento", cascade = CascadeType.ALL)
+    @JsonBackReference("consulta-agendamento")
     private Consulta consulta;
 
 

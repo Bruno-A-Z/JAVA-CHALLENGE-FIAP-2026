@@ -1,5 +1,7 @@
 package br.com.fiap.challengeClyvo.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "TB_PET")
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, ignoreUnknown = true)
 public class Pet {
 
 
@@ -38,11 +41,11 @@ public class Pet {
     @Positive(message = "A idade não pode ser MENOR que Zero.")
     @NotNull(message = "A idade não pode ser nula, ainda que igual a zero.")
     @Column(name = "IDADE")
-    private int idade;
+    private Integer idade;
 
     @Positive(message = "O peso deve ser positivo.")
     @Column(name = "PESO")
-    private double peso;
+    private Double peso;
 
     //Relacionamento do pet por tutor
     @ManyToMany
@@ -50,10 +53,10 @@ public class Pet {
             joinColumns = @JoinColumn(name = "ID_PET"),
             inverseJoinColumns = @JoinColumn(name = "ID_TUTOR")
     )
-    @JsonManagedReference
+    @JsonIgnoreProperties("pets")
     private List<Tutor> tutores;
 
-    public Pet(Long id, String nome, String especie, String raca, String cor, int idade, double peso, List<Tutor> tutores) {
+    public Pet(Long id, String nome, String especie, String raca, String cor, Integer idade, Double peso, List<Tutor> tutores) {
         this.id = id;
         this.nome = nome;
         this.especie = especie;
@@ -102,17 +105,17 @@ public class Pet {
         this.cor = cor;
     }
 
-    public int getIdade() {
+    public Integer getIdade() {
         return idade;
     }
-    public void setIdade(int idade) {
+    public void setIdade(Integer idade) {
         this.idade = idade;
     }
 
-    public double getPeso() {
+    public Double getPeso() {
         return peso;
     }
-    public void setPeso(double peso) {
+    public void setPeso(Double peso) {
         this.peso = peso;
     }
 

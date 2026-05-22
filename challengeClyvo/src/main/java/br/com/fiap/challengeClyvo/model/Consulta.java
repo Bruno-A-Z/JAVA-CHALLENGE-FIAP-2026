@@ -1,5 +1,6 @@
 package br.com.fiap.challengeClyvo.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -18,6 +19,7 @@ public class Consulta {
 
     @OneToOne
     @JoinColumn(name = "ID_AGENDAMENTO")
+    @JsonManagedReference("consulta-agendamento")
     private Agendamento agendamento;
 
     @Column(name = "DT_REALIZACAO", nullable = false)

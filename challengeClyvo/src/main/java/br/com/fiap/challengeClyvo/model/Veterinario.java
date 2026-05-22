@@ -1,5 +1,6 @@
 package br.com.fiap.challengeClyvo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -7,6 +8,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "TB_VET")
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, ignoreUnknown = true)
 public class Veterinario {
 
 
