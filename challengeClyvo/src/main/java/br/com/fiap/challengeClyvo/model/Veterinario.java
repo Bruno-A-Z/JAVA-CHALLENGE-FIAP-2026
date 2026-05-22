@@ -13,7 +13,7 @@ public class Veterinario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "vet_seq")
     @Column(name = "ID_VET")
-    private long id;
+    private Long id;
 
     @NotBlank(message = "O Nome é obrigatorio")
     @Size(min = 3, max = 70, message = "O nome deve ter entre 3 e 70 caracteres")
