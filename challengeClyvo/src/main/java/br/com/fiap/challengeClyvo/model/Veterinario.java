@@ -26,8 +26,7 @@ public class Veterinario {
     private String area;
 
     // Inicio da Identidade/CRMV | Procurando por maneira de deixar com uma formatacao melhor
-    @NotBlank(message = "O CRMV é obrigatório no seguinte formato: CRMV-SP 12345/MV")
-    @Column(name = "CRMV", unique = true, nullable = false)
+    @Column(name = "CRMV", unique = true, nullable = false, comment = "O CRMV é obrigatório no seguinte formato: CRMV-SP 12345/MV")
     @Embedded
     private Crmv crmv;
 
