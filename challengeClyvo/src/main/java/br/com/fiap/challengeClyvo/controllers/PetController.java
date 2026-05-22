@@ -66,7 +66,7 @@ public class PetController {
     }
 
     @Operation(summary = "Adiciona um tutor ao Pet")
-    @PostMapping("/{idPet}/tutores/{idTutor}")
+    @PostMapping("/{idPet}/tutor/{idTutor}")
     public ResponseEntity<Pet> adicionarTutor(
             @PathVariable Long idPet,
             @PathVariable Long idTutor) {
