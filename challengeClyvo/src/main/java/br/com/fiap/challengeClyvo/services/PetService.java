@@ -66,6 +66,19 @@ public class PetService {
         return petRepository.save(pet);
     }
 
+    public Pet removerTutor(Long idPet, Long idTutor) {
+        Pet pet = buscarPorId(idPet);
+        Tutor tutor = tutorRepository.findById(idTutor)
+                .orElseThrow(() -> new EntityNotFoundException("Tutor não encontrado."));
+
+        if (!pet.getTutores().contains(tutor)) {
+            throw new IllegalStateException("Esse tutor não está vinculado a esse pet.");
+        }
+
+        pet.getTutores().remove(tutor);
+        return petRepository.save(pet);
+    }
+
     public Pet atualizar(Long id, Pet petAtualizado) {
         Pet pet = buscarPorId(id);
         pet.setNome(petAtualizado.getNome());
