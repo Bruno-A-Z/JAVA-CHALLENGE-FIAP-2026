@@ -3,17 +3,21 @@ package br.com.fiap.challengeClyvo.controllers;
 import br.com.fiap.challengeClyvo.enums.StatusAgendamento;
 import br.com.fiap.challengeClyvo.model.Agendamento;
 import br.com.fiap.challengeClyvo.services.AgendamentoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@Tag(name = "Agendamento")
 @RestController
-@RequestMapping("/agendamentos")
+@RequestMapping("/agendamento")
 public class AgendamentoController {
 
 
@@ -26,8 +30,9 @@ public class AgendamentoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Agendamento>> buscarTodos() {
-        return ResponseEntity.ok(agendamentoService.buscarTodos());
+    public ResponseEntity<Page<Agendamento>> buscarTodos(
+            @PageableDefault(size = 10, sort = "dataHora") Pageable pageable) {
+        return ResponseEntity.ok(agendamentoService.buscarTodos(pageable));
     }
 
     @GetMapping("/{id}")
@@ -36,18 +41,24 @@ public class AgendamentoController {
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<Agendamento>> buscarPorStatus(@PathVariable StatusAgendamento status) {
-        return ResponseEntity.ok(agendamentoService.buscarPorStatus(status));
+    public ResponseEntity<Page<Agendamento>> buscarPorStatus(
+            @PathVariable StatusAgendamento status,
+            @PageableDefault(size = 10, sort = "dataHora") Pageable pageable) {
+        return ResponseEntity.ok(agendamentoService.buscarPorStatus(status, pageable));
     }
 
     @GetMapping("/veterinario/{idVet}")
-    public ResponseEntity<List<Agendamento>> buscarPorVeterinario(@PathVariable Long idVet) {
-        return ResponseEntity.ok(agendamentoService.buscarPorVeterinario(idVet));
+    public ResponseEntity<Page<Agendamento>> buscarPorVeterinario(
+            @PathVariable Long idVet,
+            @PageableDefault(size = 10, sort = "dataHora") Pageable pageable) {
+        return ResponseEntity.ok(agendamentoService.buscarPorVeterinario(idVet, pageable));
     }
 
     @GetMapping("/pet/{idPet}")
-    public ResponseEntity<List<Agendamento>> buscarPorPet(@PathVariable Long idPet) {
-        return ResponseEntity.ok(agendamentoService.buscarPorPet(idPet));
+    public ResponseEntity<Page<Agendamento>> buscarPorPet(
+            @PathVariable Long idPet,
+            @PageableDefault(size = 10, sort = "dataHora") Pageable pageable) {
+        return ResponseEntity.ok(agendamentoService.buscarPorPet(idPet, pageable));
     }
 
     @PatchMapping("/{id}/cancelar")

@@ -2,17 +2,21 @@ package br.com.fiap.challengeClyvo.controllers;
 
 import br.com.fiap.challengeClyvo.model.Pet;
 import br.com.fiap.challengeClyvo.services.PetService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@Tag(name = "Pet")
 @RestController
-@RequestMapping("/pets")
+@RequestMapping("/pet")
 public class PetController {
 
 
@@ -25,8 +29,9 @@ public class PetController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Pet>> buscarTodos() {
-        return ResponseEntity.ok(petService.buscarTodos());
+    public ResponseEntity<Page<Pet>> buscarTodos(
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+        return ResponseEntity.ok(petService.buscarTodos(pageable));
     }
 
     @GetMapping("/{id}")
@@ -35,13 +40,17 @@ public class PetController {
     }
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<List<Pet>> buscarPorNome(@PathVariable String nome) {
-        return ResponseEntity.ok(petService.buscarPorNome(nome));
+    public ResponseEntity<Page<Pet>> buscarPorNome(
+            @PathVariable String nome,
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+        return ResponseEntity.ok(petService.buscarPorNome(nome, pageable));
     }
 
     @GetMapping("/especie/{especie}")
-    public ResponseEntity<List<Pet>> buscarPorEspecie(@PathVariable String especie) {
-        return ResponseEntity.ok(petService.buscarPorEspecie(especie));
+    public ResponseEntity<Page<Pet>> buscarPorEspecie(
+            @PathVariable String especie,
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+        return ResponseEntity.ok(petService.buscarPorEspecie(especie, pageable));
     }
 
     @GetMapping("/tutor/{idTutor}")

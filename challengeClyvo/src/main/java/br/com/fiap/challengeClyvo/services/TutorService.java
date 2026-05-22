@@ -5,6 +5,8 @@ import br.com.fiap.challengeClyvo.exceptions.EntityNotFoundException;
 import br.com.fiap.challengeClyvo.model.Tutor;
 import br.com.fiap.challengeClyvo.repository.TutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +26,8 @@ public class TutorService {
         return tutorRepository.save(tutor);
     }
 
-    public List<Tutor> buscarTodos() {
-        return tutorRepository.findAll();
+    public Page<Tutor> buscarTodos(Pageable pageable) {
+        return tutorRepository.findAll(pageable);
     }
 
     public Tutor buscarPorId(Long id) {
@@ -38,8 +40,8 @@ public class TutorService {
                 .orElseThrow(() -> new EntityNotFoundException("Tutor não encontrado."));
     }
 
-    public List<Tutor> buscarPorNome(String nome) {
-        return tutorRepository.findByNome(nome);
+    public Page<Tutor> buscarPorNome(String nome, Pageable pageable) {
+        return tutorRepository.findByNome(nome, pageable);
     }
 
     public Tutor atualizar(Long id, Tutor tutorAtualizado) {

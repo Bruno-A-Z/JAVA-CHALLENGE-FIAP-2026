@@ -7,6 +7,8 @@ import br.com.fiap.challengeClyvo.model.Consulta;
 import br.com.fiap.challengeClyvo.repository.AgendamentoRepository;
 import br.com.fiap.challengeClyvo.repository.ConsultaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -48,8 +50,8 @@ public class ConsultaService {
     }
 
     // Busca todas as consultas
-    public List<Consulta> buscarTodas() {
-        return consultaRepository.findAll();
+    public Page<Consulta> buscarTodas(Pageable pageable) {
+        return consultaRepository.findAll(pageable);
     }
 
     // Busca consulta por ID
@@ -59,13 +61,13 @@ public class ConsultaService {
     }
 
     // Busca histórico médico de um pet
-    public List<Consulta> buscarPorPet(Long idPet) {
-        return consultaRepository.findByAgendamentoPetId(idPet);
+    public Page<Consulta> buscarPorPet(Long idPet, Pageable pageable) {
+        return consultaRepository.findByAgendamentoPetId(idPet, pageable);
     }
 
     // Busca consultas realizadas por um veterinário
-    public List<Consulta> buscarPorVeterinario(Long idVet) {
-        return consultaRepository.findByAgendamentoVeterinarioId(idVet);
+    public Page<Consulta> buscarPorVeterinario(Long idVet, Pageable pageable) {
+        return consultaRepository.findByAgendamentoVeterinarioId(idVet, pageable);
     }
 
     // Atualiza observações de uma consulta

@@ -3,17 +3,21 @@ package br.com.fiap.challengeClyvo.controllers;
 import br.com.fiap.challengeClyvo.enums.UF;
 import br.com.fiap.challengeClyvo.model.Veterinario;
 import br.com.fiap.challengeClyvo.services.VeterinarioService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@Tag(name = "Veterinario")
 @RestController
-@RequestMapping("/veterinarios")
+@RequestMapping("/veterinario")
 public class VeterinarioController {
 
 
@@ -26,8 +30,9 @@ public class VeterinarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Veterinario>> buscarTodos() {
-        return ResponseEntity.ok(veterinarioService.buscarTodos());
+    public ResponseEntity<Page<Veterinario>> buscarTodos(
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+        return ResponseEntity.ok(veterinarioService.buscarTodos(pageable));
     }
 
     @GetMapping("/{id}")
@@ -41,8 +46,10 @@ public class VeterinarioController {
     }
 
     @GetMapping("/area/{area}")
-    public ResponseEntity<List<Veterinario>> buscarPorArea(@PathVariable String area) {
-        return ResponseEntity.ok(veterinarioService.buscarPorArea(area));
+    public ResponseEntity<Page<Veterinario>> buscarPorArea(
+            @PathVariable String area,
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+        return ResponseEntity.ok(veterinarioService.buscarPorArea(area, pageable));
     }
 
     @GetMapping("/uf/{uf}")

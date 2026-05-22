@@ -2,17 +2,21 @@ package br.com.fiap.challengeClyvo.controllers;
 
 import br.com.fiap.challengeClyvo.model.Tutor;
 import br.com.fiap.challengeClyvo.services.TutorService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@Tag(name = "Tutor")
 @RestController
-@RequestMapping("/tutores")
+@RequestMapping("/tutor")
 public class TutorController {
 
 
@@ -25,8 +29,9 @@ public class TutorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Tutor>> buscarTodos() {
-        return ResponseEntity.ok(tutorService.buscarTodos());
+    public ResponseEntity<Page<Tutor>> buscarTodos(
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+        return ResponseEntity.ok(tutorService.buscarTodos(pageable));
     }
 
     @GetMapping("/{id}")
@@ -40,8 +45,10 @@ public class TutorController {
     }
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<List<Tutor>> buscarPorNome(@PathVariable String nome) {
-        return ResponseEntity.ok(tutorService.buscarPorNome(nome));
+    public ResponseEntity<Page<Tutor>> buscarPorNome(
+            @PathVariable String nome,
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+        return ResponseEntity.ok(tutorService.buscarPorNome(nome, pageable));
     }
 
     @PutMapping("/{id}")

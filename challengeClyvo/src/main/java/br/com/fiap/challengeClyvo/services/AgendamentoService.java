@@ -10,6 +10,8 @@ import br.com.fiap.challengeClyvo.repository.AgendamentoRepository;
 import br.com.fiap.challengeClyvo.repository.PetRepository;
 import br.com.fiap.challengeClyvo.repository.VeterinarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -50,8 +52,8 @@ public class AgendamentoService {
         return agendamentoRepository.save(agendamento);
     }
 
-    public List<Agendamento> buscarTodos() {
-        return agendamentoRepository.findAll();
+    public Page<Agendamento> buscarTodos(Pageable pageable) {
+        return agendamentoRepository.findAll(pageable);
     }
 
     public Agendamento buscarPorId(Long idAgendamento) {
@@ -59,16 +61,16 @@ public class AgendamentoService {
                 .orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado."));
     }
 
-    public List<Agendamento> buscarPorStatus(StatusAgendamento status) {
-        return agendamentoRepository.findByStatus(status);
+    public Page<Agendamento> buscarPorStatus(StatusAgendamento status, Pageable pageable) {
+        return agendamentoRepository.findByStatus(status, pageable);
     }
 
-    public List<Agendamento> buscarPorVeterinario(Long idVet) {
-        return agendamentoRepository.findByVeterinarioId(idVet);
+    public Page<Agendamento> buscarPorVeterinario(Long idVet, Pageable pageable) {
+        return agendamentoRepository.findByVeterinarioId(idVet, pageable);
     }
 
-    public List<Agendamento> buscarPorPet(Long idPet) {
-        return agendamentoRepository.findByPetId(idPet);
+    public Page<Agendamento> buscarPorPet(Long idPet, Pageable pageable) {
+        return agendamentoRepository.findByPetId(idPet, pageable);
     }
 
     public List<Agendamento> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim) {

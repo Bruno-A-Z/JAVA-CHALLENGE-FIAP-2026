@@ -1,16 +1,19 @@
 package br.com.fiap.challengeClyvo.repository;
 
 import br.com.fiap.challengeClyvo.model.Pet;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+@Repository
 public interface PetRepository extends JpaRepository<Pet, Long> {
 
 
-    List<Pet> findByNome(String nome);
-    List<Pet> findByEspecie(String especie); //Para caso exista outro pet com o mesmo nome
+    Page<Pet> findByNome(String nome, Pageable pageable);
+    Page<Pet> findByEspecie(String especie, Pageable pageable); //Para caso exista outro pet com o mesmo nome
     List<Pet> findByTutores(Long idTutor); //Listar todos os pets do tutor
 
 }

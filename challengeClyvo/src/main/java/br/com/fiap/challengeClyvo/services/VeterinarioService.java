@@ -6,6 +6,8 @@ import br.com.fiap.challengeClyvo.exceptions.EntityNotFoundException;
 import br.com.fiap.challengeClyvo.model.Veterinario;
 import br.com.fiap.challengeClyvo.repository.VeterinarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +30,8 @@ public class VeterinarioService {
     }
 
 
-    public List<Veterinario> buscarTodos() {
-        return veterinarioRepository.findAll();
+    public Page<Veterinario> buscarTodos(Pageable pageable) {
+        return veterinarioRepository.findAll(pageable);
     }
 
 
@@ -45,8 +47,8 @@ public class VeterinarioService {
     }
 
 
-    public List<Veterinario> buscarPorArea(String area) {
-        return veterinarioRepository.findByArea(area);
+    public Page<Veterinario> buscarPorArea(String area, Pageable pageable) {
+        return veterinarioRepository.findByArea(area, pageable);
     }
 
 

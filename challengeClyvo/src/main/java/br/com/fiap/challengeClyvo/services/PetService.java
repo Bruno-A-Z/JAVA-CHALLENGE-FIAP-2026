@@ -7,6 +7,8 @@ import br.com.fiap.challengeClyvo.model.Tutor;
 import br.com.fiap.challengeClyvo.repository.PetRepository;
 import br.com.fiap.challengeClyvo.repository.TutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +30,8 @@ public class PetService {
         return petRepository.save(pet);
     }
 
-    public List<Pet> buscarTodos() {
-        return petRepository.findAll();
+    public Page<Pet> buscarTodos(Pageable pageable) {
+        return petRepository.findAll(pageable);
     }
 
     public Pet buscarPorId(Long id) {
@@ -37,12 +39,12 @@ public class PetService {
                 .orElseThrow(() -> new EntityNotFoundException("Pet não encontrado."));
     }
 
-    public List<Pet> buscarPorNome(String nome) {
-        return petRepository.findByNome(nome);
+    public Page<Pet> buscarPorNome(String nome, Pageable pageable) {
+        return petRepository.findByNome(nome, pageable);
     }
 
-    public List<Pet> buscarPorEspecie(String especie) {
-        return petRepository.findByEspecie(especie);
+    public Page<Pet> buscarPorEspecie(String especie, Pageable pageable) {
+        return petRepository.findByEspecie(especie, pageable);
     }
 
     public List<Pet> buscarPorTutor(Long idTutores) {
