@@ -73,6 +73,7 @@ public class PetController {
         return ResponseEntity.ok(petService.adicionarTutor(idPet, idTutor));
     }
 
+    @Operation(summary = "Remove o tutor do Pet pelo ID")
     @DeleteMapping("/{idPet}/tutor/{idTutor}")
     public ResponseEntity<Pet> removerTutor(
             @PathVariable Long idPet,

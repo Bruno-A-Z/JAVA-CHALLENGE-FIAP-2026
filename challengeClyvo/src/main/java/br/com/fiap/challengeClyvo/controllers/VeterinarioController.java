@@ -25,7 +25,7 @@ public class VeterinarioController {
     @Autowired
     private VeterinarioService veterinarioService;
 
-    @Operation(summary = "")
+    @Operation(summary = "Cadastra um Veterinario")
     @PostMapping
     public ResponseEntity<Veterinario> salvar(@RequestBody @Valid Veterinario veterinario) {
         return ResponseEntity.status(HttpStatus.CREATED).body(veterinarioService.salvar(veterinario));
