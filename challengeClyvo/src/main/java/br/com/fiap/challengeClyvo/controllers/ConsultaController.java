@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Consulta")
+@Tag(name = "Consulta", description = "Gerenciamento de Consultas")
 @RestController
 @RequestMapping("/consulta")
 public class ConsultaController {

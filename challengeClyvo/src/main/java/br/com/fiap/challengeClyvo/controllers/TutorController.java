@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Tutor")
+@Tag(name = "Tutor", description = "Gerenciamento de tutores")
 @RestController
 @RequestMapping("/tutor")
 public class TutorController {
