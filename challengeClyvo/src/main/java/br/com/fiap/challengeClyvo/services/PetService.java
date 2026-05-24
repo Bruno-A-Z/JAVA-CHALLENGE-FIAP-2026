@@ -48,7 +48,7 @@ public class PetService {
     }
 
     public List<Pet> buscarPorTutor(Long id) {
-        return petRepository.findByTutores(id);
+        return petRepository.findByTutoresId(id);
     }
 
     public Pet adicionarTutor(Long idPet, Long idTutor) {
