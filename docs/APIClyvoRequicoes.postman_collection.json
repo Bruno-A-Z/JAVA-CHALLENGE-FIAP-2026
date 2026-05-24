@@ -1,0 +1,1033 @@
+{
+  "info": {
+    "_postman_id": "558f5c78-92b5-4b2a-b835-533527cbdde1",
+    "name": "APIClyvoRequicoes",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53645654"
+  },
+  "item": [
+    {
+      "name": "Tutor",
+      "item": [
+        {
+          "name": "METODOS GET",
+          "item": [
+            {
+              "name": "Listar Tutores",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/tutor",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "tutor"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Tutor pelo Nome",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/tutor/nome/{nome}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "tutor",
+                    "nome",
+                    "{nome}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Tutor pelo CPF",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/tutor/cpf/{cpf}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "tutor",
+                    "cpf",
+                    "{cpf}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Tutor Pelo ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/tutor/{id}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "tutor",
+                    "{id}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "METODOS POST",
+          "item": [
+            {
+              "name": "Criar Tutor",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nome\": \"Marcel Stefan Wagner\",\r\n  \"idade\": 41,\r\n  \"endereco\": \"ENDERECO\",\r\n  \"tel\": \"11 91809-5577\",\r\n  \"cpf\": \"129.312.431-33\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/tutor",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "tutor"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "METODOS PUT",
+          "item": [
+            {
+              "name": "Atualiza Tutor pelo ID",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nome\": \"Marcel Stefan Wagner\",\r\n  \"idade\": 40,\r\n  \"endereco\": \"ENDERECO\",\r\n  \"tel\": \"11 91809-5577\",\r\n  \"cpf\": \"129.312.431-33\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/tutor/{id}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "tutor",
+                    "{id}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "METODOS DELETE",
+          "item": [
+            {
+              "name": "Deletar Tutor By ID",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/tutor/{id}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "tutor",
+                    "{id}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Pet",
+      "item": [
+        {
+          "name": "METODOS GET",
+          "item": [
+            {
+              "name": "Listar Pets",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/pet",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "pet"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Pet por ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/pet/{id}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "pet",
+                    "{id}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Pet por ID Tutor",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/pet/tutor/{idTutor}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "pet",
+                    "tutor",
+                    "{idTutor}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Pet por Nome",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/pet/nome/{nome}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "pet",
+                    "nome",
+                    "{nome}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Pet por Especie",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/pet/especie/{especie}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "pet",
+                    "especie",
+                    "{especie}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "METODOS POST",
+          "item": [
+            {
+              "name": "Criar Pet",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nome\": \"Trovão\",\r\n  \"especie\": \"Cachorro\",\r\n  \"raca\": \"Lhasa Apso\",\r\n  \"cor\": \"Malhado\",\r\n  \"idade\": 7,\r\n  \"peso\": 6.0\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/pet",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "pet"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Adicionar ao Pet um Tutor",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/pet/{idPet}/tutor/{idTutor}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "pet",
+                    "{idPet}",
+                    "tutor",
+                    "{idTutor}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "METODOS PUT",
+          "item": [
+            {
+              "name": "Atualizar Pet existente",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nome\": \"Trovão\",\r\n  \"especie\": \"Cachorro\",\r\n  \"raca\": \"Lhasa Apso\",\r\n  \"cor\": \"Malhado\",\r\n  \"idade\": 8,\r\n  \"peso\": 6.0\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/pet/{id}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "pet",
+                    "{id}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "METODOS DELETE",
+          "item": [
+            {
+              "name": "Remover Tutor de Pet",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/pet/{idPet}/tutor/{idTutor}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "pet",
+                    "{idPet}",
+                    "tutor",
+                    "{idTutor}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Pet",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/pet/{id}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "pet",
+                    "{id}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vet",
+      "item": [
+        {
+          "name": "METODOS GET",
+          "item": [
+            {
+              "name": "Listar Vet",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "file",
+                  "file": {}
+                },
+                "url": {
+                  "raw": "http://localhost:8080/veterinario",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "veterinario"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Vet por ID",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "file",
+                  "file": {}
+                },
+                "url": {
+                  "raw": "http://localhost:8080/veterinario/{id}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "veterinario",
+                    "{id}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Vet por Area",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "http://localhost:8080/veterinario/area/{area}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "veterinario",
+                    "area",
+                    "{area}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Vet por CRMV",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "http://localhost:8080/veterinario/crmv/{numeroDeInscricao}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "veterinario",
+                    "crmv",
+                    "{numeroDeInscricao}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Vet por UF",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "http://localhost:8080/veterinario/uf/{uf}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "veterinario",
+                    "uf",
+                    "{uf}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "METODOS POST",
+          "item": [
+            {
+              "name": "Criar Vet",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nome\": \"Dr. Henrique de Ferraz\",\r\n  \"area\": \"gastroenterologista.\",\r\n  \"crmv\": {\r\n    \"prefixo\": \"crmv\",\r\n    \"uf\": \"AC\",\r\n    \"numeroDeInscricao\": 32465,\r\n    \"sufixo\": \"MV\"\r\n  }\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/veterinario",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "veterinario"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "METODOS PUT",
+          "item": [
+            {
+              "name": "Atualizar Vet existente",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nome\": \"Dr. Henrique Ferraz\",\r\n  \"area\": \"gastroenterologista\",\r\n  \"crmv\": {\r\n    \"prefixo\": \"crmv\",\r\n    \"uf\": \"AC\",\r\n    \"numeroDeInscricao\": 32465,\r\n    \"sufixo\": \"MV\"\r\n  }\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/veterinario/{id}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "veterinario",
+                    "{id}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "METODOS DELETE",
+          "item": [
+            {
+              "name": "Delete Vet",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/veterinario/{id}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "veterinario",
+                    "{id}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Agendamento",
+      "item": [
+        {
+          "name": "METODOS GET",
+          "item": [
+            {
+              "name": "Listar Agendamentos",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/agendamento",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "agendamento"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Agendamento por ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/agendamento/{id}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "agendamento",
+                    "{id}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Agendamento pelo idVet",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/agendamento/veterinario/{id}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "agendamento",
+                    "veterinario",
+                    "{id}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Agendamento pelo idPet",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/agendamento/pet/{idPet}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "agendamento",
+                    "pet",
+                    "{idPet}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Agendamento por Status",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/agendamento/status/{status}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "agendamento",
+                    "status",
+                    "{status}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "METODOS POST",
+          "item": [
+            {
+              "name": "Criar Agendamento",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"dataHora\": \"2026-06-16T12:00:13\",\r\n  \"pet\": { \"id\": {idPet} },\r\n  \"veterinario\": { \"id\": {idVet} },\r\n  \"motivo\": \"Consulta de rotina\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/agendamento",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "agendamento"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "METODOS PATCH",
+          "item": [
+            {
+              "name": "Cancelar Agendamento",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/agendamento/{id}/cancelar",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "agendamento",
+                    "{id}",
+                    "cancelar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Consulta",
+      "item": [
+        {
+          "name": "METODOS GET",
+          "item": [
+            {
+              "name": "Listar Consultas",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/consulta",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "consulta"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Consultas por ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/consulta/{id}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "consulta",
+                    "{id}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Consultas por ID Vet",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/consulta/veterinario/{idVet}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "consulta",
+                    "veterinario",
+                    "{idVet}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Buscar Consultas por IDPet",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/consulta/pet/{idPet}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "consulta",
+                    "pet",
+                    "{idPet}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "METODOS POST",
+          "item": [
+            {
+              "name": "Criar Consulta",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"dataRealizacao\": \"2026-05-24T18:32:41.982\",\r\n  \"diagnostico\": \"Animal Saudavel, nada fora do comum\",\r\n  \"tratamento\": \"Nada Necessario\",\r\n  \"observacoes\": \"Retorno em 6 meses\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/consulta/agendamento/{idAgendamento}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "consulta",
+                    "agendamento",
+                    "{idAgendamento}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "METODOS PATCH",
+          "item": [
+            {
+              "name": "Atualizar Observacao Consulta",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "\"string\"",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/consulta/{id}/observacoes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "consulta",
+                    "{id}",
+                    "observacoes"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
