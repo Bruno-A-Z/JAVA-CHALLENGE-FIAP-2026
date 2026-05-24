@@ -1,0 +1,58 @@
+erDiagram
+    TB_TUTOR {
+        NUMBER ID_TUTOR PK
+        VARCHAR NOME
+        NUMBER IDADE
+        VARCHAR ENDERECO
+        VARCHAR NUM_TELEFONE
+        VARCHAR CPF UK
+    }
+
+    TB_PET {
+        NUMBER ID_PET PK
+        VARCHAR NOME
+        VARCHAR ESPECIE
+        VARCHAR RACA
+        VARCHAR COR
+        NUMBER IDADE
+        NUMBER PESO
+    }
+
+    TB_PET_TUTOR {
+        NUMBER ID_PET FK
+        NUMBER ID_TUTOR FK
+    }
+
+    TB_VETERINARIO {
+        NUMBER ID_VET PK
+        VARCHAR NOME
+        VARCHAR AREA
+        VARCHAR CRMV_PREFIXO
+        VARCHAR CRMV_UF
+        NUMBER CRMV_NUMINSCRICAO
+        VARCHAR CRMV_SUFIXO
+    }
+
+    TB_AGENDAMENTO {
+        NUMBER ID_AGENDAMENTO PK
+        TIMESTAMP DT_HORA
+        NUMBER ID_PET FK
+        NUMBER ID_VET FK
+        VARCHAR STATUS
+        VARCHAR MOTIVO
+    }
+
+    TB_CONSULTA {
+        NUMBER ID_CONSULTA PK
+        NUMBER ID_AGENDAMENTO FK
+        TIMESTAMP DT_REALIZACAO
+        VARCHAR DIAGNOSTICO
+        VARCHAR TRATAMENTO
+        VARCHAR OBSERVACOES
+    }
+
+    TB_TUTOR ||--o{ TB_PET_TUTOR : "possui"
+    TB_PET   ||--o{ TB_PET_TUTOR : "pertence a"
+    TB_PET          }o--|| TB_AGENDAMENTO : "é agendado em"
+    TB_VETERINARIO  }o--|| TB_AGENDAMENTO : "atende em"
+    TB_AGENDAMENTO  ||--o| TB_CONSULTA    : "gera"

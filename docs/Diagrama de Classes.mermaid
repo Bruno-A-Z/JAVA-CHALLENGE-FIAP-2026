@@ -1,0 +1,109 @@
+classDiagram
+    direction TB
+
+    class Pet {
+        +Long id
+        +String nome
+        +String especie
+        +String raca
+        +String cor
+        +Integer idade
+        +Double peso
+        +List~Tutor~ tutores
+    }
+
+    class Tutor {
+        +Long id
+        +String nome
+        +Integer idade
+        +String endereco
+        +String tel
+        +String cpf
+        +List~Pet~ pets
+    }
+
+    class Veterinario {
+        +Long id
+        +String nome
+        +String area
+        +Crmv crmv
+    }
+
+    class Crmv {
+        <<Embeddable>>
+        +String prefixo
+        +UF uf
+        +Integer numeroDeInscricao
+        +SufixoCrmv sufixo
+    }
+
+    class Agendamento {
+        +Long id
+        +LocalDateTime dataHora
+        +Pet pet
+        +Veterinario veterinario
+        +StatusAgendamento status
+        +String motivo
+        +Consulta consulta
+    }
+
+    class Consulta {
+        +Long id
+        +Agendamento agendamento
+        +LocalDateTime dataRealizacao
+        +String diagnostico
+        +String tratamento
+        +String observacoes
+    }
+
+    class StatusAgendamento {
+        <<enumeration>>
+        AGENDADO
+        REALIZADO
+        CANCELADO
+    }
+
+    class UF {
+        <<enumeration>>
+        AC
+        AL
+        AM
+        BA
+        CE
+        DF
+        ES
+        GO
+        MA
+        MG
+        MS
+        MT
+        PA
+        PB
+        PE
+        PI
+        PR
+        RJ
+        RN
+        RO
+        RR
+        RS
+        SC
+        SE
+        SP
+        TO
+    }
+
+    class SufixoCrmv {
+        <<enumeration>>
+        MV
+        ZT
+    }
+
+    Pet "N" <--> "N" Tutor : TB_PET_TUTOR
+    Agendamento "N" --> "1" Pet : id_pet
+    Agendamento "N" --> "1" Veterinario : id_vet
+    Consulta "1" --> "1" Agendamento : id_agendamento
+    Veterinario "1" *-- "1" Crmv : embedded
+    Agendamento --> StatusAgendamento
+    Crmv --> UF
+    Crmv --> SufixoCrmv
