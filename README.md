@@ -5,16 +5,16 @@ O sistema permite cadastrar tutores, pets e veterinários, realizar agendamentos
 
 ---
 
-## 👥 Equipe
+## 👥 Equipe - 2TDSPO
 
-|         Nome        |   RM   |  Turma |
-|---------------------|--------|--------|
-| Bruno A Zanaeli     | 563736 |        |
-| Christian S Freitas | 566098 |        |
-| Pedro P Biasolli    | 562521 | 1TDSPO |
-| Rodrigo Tiezzi      | 562975 |        |
-| Maheus E Souza      | 562532 |        |
------------------------------------------
+|         Nome        |   RM   |
+|---------------------|--------|
+| Bruno A Zanaeli     | 563736 |
+| Christian S Freitas | 566098 |
+| Pedro P Biasolli    | 562521 |
+| Rodrigo Tiezzi      | 562975 |
+| Maheus E Souza      | 562532 |
+--------------------------------
 
 ## 🛠️ Tecnologias Utilizadas
 
