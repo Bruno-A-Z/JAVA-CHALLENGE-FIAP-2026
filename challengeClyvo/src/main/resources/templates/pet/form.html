@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${modoEdicao} ? 'Editar Pet' : 'Novo Pet')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: menu}"></div>
+
+<h1 th:text="${modoEdicao} ? 'Editar Pet' : 'Novo Pet'">Pet</h1>
+
+<form th:action="${modoEdicao} ? @{/web/pet/{id}(id=${id})} : @{/web/pet}"
+      th:object="${pet}"
+      method="post">
+
+    <div>
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" th:field="*{nome}">
+        <span th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" style="color:red;"></span>
+    </div>
+
+    <div>
+        <label for="especie">Espécie</label>
+        <input type="text" id="especie" th:field="*{especie}">
+        <span th:if="${#fields.hasErrors('especie')}" th:errors="*{especie}" style="color:red;"></span>
+    </div>
+
+    <div>
+        <label for="raca">Raça</label>
+        <input type="text" id="raca" th:field="*{raca}">
+    </div>
+
+    <div>
+        <label for="cor">Cor</label>
+        <input type="text" id="cor" th:field="*{cor}">
+    </div>
+
+    <div>
+        <label for="idade">Idade</label>
+        <input type="number" id="idade" th:field="*{idade}">
+        <span th:if="${#fields.hasErrors('idade')}" th:errors="*{idade}" style="color:red;"></span>
+    </div>
+
+    <div>
+        <label for="peso">Peso</label>
+        <input type="number" step="0.1" id="peso" th:field="*{peso}">
+        <span th:if="${#fields.hasErrors('peso')}" th:errors="*{peso}" style="color:red;"></span>
+    </div>
+
+    <button type="submit">Salvar</button>
+    <a th:href="@{/templates/web/pet}">Cancelar</a>
+</form>
+
+<!-- Vincular tutor: só faz sentido depois que o pet já existe -->
+<div th:if="${modoEdicao}">
+    <h2>Vincular Tutor</h2>
+    <form th:action="@{/templates/web/pet/{idPet}/tutor/{idTutor}(idPet=${id}, idTutor=0)}" method="post"
+          onsubmit="this.action=this.action.replace('/0', '/' + document.getElementById('idTutorVincular').value); return true;">
+        <label for="idTutorVincular">ID do Tutor</label>
+        <input type="number" id="idTutorVincular" name="idTutorVincular">
+        <button type="submit">Vincular</button>
+    </form>
+</div>
+</body>
+</html>

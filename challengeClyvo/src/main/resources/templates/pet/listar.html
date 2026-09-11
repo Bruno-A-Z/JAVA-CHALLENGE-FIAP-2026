@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Pets')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: menu}"></div>
+
+<h1>Pets</h1>
+<a th:href="@{/templates/web/pet/novo}">+ Novo Pet</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th><th>Nome</th><th>Espécie</th><th>Raça</th><th>Idade</th><th>Peso</th><th>Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="pet : ${pets.content}">
+        <td th:text="${pet.id}">1</td>
+        <td th:text="${pet.nome}">Nome</td>
+        <td th:text="${pet.especie}">Espécie</td>
+        <td th:text="${pet.raca}">Raça</td>
+        <td th:text="${pet.idade}">3</td>
+        <td th:text="${pet.peso}">10.0</td>
+        <td>
+            <a th:href="@{/templates/web/pet/{id}/editar(id=${pet.id})}">Editar</a>
+            <form th:action="@{/templates/web/pet/{id}/deletar(id=${pet.id})}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Confirma exclusão?')">Excluir</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div th:if="${!pets.first}"><a th:href="@{/templates/web/pet(pagina=${pets.number - 1})}">Anterior</a></div>
+<span th:text="'Página ' + (${pets.number} + 1) + ' de ' + ${pets.totalPages}"></span>
+<div th:if="${!pets.last}"><a th:href="@{/templates/web/pet(pagina=${pets.number + 1})}">Próxima</a></div>
+</body>
+</html>

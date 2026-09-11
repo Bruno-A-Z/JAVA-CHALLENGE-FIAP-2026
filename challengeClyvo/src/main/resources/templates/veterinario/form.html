@@ -1,0 +1,43 @@
+<!-- templates/veterinario/form.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${modoEdicao} ? 'Editar Veterinário' : 'Novo Veterinário')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: menu}"></div>
+
+<h1 th:text="${modoEdicao} ? 'Editar Veterinário' : 'Novo Veterinário'">Veterinário</h1>
+
+<form th:action="${modoEdicao} ? @{/web/veterinario/{id}(id=${id})} : @{/web/veterinario}"
+      th:object="${veterinario}"
+      method="post">
+
+    <div>
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" th:field="*{nome}">
+        <span th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" style="color:red;"></span>
+    </div>
+
+    <div>
+        <label for="area">Área de atuação</label>
+        <input type="text" id="area" th:field="*{area}">
+        <span th:if="${#fields.hasErrors('area')}" th:errors="*{area}" style="color:red;"></span>
+    </div>
+
+    <div>
+        <label for="uf">UF do CRMV</label>
+        <select id="uf" th:field="*{crmv.uf}">
+            <option th:each="uf : ${ufs}" th:value="${uf}" th:text="${uf}"></option>
+        </select>
+    </div>
+
+    <div>
+        <label for="numeroDeInscricao">Número de inscrição</label>
+        <input type="number" id="numeroDeInscricao" th:field="*{crmv.numeroDeInscricao}">
+        <span th:if="${#fields.hasErrors('crmv.numeroDeInscricao')}" th:errors="*{crmv.numeroDeInscricao}" style="color:red;"></span>
+    </div>
+
+    <button type="submit">Salvar</button>
+    <a th:href="@{/templates/web/veterinario}">Cancelar</a>
+</form>
+</body>
+</html>

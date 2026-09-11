@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(titulo)">
+    <meta charset="UTF-8">
+    <title th:text="${titulo} + ' - Clyvo'">Clyvo</title>
+    <link rel="stylesheet" th:href="@{/web/css/style.css}">
+</head>
+<body>
+<div th:fragment="menu">
+    <nav>
+        <a th:href="@{/web/tutor}">Tutores</a>
+        <a th:href="@{/web/pet}">Pets</a>
+        <a th:href="@{/web/veterinario}">Veterinários</a>
+        <a th:href="@{/web/agendamento}">Agendamentos</a>
+        <a th:href="@{/web/consulta}">Consultas</a>
+        <form method="post" th:action="@{/web/logout}" style="display:inline;">
+            <button type="submit">Sair</button>
+        </form>
+    </nav>
+</div>
+</body>
+</html>

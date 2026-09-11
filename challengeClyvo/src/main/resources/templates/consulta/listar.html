@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Consultas')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: menu}"></div>
+
+<h1>Consultas</h1>
+
+<table>
+    <thead>
+    <tr><th>ID</th><th>Data Realização</th><th>Diagnóstico</th><th>Tratamento</th><th>Observações</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="c : ${consultas.content}">
+        <td th:text="${c.id}">1</td>
+        <td th:text="${c.dataRealizacao}">2026-01-01T10:00</td>
+        <td th:text="${c.diagnostico}">Diagnóstico</td>
+        <td th:text="${c.tratamento}">Tratamento</td>
+        <td th:text="${c.observacoes}">Observações</td>
+    </tr>
+    </tbody>
+</table>
+
+<div th:if="${!consultas.first}"><a th:href="@{/templates/web/consulta(pagina=${consultas.number - 1})}">Anterior</a></div>
+<span th:text="'Página ' + (${consultas.number} + 1) + ' de ' + ${consultas.totalPages}"></span>
+<div th:if="${!consultas.last}"><a th:href="@{/templates/web/consulta(pagina=${consultas.number + 1})}">Próxima</a></div>
+</body>
+</html>

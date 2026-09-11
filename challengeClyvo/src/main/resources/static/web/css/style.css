@@ -1,0 +1,323 @@
+
+:root {
+    --cor-fundo: #faf6f0;
+    --cor-superficie: #ffffff;
+    --cor-borda: #e8ddd0;
+    --cor-texto: #3a332c;
+    --cor-texto-suave: #7a7168;
+    --cor-laranja: #e8792e;
+    --cor-laranja-escura: #c9611f;
+    --cor-erro: #c0392b;
+    --cor-erro-fundo: #fdecea;
+    --cor-sucesso: #2e8b57;
+    --cor-sucesso-fundo: #eafaf1;
+    --radius: 10px;
+    --sombra: 0 2px 10px rgba(58, 51, 44, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    margin: 0;
+    padding: 0 0 60px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ---------- NAVBAR (ocupa a largura toda, mesmo com body centralizado) ---------- */
+nav {
+    width: 100%;
+    background-color: var(--cor-superficie);
+    border-bottom: 1px solid var(--cor-borda);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: var(--cor-texto);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: var(--radius);
+    transition: background-color 0.15s ease, color 0.15s ease;
+    font-size: 0.92rem;
+}
+
+nav a:hover {
+    background-color: #fdf1e6;
+    color: var(--cor-laranja-escura);
+}
+
+nav form {
+    margin-left: auto;
+}
+
+nav button {
+    background-color: transparent;
+    border: 1px solid var(--cor-borda);
+    color: var(--cor-texto-suave);
+    font-weight: 600;
+}
+
+nav button:hover {
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+}
+
+/* ---------- BLOCO CENTRAL DE CONTEÚDO ---------- */
+h1 {
+    width: 100%;
+    max-width: 900px;
+    margin: 32px auto 0 auto;
+    padding: 0 24px;
+    color: var(--cor-texto);
+    text-align: center;
+}
+
+h2 {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 0 24px;
+    color: var(--cor-texto-suave);
+    font-size: 1.05rem;
+    text-align: center;
+}
+
+/* Link "+ Novo" abaixo do h1, virou botão laranja */
+h1 + a {
+    display: inline-block;
+    margin: 18px auto 8px auto;
+    padding: 10px 22px;
+    background-color: var(--cor-laranja);
+    color: #fff;
+    text-decoration: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+    box-shadow: var(--sombra);
+}
+
+h1 + a:hover {
+    background-color: var(--cor-laranja-escura);
+}
+
+/* ---------- TABELA ---------- */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 900px;
+    margin: 16px auto;
+    background-color: var(--cor-superficie);
+    box-shadow: var(--sombra);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+thead {
+    background-color: var(--cor-fundo);
+    border-bottom: 2px solid var(--cor-borda);
+}
+
+th {
+    color: var(--cor-texto-suave);
+    text-align: left;
+    padding: 14px 16px;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--cor-borda);
+    font-size: 0.92rem;
+}
+
+tbody tr:hover {
+    background-color: #fdf8f2;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+td a {
+    color: var(--cor-laranja-escura);
+    text-decoration: none;
+    font-weight: 600;
+    margin-right: 12px;
+}
+
+td a:hover {
+    text-decoration: underline;
+}
+
+td form {
+    display: inline;
+}
+
+/* ---------- BOTÕES ---------- */
+button {
+    background-color: var(--cor-laranja);
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: background-color 0.15s ease;
+}
+
+button:hover {
+    background-color: var(--cor-laranja-escura);
+}
+
+td button {
+    background-color: var(--cor-superficie);
+    color: var(--cor-erro);
+    border: 1px solid var(--cor-erro);
+    padding: 6px 12px;
+}
+
+td button:hover {
+    background-color: var(--cor-erro-fundo);
+}
+
+/* ---------- PAGINAÇÃO ---------- */
+span, div {
+    max-width: 900px;
+    width: 100%;
+    text-align: center;
+}
+
+div > a {
+    color: var(--cor-laranja-escura);
+    font-weight: 600;
+    text-decoration: none;
+    margin: 0 16px;
+}
+
+div > a:hover {
+    text-decoration: underline;
+}
+
+/* ---------- FORMULÁRIOS ---------- */
+body > form {
+    background-color: var(--cor-superficie);
+    width: 100%;
+    max-width: 480px;
+    margin: 20px auto;
+    padding: 32px;
+    border-radius: var(--radius);
+    box-shadow: var(--sombra);
+}
+
+form > div {
+    max-width: none;
+    margin: 0 0 18px 0;
+    padding: 0;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--cor-texto-suave);
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="datetime-local"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--radius);
+    font-size: 0.92rem;
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--cor-laranja);
+    background-color: #fff;
+}
+
+textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+form button[type="submit"] {
+    margin-right: 10px;
+}
+
+form a {
+    color: var(--cor-texto-suave);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+form a:hover {
+    color: var(--cor-texto);
+    text-decoration: underline;
+}
+
+/* ---------- MENSAGENS DE ERRO / STATUS ---------- */
+span[style*="color:red"] {
+    display: block;
+    color: var(--cor-erro) !important;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    text-align: left;
+    max-width: none;
+}
+
+p[style*="color:red"] {
+    background-color: var(--cor-erro-fundo);
+    color: var(--cor-erro) !important;
+    padding: 12px 18px;
+    margin: 16px auto;
+    border-radius: var(--radius);
+    border: 1px solid #f5c6cb;
+    max-width: 380px;
+}
+
+p[style*="color:green"] {
+    background-color: var(--cor-sucesso-fundo);
+    color: var(--cor-sucesso) !important;
+    padding: 12px 18px;
+    margin: 16px auto;
+    border-radius: var(--radius);
+    border: 1px solid #c3e6cb;
+    max-width: 380px;
+}
+
+/* ---------- PÁGINA DE LOGIN ---------- */
+body:has(form[action*="/web/login"]) {
+    justify-content: center;
+    min-height: 100vh;
+    padding: 0;
+}
+
+body:has(form[action*="/web/login"]) h1 {
+    margin-top: 0;
+}

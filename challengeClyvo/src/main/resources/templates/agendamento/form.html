@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Novo Agendamento')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: menu}"></div>
+
+<h1>Novo Agendamento</h1>
+
+<form th:action="@{/templates/web/agendamento}" th:object="${agendamento}" method="post">
+
+    <div>
+        <label for="dataHora">Data e Hora</label>
+        <input type="datetime-local" id="dataHora" th:field="*{dataHora}">
+        <span th:if="${#fields.hasErrors('dataHora')}" th:errors="*{dataHora}" style="color:red;"></span>
+    </div>
+
+    <div>
+        <label for="idPet">Pet</label>
+        <select id="idPet" th:field="*{idPet}">
+            <option th:each="pet : ${pets}" th:value="${pet.id}" th:text="${pet.nome} + ' (' + ${pet.especie} + ')'"></option>
+        </select>
+        <span th:if="${#fields.hasErrors('idPet')}" th:errors="*{idPet}" style="color:red;"></span>
+    </div>
+
+    <div>
+        <label for="idVeterinario">Veterinário</label>
+        <select id="idVeterinario" th:field="*{idVeterinario}">
+            <option th:each="vet : ${veterinarios}" th:value="${vet.id}" th:text="${vet.nome} + ' - ' + ${vet.area}"></option>
+        </select>
+        <span th:if="${#fields.hasErrors('idVeterinario')}" th:errors="*{idVeterinario}" style="color:red;"></span>
+    </div>
+
+    <div>
+        <label for="motivo">Motivo</label>
+        <input type="text" id="motivo" th:field="*{motivo}">
+    </div>
+
+    <button type="submit">Agendar</button>
+    <a th:href="@{/templates/web/agendamento}">Cancelar</a>
+</form>
+</body>
+</html>

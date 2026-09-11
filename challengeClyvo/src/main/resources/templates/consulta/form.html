@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Realizar Consulta')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: menu}"></div>
+
+<h1>Realizar Consulta — Agendamento #<span th:text="${idAgendamento}"></span></h1>
+
+<form th:action="@{/templates/web/consulta/agendamento/{id}(id=${idAgendamento})}" th:object="${consulta}" method="post">
+
+    <div>
+        <label for="diagnostico">Diagnóstico</label>
+        <textarea id="diagnostico" th:field="*{diagnostico}"></textarea>
+        <span th:if="${#fields.hasErrors('diagnostico')}" th:errors="*{diagnostico}" style="color:red;"></span>
+    </div>
+
+    <div>
+        <label for="tratamento">Tratamento</label>
+        <textarea id="tratamento" th:field="*{tratamento}"></textarea>
+    </div>
+
+    <div>
+        <label for="observacoes">Observações</label>
+        <textarea id="observacoes" th:field="*{observacoes}"></textarea>
+    </div>
+
+    <button type="submit">Salvar Consulta</button>
+    <a th:href="@{/templates/web/agendamento}">Cancelar</a>
+</form>
+</body>
+</html>
