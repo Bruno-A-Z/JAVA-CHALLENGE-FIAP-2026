@@ -1,9 +1,12 @@
 package br.com.fiap.challengeClyvo.services;
 
+import br.com.fiap.challengeClyvo.dto.request.ConsultaRequestDTO;
+import br.com.fiap.challengeClyvo.dto.response.ConsultaResponseDTO;
+import br.com.fiap.challengeClyvo.entity.Agendamento;
+import br.com.fiap.challengeClyvo.entity.Consulta;
 import br.com.fiap.challengeClyvo.enums.StatusAgendamento;
 import br.com.fiap.challengeClyvo.exceptions.EntityNotFoundException;
-import br.com.fiap.challengeClyvo.model.Agendamento;
-import br.com.fiap.challengeClyvo.model.Consulta;
+import br.com.fiap.challengeClyvo.mapper.ConsultaMapper;
 import br.com.fiap.challengeClyvo.repository.AgendamentoRepository;
 import br.com.fiap.challengeClyvo.repository.ConsultaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-
 @Service
 public class ConsultaService {
-
 
     @Autowired
     private ConsultaRepository consultaRepository;
@@ -25,7 +26,7 @@ public class ConsultaService {
     private AgendamentoRepository agendamentoRepository;
 
     // Realiza uma consulta a partir de um agendamento
-    public Consulta realizar(Long id, Consulta dadosConsulta) {
+    public ConsultaResponseDTO realizar(Long id, ConsultaRequestDTO dto) {
         Agendamento agendamento = agendamentoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado."));
 
@@ -37,43 +38,40 @@ public class ConsultaService {
             throw new IllegalStateException("Esse agendamento já possui uma consulta realizada.");
         }
 
-        // Vincula a consulta ao agendamento
-        dadosConsulta.setAgendamento(agendamento);
-        dadosConsulta.setDataRealizacao(LocalDateTime.now());
+        Consulta consulta = ConsultaMapper.toEntity(dto);
+        consulta.setAgendamento(agendamento);
+        consulta.setDataRealizacao(LocalDateTime.now());
 
-        // Atualiza o status do agendamento
         agendamento.setStatus(StatusAgendamento.REALIZADO);
         agendamentoRepository.save(agendamento);
 
-        return consultaRepository.save(dadosConsulta);
+        return ConsultaMapper.toDTO(consultaRepository.save(consulta));
     }
 
-    // Busca todas as consultas
-    public Page<Consulta> buscarTodas(Pageable pageable) {
-        return consultaRepository.findAll(pageable);
+    public Page<ConsultaResponseDTO> buscarTodas(Pageable pageable) {
+        return consultaRepository.findAll(pageable).map(ConsultaMapper::toDTO);
     }
 
-    // Busca consulta por ID
-    public Consulta buscarPorId(Long id) {
+    public ConsultaResponseDTO buscarPorId(Long id) {
+        return ConsultaMapper.toDTO(buscarEntidadePorId(id));
+    }
+
+    public Page<ConsultaResponseDTO> buscarPorPet(Long id, Pageable pageable) {
+        return consultaRepository.findByAgendamentoPetId(id, pageable).map(ConsultaMapper::toDTO);
+    }
+
+    public Page<ConsultaResponseDTO> buscarPorVeterinario(Long id, Pageable pageable) {
+        return consultaRepository.findByAgendamentoVeterinarioId(id, pageable).map(ConsultaMapper::toDTO);
+    }
+
+    public ConsultaResponseDTO atualizarObservacoes(Long id, String observacoes) {
+        Consulta consulta = buscarEntidadePorId(id);
+        consulta.setObservacoes(observacoes);
+        return ConsultaMapper.toDTO(consultaRepository.save(consulta));
+    }
+
+    private Consulta buscarEntidadePorId(Long id) {
         return consultaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Consulta não encontrada."));
     }
-
-    // Busca histórico médico de um pet
-    public Page<Consulta> buscarPorPet(Long id, Pageable pageable) {
-        return consultaRepository.findByAgendamentoPetId(id, pageable);
-    }
-
-    // Busca consultas realizadas por um veterinário
-    public Page<Consulta> buscarPorVeterinario(Long id, Pageable pageable) {
-        return consultaRepository.findByAgendamentoVeterinarioId(id, pageable);
-    }
-
-    // Atualiza observações de uma consulta
-    public Consulta atualizarObservacoes(Long id, String observacoes) {
-        Consulta consulta = buscarPorId(id);
-        consulta.setObservacoes(observacoes);
-        return consultaRepository.save(consulta);
-    }
-
 }

@@ -1,9 +1,11 @@
 package br.com.fiap.challengeClyvo.services;
 
-
+import br.com.fiap.challengeClyvo.dto.request.PetRequestDTO;
+import br.com.fiap.challengeClyvo.dto.response.PetResponseDTO;
+import br.com.fiap.challengeClyvo.entity.Pet;
+import br.com.fiap.challengeClyvo.entity.Tutor;
 import br.com.fiap.challengeClyvo.exceptions.EntityNotFoundException;
-import br.com.fiap.challengeClyvo.model.Pet;
-import br.com.fiap.challengeClyvo.model.Tutor;
+import br.com.fiap.challengeClyvo.mapper.PetMapper;
 import br.com.fiap.challengeClyvo.repository.PetRepository;
 import br.com.fiap.challengeClyvo.repository.TutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
 @Service
 public class PetService {
-
 
     private static final int LIMITE_TUTORES = 2;
 
@@ -26,33 +26,33 @@ public class PetService {
     @Autowired
     private TutorRepository tutorRepository;
 
-    public Pet salvar(Pet pet) {
-        return petRepository.save(pet);
+    public PetResponseDTO salvar(PetRequestDTO dto) {
+        Pet pet = PetMapper.toEntity(dto);
+        return PetMapper.toDTO(petRepository.save(pet));
     }
 
-    public Page<Pet> buscarTodos(Pageable pageable) {
-        return petRepository.findAll(pageable);
+    public Page<PetResponseDTO> buscarTodos(Pageable pageable) {
+        return petRepository.findAll(pageable).map(PetMapper::toDTO);
     }
 
-    public Pet buscarPorId(Long id) {
-        return petRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Pet não encontrado."));
+    public PetResponseDTO buscarPorId(Long id) {
+        return PetMapper.toDTO(buscarEntidadePorId(id));
     }
 
-    public Page<Pet> buscarPorNome(String nome, Pageable pageable) {
-        return petRepository.findByNome(nome, pageable);
+    public Page<PetResponseDTO> buscarPorNome(String nome, Pageable pageable) {
+        return petRepository.findByNome(nome, pageable).map(PetMapper::toDTO);
     }
 
-    public Page<Pet> buscarPorEspecie(String especie, Pageable pageable) {
-        return petRepository.findByEspecie(especie, pageable);
+    public Page<PetResponseDTO> buscarPorEspecie(String especie, Pageable pageable) {
+        return petRepository.findByEspecie(especie, pageable).map(PetMapper::toDTO);
     }
 
-    public List<Pet> buscarPorTutor(Long id) {
-        return petRepository.findByTutoresId(id);
+    public List<PetResponseDTO> buscarPorTutor(Long id) {
+        return petRepository.findByTutoresId(id).stream().map(PetMapper::toDTO).toList();
     }
 
-    public Pet adicionarTutor(Long idPet, Long idTutor) {
-        Pet pet = buscarPorId(idPet);
+    public PetResponseDTO adicionarTutor(Long idPet, Long idTutor) {
+        Pet pet = buscarEntidadePorId(idPet);
         Tutor tutor = tutorRepository.findById(idTutor)
                 .orElseThrow(() -> new EntityNotFoundException("Tutor não encontrado."));
 
@@ -63,11 +63,11 @@ public class PetService {
         }
 
         pet.getTutores().add(tutor);
-        return petRepository.save(pet);
+        return PetMapper.toDTO(petRepository.save(pet));
     }
 
-    public Pet removerTutor(Long idPet, Long idTutor) {
-        Pet pet = buscarPorId(idPet);
+    public PetResponseDTO removerTutor(Long idPet, Long idTutor) {
+        Pet pet = buscarEntidadePorId(idPet);
         Tutor tutor = tutorRepository.findById(idTutor)
                 .orElseThrow(() -> new EntityNotFoundException("Tutor não encontrado."));
 
@@ -76,24 +76,27 @@ public class PetService {
         }
 
         pet.getTutores().remove(tutor);
-        return petRepository.save(pet);
+        return PetMapper.toDTO(petRepository.save(pet));
     }
 
-    public Pet atualizar(Long id, Pet petAtualizado) {
-        Pet pet = buscarPorId(id);
-        pet.setNome(petAtualizado.getNome());
-        pet.setEspecie(petAtualizado.getEspecie());
-        pet.setRaca(petAtualizado.getRaca());
-        pet.setCor(petAtualizado.getCor());
-        pet.setIdade(petAtualizado.getIdade());
-        pet.setPeso(petAtualizado.getPeso());
-        return petRepository.save(pet);
+    public PetResponseDTO atualizar(Long id, PetRequestDTO dto) {
+        Pet pet = buscarEntidadePorId(id);
+        pet.setNome(dto.getNome());
+        pet.setEspecie(dto.getEspecie());
+        pet.setRaca(dto.getRaca());
+        pet.setCor(dto.getCor());
+        pet.setIdade(dto.getIdade());
+        pet.setPeso(dto.getPeso());
+        return PetMapper.toDTO(petRepository.save(pet));
     }
 
     public void deletar(Long id) {
-        buscarPorId(id);
+        buscarEntidadePorId(id);
         petRepository.deleteById(id);
     }
 
-
+    private Pet buscarEntidadePorId(Long id) {
+        return petRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pet não encontrado."));
+    }
 }

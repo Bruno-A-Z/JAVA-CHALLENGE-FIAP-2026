@@ -1,6 +1,6 @@
 package br.com.fiap.challengeClyvo.repository;
 
-import br.com.fiap.challengeClyvo.model.Pet;
+import br.com.fiap.challengeClyvo.entity.Pet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

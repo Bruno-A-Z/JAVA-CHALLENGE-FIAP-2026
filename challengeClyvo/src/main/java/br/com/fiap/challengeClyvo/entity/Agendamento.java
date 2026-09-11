@@ -1,4 +1,4 @@
-package br.com.fiap.challengeClyvo.model;
+package br.com.fiap.challengeClyvo.entity;
 
 
 import br.com.fiap.challengeClyvo.enums.StatusAgendamento;

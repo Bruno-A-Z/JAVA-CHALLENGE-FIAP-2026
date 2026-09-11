@@ -1,9 +1,11 @@
 package br.com.fiap.challengeClyvo.services;
 
-
+import br.com.fiap.challengeClyvo.dto.request.VeterinarioRequestDTO;
+import br.com.fiap.challengeClyvo.dto.response.VeterinarioResponseDTO;
+import br.com.fiap.challengeClyvo.entity.Veterinario;
 import br.com.fiap.challengeClyvo.enums.UF;
 import br.com.fiap.challengeClyvo.exceptions.EntityNotFoundException;
-import br.com.fiap.challengeClyvo.model.Veterinario;
+import br.com.fiap.challengeClyvo.mapper.VeterinarioMapper;
 import br.com.fiap.challengeClyvo.repository.VeterinarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,61 +14,57 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
 @Service
 public class VeterinarioService {
-
 
     @Autowired
     private VeterinarioRepository veterinarioRepository;
 
-
-    public Veterinario salvar(Veterinario veterinario) {
+    public VeterinarioResponseDTO salvar(VeterinarioRequestDTO dto) {
         if (veterinarioRepository.findByCrmvNumeroDeInscricao(
-                veterinario.getCrmv().getNumeroDeInscricao()).isPresent()) {
+                dto.getCrmv().getNumeroDeInscricao()).isPresent()) {
             throw new IllegalStateException("Já existe um veterinário cadastrado com esse CRMV.");
         }
-        return veterinarioRepository.save(veterinario);
+        Veterinario veterinario = VeterinarioMapper.toEntity(dto);
+        return VeterinarioMapper.toDTO(veterinarioRepository.save(veterinario));
     }
 
-
-    public Page<Veterinario> buscarTodos(Pageable pageable) {
-        return veterinarioRepository.findAll(pageable);
+    public Page<VeterinarioResponseDTO> buscarTodos(Pageable pageable) {
+        return veterinarioRepository.findAll(pageable).map(VeterinarioMapper::toDTO);
     }
 
+    public VeterinarioResponseDTO buscarPorId(Long id) {
+        return VeterinarioMapper.toDTO(buscarEntidadePorId(id));
+    }
 
-    public Veterinario buscarPorId(Long id) {
-        return veterinarioRepository.findById(id)
+    public VeterinarioResponseDTO buscarPorCrmv(int numeroDeInscricao) {
+        Veterinario veterinario = veterinarioRepository.findByCrmvNumeroDeInscricao(numeroDeInscricao)
                 .orElseThrow(() -> new EntityNotFoundException("Veterinário não encontrado."));
+        return VeterinarioMapper.toDTO(veterinario);
     }
 
-
-    public Veterinario buscarPorCrmv(int numeroDeInscricao) {
-        return veterinarioRepository.findByCrmvNumeroDeInscricao(numeroDeInscricao)
-                .orElseThrow(() -> new EntityNotFoundException("Veterinário não encontrado."));
+    public Page<VeterinarioResponseDTO> buscarPorArea(String area, Pageable pageable) {
+        return veterinarioRepository.findByArea(area, pageable).map(VeterinarioMapper::toDTO);
     }
 
-
-    public Page<Veterinario> buscarPorArea(String area, Pageable pageable) {
-        return veterinarioRepository.findByArea(area, pageable);
+    public List<VeterinarioResponseDTO> buscarPorUf(UF uf) {
+        return veterinarioRepository.findByCrmvUf(uf).stream().map(VeterinarioMapper::toDTO).toList();
     }
 
-
-    public List<Veterinario> buscarPorUf(UF uf) {
-        return veterinarioRepository.findByCrmvUf(uf);
+    public VeterinarioResponseDTO atualizar(Long id, VeterinarioRequestDTO dto) {
+        Veterinario veterinario = buscarEntidadePorId(id);
+        veterinario.setNome(dto.getNome());
+        veterinario.setArea(dto.getArea());
+        return VeterinarioMapper.toDTO(veterinarioRepository.save(veterinario));
     }
-
-
-    public Veterinario atualizar(Long id, Veterinario vetAtualizado) {
-        Veterinario veterinario = buscarPorId(id);
-        veterinario.setNome(vetAtualizado.getNome());
-        veterinario.setArea(vetAtualizado.getArea());
-        return veterinarioRepository.save(veterinario);
-    }
-
 
     public void deletar(Long id) {
-        buscarPorId(id);
+        buscarEntidadePorId(id);
         veterinarioRepository.deleteById(id);
+    }
+
+    private Veterinario buscarEntidadePorId(Long id) {
+        return veterinarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Veterinário não encontrado."));
     }
 }

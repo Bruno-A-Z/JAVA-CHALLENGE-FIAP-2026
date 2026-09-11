@@ -1,7 +1,7 @@
 package br.com.fiap.challengeClyvo.repository;
 
 import br.com.fiap.challengeClyvo.enums.UF;
-import br.com.fiap.challengeClyvo.model.Veterinario;
+import br.com.fiap.challengeClyvo.entity.Veterinario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

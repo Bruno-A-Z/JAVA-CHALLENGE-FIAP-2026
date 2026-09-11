@@ -1,4 +1,4 @@
-package br.com.fiap.challengeClyvo.model;
+package br.com.fiap.challengeClyvo.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;

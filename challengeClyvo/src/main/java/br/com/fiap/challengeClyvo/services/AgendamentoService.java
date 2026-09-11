@@ -1,11 +1,13 @@
 package br.com.fiap.challengeClyvo.services;
 
-
+import br.com.fiap.challengeClyvo.dto.request.AgendamentoRequestDTO;
+import br.com.fiap.challengeClyvo.dto.response.AgendamentoResponseDTO;
+import br.com.fiap.challengeClyvo.entity.Agendamento;
+import br.com.fiap.challengeClyvo.entity.Pet;
+import br.com.fiap.challengeClyvo.entity.Veterinario;
 import br.com.fiap.challengeClyvo.enums.StatusAgendamento;
 import br.com.fiap.challengeClyvo.exceptions.EntityNotFoundException;
-import br.com.fiap.challengeClyvo.model.Agendamento;
-import br.com.fiap.challengeClyvo.model.Pet;
-import br.com.fiap.challengeClyvo.model.Veterinario;
+import br.com.fiap.challengeClyvo.mapper.AgendamentoMapper;
 import br.com.fiap.challengeClyvo.repository.AgendamentoRepository;
 import br.com.fiap.challengeClyvo.repository.PetRepository;
 import br.com.fiap.challengeClyvo.repository.VeterinarioRepository;
@@ -17,10 +19,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Service
 public class AgendamentoService {
-
 
     @Autowired
     private AgendamentoRepository agendamentoRepository;
@@ -31,60 +31,65 @@ public class AgendamentoService {
     @Autowired
     private VeterinarioRepository veterinarioRepository;
 
-    public Agendamento salvar(Agendamento agendamento) {
-        Pet pet = petRepository.findById(agendamento.getPet().getId())
+    public AgendamentoResponseDTO salvar(AgendamentoRequestDTO dto) {
+        Pet pet = petRepository.findById(dto.getIdPet())
                 .orElseThrow(() -> new EntityNotFoundException("Pet não encontrado."));
 
-        Veterinario vet = veterinarioRepository.findById(agendamento.getVeterinario().getId())
+        Veterinario vet = veterinarioRepository.findById(dto.getIdVeterinario())
                 .orElseThrow(() -> new EntityNotFoundException("Veterinário não encontrado."));
 
         // Verifica se o vet já tem agendamento no mesmo horário
         List<Agendamento> conflitoHorario = agendamentoRepository
-                .findByVeterinarioIdAndDataHora(vet.getId(), agendamento.getDataHora());
+                .findByVeterinarioIdAndDataHora(vet.getId(), dto.getDataHora());
 
         if (!conflitoHorario.isEmpty()) {
             throw new IllegalStateException("Veterinário já possui agendamento nesse horário.");
         }
 
-        agendamento.setPet(pet);
-        agendamento.setVeterinario(vet);
+        Agendamento agendamento = AgendamentoMapper.toEntity(dto, pet, vet);
         agendamento.setStatus(StatusAgendamento.AGENDADO);
-        return agendamentoRepository.save(agendamento);
+        return AgendamentoMapper.toDTO(agendamentoRepository.save(agendamento));
     }
 
-    public Page<Agendamento> buscarTodos(Pageable pageable) {
-        return agendamentoRepository.findAll(pageable);
+    public Page<AgendamentoResponseDTO> buscarTodos(Pageable pageable) {
+        return agendamentoRepository.findAll(pageable).map(AgendamentoMapper::toDTO);
     }
 
-    public Agendamento buscarPorId(Long id) {
-        return agendamentoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado."));
+    public AgendamentoResponseDTO buscarPorId(Long id) {
+        return AgendamentoMapper.toDTO(buscarEntidadePorId(id));
     }
 
-    public Page<Agendamento> buscarPorStatus(StatusAgendamento status, Pageable pageable) {
-        return agendamentoRepository.findByStatus(status, pageable);
+    public Page<AgendamentoResponseDTO> buscarPorStatus(StatusAgendamento status, Pageable pageable) {
+        return agendamentoRepository.findByStatus(status, pageable).map(AgendamentoMapper::toDTO);
     }
 
-    public Page<Agendamento> buscarPorVeterinario(Long id, Pageable pageable) {
-        return agendamentoRepository.findByVeterinarioId(id, pageable);
+    public Page<AgendamentoResponseDTO> buscarPorVeterinario(Long id, Pageable pageable) {
+        return agendamentoRepository.findByVeterinarioId(id, pageable).map(AgendamentoMapper::toDTO);
     }
 
-    public Page<Agendamento> buscarPorPet(Long id, Pageable pageable) {
-        return agendamentoRepository.findByPetId(id, pageable);
+    public Page<AgendamentoResponseDTO> buscarPorPet(Long id, Pageable pageable) {
+        return agendamentoRepository.findByPetId(id, pageable).map(AgendamentoMapper::toDTO);
     }
 
-    public List<Agendamento> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim) {
-        return agendamentoRepository.findByDataHoraBetween(inicio, fim);
+    public List<AgendamentoResponseDTO> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim) {
+        return agendamentoRepository.findByDataHoraBetween(inicio, fim)
+                .stream().map(AgendamentoMapper::toDTO).toList();
     }
 
-    public Agendamento cancelar(Long id) {
-        Agendamento agendamento = buscarPorId(id);
+    public AgendamentoResponseDTO cancelar(Long id) {
+        Agendamento agendamento = buscarEntidadePorId(id);
 
         if (agendamento.getStatus() == StatusAgendamento.REALIZADO) {
             throw new IllegalStateException("Não é possível cancelar uma consulta já realizada.");
         }
 
         agendamento.setStatus(StatusAgendamento.CANCELADO);
-        return agendamentoRepository.save(agendamento);
+        return AgendamentoMapper.toDTO(agendamentoRepository.save(agendamento));
+    }
+
+    // usado pelo ConsultaService, que precisa da entidade completa
+    Agendamento buscarEntidadePorId(Long id) {
+        return agendamentoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado."));
     }
 }
