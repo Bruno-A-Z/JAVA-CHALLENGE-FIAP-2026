@@ -9,7 +9,7 @@ O sistema permite cadastrar tutores, pets e veterinários, realizar agendamentos
 
 |         Nome        |   RM   |
 |---------------------|--------|
-| Bruno A Zanaeli     | 563736 |
+| Bruno A Zanateli     | 563736 |
 | Christian S Freitas | 566098 |
 | Pedro P Biasolli    | 562521 |
 | Rodrigo Tiezzi      | 562975 |
