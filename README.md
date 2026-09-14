@@ -242,7 +242,7 @@ cd challengeClyvo
 ./mvnw spring-boot:run
 ```
 
-A API estará disponível em: `http://localhost:8080`
+A API estará disponível em: `http://localhost:8080` e `https://java-challenge-fiap-2026.onrender.com/web/login`
 
 ---
 
