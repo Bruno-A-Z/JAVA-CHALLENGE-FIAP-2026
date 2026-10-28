@@ -1,15 +1,23 @@
 package br.com.fiap.challengeClyvo.controllers.web;
 
 import br.com.fiap.challengeClyvo.dto.request.PetRequestDTO;
+import br.com.fiap.challengeClyvo.dto.response.PetResponseDTO;
+import br.com.fiap.challengeClyvo.dto.response.TutorResponseDTO;
 import br.com.fiap.challengeClyvo.services.PetService;
+import br.com.fiap.challengeClyvo.services.TutorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/web/pet")
@@ -18,10 +26,20 @@ public class WebPetController {
     @Autowired
     private PetService petService;
 
+    @Autowired
+    private TutorService tutorService;
+
     @GetMapping
     public String listar(Model model, @RequestParam(defaultValue = "0") int pagina) {
         Pageable pageable = PageRequest.of(pagina, 10);
-        model.addAttribute("pets", petService.buscarTodos(pageable));
+        Page<PetResponseDTO> pets = petService.buscarTodos(pageable);
+
+        // Tutores de cada pet da página (aparecem ao clicar na linha do pet)
+        Map<Long, List<TutorResponseDTO>> tutoresPorPet = new HashMap<>();
+        pets.getContent().forEach(pet -> tutoresPorPet.put(pet.getId(), petService.buscarTutoresDoPet(pet.getId())));
+
+        model.addAttribute("pets", pets);
+        model.addAttribute("tutoresPorPet", tutoresPorPet);
         return "pet/listar";
     }
 
@@ -55,16 +73,14 @@ public class WebPetController {
         dto.setPeso(pet.getPeso());
 
         model.addAttribute("pet", dto);
-        model.addAttribute("id", id);
-        model.addAttribute("modoEdicao", true);
+        carregarEdicao(model, id);
         return "pet/form";
     }
 
     @PostMapping("/{id}")
     public String atualizar(@PathVariable Long id, @Valid @ModelAttribute("pet") PetRequestDTO dto, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("id", id);
-            model.addAttribute("modoEdicao", true);
+            carregarEdicao(model, id);
             return "pet/form";
         }
         petService.atualizar(id, dto);
@@ -77,6 +93,12 @@ public class WebPetController {
         return "redirect:/web/pet";
     }
 
+    @PostMapping("/{idPet}/tutor")
+    public String vincularTutor(@PathVariable Long idPet, @RequestParam String cpf) {
+        petService.adicionarTutorPorCpf(idPet, cpf);
+        return "redirect:/web/pet/" + idPet + "/editar";
+    }
+
     @PostMapping("/{idPet}/tutor/{idTutor}")
     public String adicionarTutor(@PathVariable Long idPet, @PathVariable Long idTutor) {
         petService.adicionarTutor(idPet, idTutor);
@@ -87,5 +109,21 @@ public class WebPetController {
     public String removerTutor(@PathVariable Long idPet, @PathVariable Long idTutor) {
         petService.removerTutor(idPet, idTutor);
         return "redirect:/web/pet/" + idPet + "/editar";
+    }
+
+    private void carregarEdicao(Model model, Long idPet) {
+        List<TutorResponseDTO> vinculados = petService.buscarTutoresDoPet(idPet);
+        List<Long> idsVinculados = vinculados.stream().map(TutorResponseDTO::getId).toList();
+
+        List<TutorResponseDTO> disponiveis = tutorService.buscarTodos(PageRequest.of(0, 200)).getContent().stream()
+                .filter(t -> !idsVinculados.contains(t.getId()))
+                .toList();
+
+        model.addAttribute("id", idPet);
+        model.addAttribute("modoEdicao", true);
+        model.addAttribute("tutoresVinculados", vinculados);
+        model.addAttribute("tutoresDisponiveis", disponiveis);
+        model.addAttribute("podeVincular", vinculados.size() < PetService.LIMITE_TUTORES);
+        model.addAttribute("limiteTutores", PetService.LIMITE_TUTORES);
     }
 }

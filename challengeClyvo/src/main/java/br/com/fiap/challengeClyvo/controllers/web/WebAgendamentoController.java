@@ -1,13 +1,16 @@
 package br.com.fiap.challengeClyvo.controllers.web;
 
 import br.com.fiap.challengeClyvo.dto.request.AgendamentoRequestDTO;
+import br.com.fiap.challengeClyvo.dto.response.AgendamentoResponseDTO;
 import br.com.fiap.challengeClyvo.services.AgendamentoService;
 import br.com.fiap.challengeClyvo.services.PetService;
 import br.com.fiap.challengeClyvo.services.VeterinarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,10 +29,17 @@ public class WebAgendamentoController {
     @Autowired
     private VeterinarioService veterinarioService;
 
+    @Autowired
+    private WebNomeResolver nomeResolver;
+
     @GetMapping
     public String listar(Model model, @RequestParam(defaultValue = "0") int pagina) {
-        Pageable pageable = PageRequest.of(pagina, 10);
-        model.addAttribute("agendamentos", agendamentoService.buscarTodos(pageable));
+        Pageable pageable = PageRequest.of(pagina, 10, Sort.by(Sort.Direction.DESC, "dataHora"));
+        Page<AgendamentoResponseDTO> agendamentos = agendamentoService.buscarTodos(pageable);
+
+        model.addAttribute("agendamentos", agendamentos);
+        model.addAttribute("nomesPets", nomeResolver.nomesDosPets(agendamentos.getContent()));
+        model.addAttribute("nomesVeterinarios", nomeResolver.nomesDosVeterinarios(agendamentos.getContent()));
         return "agendamento/listar";
     }
 

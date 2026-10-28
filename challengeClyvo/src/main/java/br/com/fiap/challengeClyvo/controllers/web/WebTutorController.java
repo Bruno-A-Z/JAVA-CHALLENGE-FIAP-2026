@@ -1,15 +1,22 @@
 package br.com.fiap.challengeClyvo.controllers.web;
 
 import br.com.fiap.challengeClyvo.dto.request.TutorRequestDTO;
+import br.com.fiap.challengeClyvo.dto.response.PetResponseDTO;
+import br.com.fiap.challengeClyvo.dto.response.TutorResponseDTO;
 import br.com.fiap.challengeClyvo.services.TutorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/web/tutor")
@@ -21,7 +28,13 @@ public class WebTutorController {
     @GetMapping
     public String listar(Model model, @RequestParam(defaultValue = "0") int pagina) {
         Pageable pageable = PageRequest.of(pagina, 10);
-        model.addAttribute("tutores", tutorService.buscarTodos(pageable));
+        Page<TutorResponseDTO> tutores = tutorService.buscarTodos(pageable);
+
+        Map<Long, List<PetResponseDTO>> petsPorTutor = new HashMap<>();
+        tutores.getContent().forEach(t -> petsPorTutor.put(t.getId(), tutorService.buscarPetsDoTutor(t.getId())));
+
+        model.addAttribute("tutores", tutores);
+        model.addAttribute("petsPorTutor", petsPorTutor);
         return "tutor/listar";
     }
 
@@ -56,6 +69,7 @@ public class WebTutorController {
         model.addAttribute("tutor", dto);
         model.addAttribute("id", id);
         model.addAttribute("modoEdicao", true);
+        model.addAttribute("petsDoTutor", tutorService.buscarPetsDoTutor(id));
         return "tutor/form";
     }
 
@@ -64,6 +78,7 @@ public class WebTutorController {
         if (result.hasErrors()) {
             model.addAttribute("id", id);
             model.addAttribute("modoEdicao", true);
+            model.addAttribute("petsDoTutor", tutorService.buscarPetsDoTutor(id));
             return "tutor/form";
         }
         tutorService.atualizar(id, dto);
