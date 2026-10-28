@@ -2,12 +2,14 @@ package br.com.fiap.challengeClyvo.dto.request;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 
 public class AgendamentoRequestDTO {
 
     @NotNull(message = "A data e hora são obrigatórias.")
     @Future(message = "O agendamento deve ser em uma data futura.")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dataHora;
 
     @NotNull(message = "O pet é obrigatório.")

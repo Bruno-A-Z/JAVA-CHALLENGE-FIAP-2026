@@ -1,7 +1,5 @@
 package br.com.fiap.challengeClyvo.dto.response;
 
-import br.com.fiap.challengeClyvo.entity.Pet;
-import br.com.fiap.challengeClyvo.entity.Veterinario;
 import br.com.fiap.challengeClyvo.enums.StatusAgendamento;
 import java.time.LocalDateTime;
 

@@ -1,9 +1,6 @@
 package br.com.fiap.challengeClyvo.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public class PetRequestDTO {
 
@@ -17,7 +14,7 @@ public class PetRequestDTO {
     private String raca;
     private String cor;
 
-    @Positive(message = "A idade não pode ser MENOR que Zero.")
+    @PositiveOrZero(message = "A idade não pode ser MENOR que Zero.")
     @NotNull(message = "A idade não pode ser nula, ainda que igual a zero.")
     private Integer idade;
 

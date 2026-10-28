@@ -13,7 +13,7 @@ public class Veterinario {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "vet_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_VET")
     private Long id;
 
@@ -28,7 +28,7 @@ public class Veterinario {
     private String area;
 
     // Inicio da Identidade/CRMV | Procurando por maneira de deixar com uma formatacao melhor
-    @Column(name = "CRMV", unique = true, nullable = false, comment = "O CRMV é obrigatório no seguinte formato: CRMV-SP 12345/MV")
+    // Colunas CRMV_* vêm do @Embeddable Crmv; a unicidade (UF + nº) está na migration (UQ_VET_CRMV)
     @Embedded
     private Crmv crmv;
 

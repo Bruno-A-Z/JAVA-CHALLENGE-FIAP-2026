@@ -2,10 +2,7 @@ package br.com.fiap.challengeClyvo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.util.List;
 
@@ -17,7 +14,7 @@ public class Pet {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "pet_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_PET")
     private Long id;
 
@@ -36,7 +33,7 @@ public class Pet {
     @Column(name = "COR")
     private String cor;
 
-    @Positive(message = "A idade não pode ser MENOR que Zero.")
+    @PositiveOrZero(message = "A idade não pode ser MENOR que Zero.")
     @NotNull(message = "A idade não pode ser nula, ainda que igual a zero.")
     @Column(name = "IDADE")
     private Integer idade;

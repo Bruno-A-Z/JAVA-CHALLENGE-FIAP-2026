@@ -1,21 +1,29 @@
 package br.com.fiap.challengeClyvo.services;
 
 import br.com.fiap.challengeClyvo.dto.request.TutorRequestDTO;
+import br.com.fiap.challengeClyvo.dto.response.PetResponseDTO;
 import br.com.fiap.challengeClyvo.dto.response.TutorResponseDTO;
 import br.com.fiap.challengeClyvo.entity.Tutor;
 import br.com.fiap.challengeClyvo.exceptions.EntityNotFoundException;
+import br.com.fiap.challengeClyvo.mapper.PetMapper;
 import br.com.fiap.challengeClyvo.mapper.TutorMapper;
+import br.com.fiap.challengeClyvo.repository.PetRepository;
 import br.com.fiap.challengeClyvo.repository.TutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 public class TutorService {
 
     @Autowired
     private TutorRepository tutorRepository;
+
+    @Autowired
+    private PetRepository petRepository;
 
     public TutorResponseDTO salvar(TutorRequestDTO dto) {
         if (tutorRepository.findByCpf(dto.getCpf()).isPresent()) {
@@ -52,9 +60,21 @@ public class TutorService {
         return TutorMapper.toDTO(tutorRepository.save(tutor));
     }
 
+    // Pets de que o tutor cuida (usado na tela de tutores)
+    @Transactional(readOnly = true)
+    public List<PetResponseDTO> buscarPetsDoTutor(Long idTutor) {
+        buscarEntidadePorId(idTutor);
+        return petRepository.findByTutoresId(idTutor).stream().map(PetMapper::toDTO).toList();
+    }
+
+    // O dono do vínculo (TB_PET_TUTOR) é o Pet, desvinculamos antes de excluir o tutor
+    @Transactional
     public void deletar(Long id) {
-        buscarEntidadePorId(id);
-        tutorRepository.deleteById(id);
+        Tutor tutor = buscarEntidadePorId(id);
+        if (tutor.getPets() != null) {
+            tutor.getPets().forEach(pet -> pet.getTutores().removeIf(t -> t.getIdTutor().equals(id)));
+        }
+        tutorRepository.delete(tutor);
     }
 
     private Tutor buscarEntidadePorId(Long id) {

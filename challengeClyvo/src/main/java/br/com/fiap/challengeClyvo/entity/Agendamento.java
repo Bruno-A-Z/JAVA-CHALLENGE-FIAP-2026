@@ -5,7 +5,6 @@ import br.com.fiap.challengeClyvo.enums.StatusAgendamento;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
@@ -22,7 +21,6 @@ public class Agendamento {
     private Long id;
 
     @NotNull(message = "A data e hora são obrigatórias.")
-    @Future(message = "O agendamento deve ser em uma data futura.")
     @Column(name = "DT_HORA", nullable = false)
     private LocalDateTime dataHora;
 

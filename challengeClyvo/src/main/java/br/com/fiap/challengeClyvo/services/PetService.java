@@ -2,23 +2,26 @@ package br.com.fiap.challengeClyvo.services;
 
 import br.com.fiap.challengeClyvo.dto.request.PetRequestDTO;
 import br.com.fiap.challengeClyvo.dto.response.PetResponseDTO;
+import br.com.fiap.challengeClyvo.dto.response.TutorResponseDTO;
 import br.com.fiap.challengeClyvo.entity.Pet;
 import br.com.fiap.challengeClyvo.entity.Tutor;
 import br.com.fiap.challengeClyvo.exceptions.EntityNotFoundException;
 import br.com.fiap.challengeClyvo.mapper.PetMapper;
+import br.com.fiap.challengeClyvo.mapper.TutorMapper;
 import br.com.fiap.challengeClyvo.repository.PetRepository;
 import br.com.fiap.challengeClyvo.repository.TutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class PetService {
 
-    private static final int LIMITE_TUTORES = 2;
+    public static final int LIMITE_TUTORES = 2;
 
     @Autowired
     private PetRepository petRepository;
@@ -51,10 +54,24 @@ public class PetService {
         return petRepository.findByTutoresId(id).stream().map(PetMapper::toDTO).toList();
     }
 
+    // Tutores que cuidam do pet (usado na tela de pets)
+    @Transactional(readOnly = true)
+    public List<TutorResponseDTO> buscarTutoresDoPet(Long idPet) {
+        buscarEntidadePorId(idPet);
+        return tutorRepository.findByPetsId(idPet).stream().map(TutorMapper::toDTO).toList();
+    }
+
+    @Transactional
     public PetResponseDTO adicionarTutor(Long idPet, Long idTutor) {
         Pet pet = buscarEntidadePorId(idPet);
         Tutor tutor = tutorRepository.findById(idTutor)
                 .orElseThrow(() -> new EntityNotFoundException("Tutor não encontrado."));
+
+        boolean jaVinculado = pet.getTutores().stream()
+                .anyMatch(t -> t.getIdTutor().equals(idTutor));
+        if (jaVinculado) {
+            throw new IllegalStateException("Esse tutor já está vinculado a esse pet.");
+        }
 
         if (pet.getTutores().size() >= LIMITE_TUTORES) {
             throw new IllegalStateException(
@@ -66,16 +83,25 @@ public class PetService {
         return PetMapper.toDTO(petRepository.save(pet));
     }
 
+    @Transactional
+    public PetResponseDTO adicionarTutorPorCpf(Long idPet, String cpf) {
+        String cpfNumeros = cpf == null ? "" : cpf.replaceAll("\\D", "");
+        Tutor tutor = tutorRepository.findByCpf(cpfNumeros)
+                .orElseThrow(() -> new EntityNotFoundException("Nenhum tutor encontrado com esse CPF."));
+        return adicionarTutor(idPet, tutor.getIdTutor());
+    }
+
+    @Transactional
     public PetResponseDTO removerTutor(Long idPet, Long idTutor) {
         Pet pet = buscarEntidadePorId(idPet);
         Tutor tutor = tutorRepository.findById(idTutor)
                 .orElseThrow(() -> new EntityNotFoundException("Tutor não encontrado."));
 
-        if (!pet.getTutores().contains(tutor)) {
+        boolean removido = pet.getTutores().removeIf(t -> t.getIdTutor().equals(tutor.getIdTutor()));
+        if (!removido) {
             throw new IllegalStateException("Esse tutor não está vinculado a esse pet.");
         }
 
-        pet.getTutores().remove(tutor);
         return PetMapper.toDTO(petRepository.save(pet));
     }
 
