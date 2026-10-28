@@ -13,7 +13,7 @@
     <tbody>
     <tr th:each="c : ${consultas.content}">
         <td th:text="${c.id}">1</td>
-        <td th:text="${c.dataRealizacao}">2026-01-01T10:00</td>
+        <td th:text="${#temporals.format(c.dataRealizacao, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
         <td th:text="${c.diagnostico}">Diagnóstico</td>
         <td th:text="${c.tratamento}">Tratamento</td>
         <td th:text="${c.observacoes}">Observações</td>

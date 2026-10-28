@@ -9,15 +9,15 @@
 
 <table>
     <thead>
-    <tr><th>ID</th><th>Data/Hora</th><th>ID Pet</th><th>ID Veterinário</th><th>Status</th><th>Motivo</th><th>Ações</th></tr>
+    <tr><th>ID</th><th>Data/Hora</th><th>Pet</th><th>Veterinário</th><th>Status</th><th>Motivo</th><th>Ações</th></tr>
     </thead>
     <tbody>
     <tr th:each="ag : ${agendamentos.content}">
         <td th:text="${ag.id}">1</td>
-        <td th:text="${ag.dataHora}">2026-01-01T10:00</td>
-        <td th:text="${ag.idPet}">5</td>
-        <td th:text="${ag.idVeterinario}">2</td>
-        <td th:text="${ag.status}">AGENDADO</td>
+        <td th:text="${#temporals.format(ag.dataHora, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
+        <td th:text="${nomesPets[ag.idPet]}">Pet</td>
+        <td th:text="${nomesVeterinarios[ag.idVeterinario]}">Veterinário</td>
+        <td><span class="status" th:classappend="${'status-' + ag.status.name().toLowerCase()}" th:text="${ag.status}">AGENDADO</span></td>
         <td th:text="${ag.motivo}">Motivo</td>
         <td>
             <form th:if="${ag.status.name() == 'AGENDADO'}"

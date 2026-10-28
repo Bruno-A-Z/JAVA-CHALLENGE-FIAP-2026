@@ -42,5 +42,17 @@
     <button type="submit">Salvar</button>
     <a th:href="@{/web/tutor}">Cancelar</a>
 </form>
+
+<!-- Pets de que este tutor cuida -->
+<section class="bloco" th:if="${modoEdicao}">
+    <h2>Pets deste tutor</h2>
+    <ul th:if="${!petsDoTutor.isEmpty()}">
+        <li th:each="pet : ${petsDoTutor}">
+            <a th:href="@{/web/pet/{id}/editar(id=${pet.id})}" th:text="${pet.nome}">Pet</a>
+            <small th:text="${pet.especie}">Espécie</small>
+        </li>
+    </ul>
+    <p th:if="${petsDoTutor.isEmpty()}" class="vazio">Nenhum pet vinculado a este tutor.</p>
+</section>
 </body>
 </html>

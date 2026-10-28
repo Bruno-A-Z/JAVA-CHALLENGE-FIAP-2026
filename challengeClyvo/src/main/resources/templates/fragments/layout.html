@@ -4,19 +4,21 @@
     <meta charset="UTF-8">
     <title th:text="${titulo} + ' - Clyvo'">Clyvo</title>
     <link rel="stylesheet" th:href="@{/web/css/style.css}">
+    <script th:src="@{/web/js/app.js}" defer></script>
 </head>
 <body>
 <div th:fragment="menu">
     <nav>
-        <a th:href="@{/web/tutor}">Tutores</a>
-        <a th:href="@{/web/pet}">Pets</a>
-        <a th:href="@{/web/veterinario}">Veterinários</a>
+        <a th:if="${isAdmin}" th:href="@{/web/tutor}">Tutores</a>
+        <a th:if="${isAdmin}" th:href="@{/web/pet}">Pets</a>
+        <a th:if="${isAdmin}" th:href="@{/web/veterinario}">Veterinários</a>
         <a th:href="@{/web/agendamento}">Agendamentos</a>
         <a th:href="@{/web/consulta}">Consultas</a>
         <form method="post" th:action="@{/web/logout}" style="display:inline;">
             <button type="submit">Sair</button>
         </form>
     </nav>
+    <a th:href="@{/web}">Início</a>
 </div>
 </body>
 </html>

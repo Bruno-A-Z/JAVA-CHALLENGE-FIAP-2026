@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Erro')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: menu}"></div>
+
+<h1>Não foi possível concluir a operação</h1>
+<p style="color:red;" th:text="${mensagem}">Mensagem de erro</p>
+
+<div><a href="#" onclick="history.back(); return false;">&larr; Voltar</a></div>
+</body>
+</html>

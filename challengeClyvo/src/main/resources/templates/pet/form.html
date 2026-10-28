@@ -45,18 +45,36 @@
     </div>
 
     <button type="submit">Salvar</button>
-    <a th:href="@{/templates/web/pet}">Cancelar</a>
+    <a th:href="@{/web/pet}">Cancelar</a>
 </form>
 
-<!-- Vincular tutor: só faz sentido depois que o pet já existe -->
-<div th:if="${modoEdicao}">
-    <h2>Vincular Tutor</h2>
-    <form th:action="@{/web/pet/{idPet}/tutor/{idTutor}(idPet=${id}, idTutor=0)}" method="post"
-          onsubmit="this.action=this.action.replace('/0', '/' + document.getElementById('idTutorVincular').value); return true;">
-        <label for="idTutorVincular">ID do Tutor</label>
-        <input type="number" id="idTutorVincular" name="idTutorVincular">
+<!-- Tutores do pet: só faz sentido depois que o pet já existe -->
+<section class="bloco" th:if="${modoEdicao}">
+    <h2>Tutores deste pet</h2>
+
+    <ul th:if="${!tutoresVinculados.isEmpty()}">
+        <li th:each="tutor : ${tutoresVinculados}">
+            <span th:text="${tutor.nome}">Tutor</span>
+            <small th:text="'CPF ' + ${tutor.cpf}">CPF</small>
+            <form th:action="@{/web/pet/{idPet}/tutor/{idTutor}/remover(idPet=${id}, idTutor=${tutor.id})}"
+                  method="post" style="display:inline;">
+                <button type="submit" class="perigo" onclick="return confirm('Remover este tutor do pet?')">Remover</button>
+            </form>
+        </li>
+    </ul>
+    <p th:if="${tutoresVinculados.isEmpty()}" class="vazio">Nenhum tutor vinculado.</p>
+
+    <form th:if="${podeVincular}"
+          th:action="@{/web/pet/{idPet}/tutor(idPet=${id})}" method="post">
+        <label for="cpf">CPF do tutor</label>
+        <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" required>
         <button type="submit">Vincular</button>
     </form>
-</div>
+    <p th:if="${!podeVincular}" class="vazio"
+       th:text="'Limite de ' + ${limiteTutores} + ' tutores por pet atingido.'"></p>
+    <p th:if="${podeVincular and tutoresDisponiveis.isEmpty()}" class="vazio">
+        Não há outros tutores cadastrados. <a th:href="@{/web/tutor/novo}">Cadastrar tutor</a>
+    </p>
+</section>
 </body>
 </html>

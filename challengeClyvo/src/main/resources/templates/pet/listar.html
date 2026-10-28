@@ -14,20 +14,41 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="pet : ${pets.content}">
-        <td th:text="${pet.id}">1</td>
-        <td th:text="${pet.nome}">Nome</td>
-        <td th:text="${pet.especie}">Espécie</td>
-        <td th:text="${pet.raca}">Raça</td>
-        <td th:text="${pet.idade}">3</td>
-        <td th:text="${pet.peso}">10.0</td>
-        <td>
-            <a th:href="@{/web/pet/{id}/editar(id=${pet.id})}">Editar</a>
-            <form th:action="@{/web/pet/{id}/deletar(id=${pet.id})}" method="post" style="display:inline;">
-                <button type="submit" onclick="return confirm('Confirma exclusão?')">Excluir</button>
-            </form>
-        </td>
-    </tr>
+    <th:block th:each="pet : ${pets.content}">
+        <tr>
+            <td th:text="${pet.id}">1</td>
+            <td>
+                <a href="#" class="expansor" th:attr="data-alvo=${'detalhe-pet-' + pet.id}"
+                   title="Clique para ver os tutores" th:text="${pet.nome}">Nome</a>
+            </td>
+            <td th:text="${pet.especie}">Espécie</td>
+            <td th:text="${pet.raca}">Raça</td>
+            <td th:text="${pet.idade}">3</td>
+            <td th:text="${pet.peso}">10.0</td>
+            <td>
+                <a th:href="@{/web/pet/{id}/editar(id=${pet.id})}">Editar</a>
+                <form th:action="@{/web/pet/{id}/deletar(id=${pet.id})}" method="post" style="display:inline;">
+                    <button type="submit" onclick="return confirm('Confirma exclusão?')">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        <tr class="detalhe" hidden th:id="${'detalhe-pet-' + pet.id}">
+            <td colspan="7">
+                <strong>Tutores de <span th:text="${pet.nome}">Pet</span>:</strong>
+                <ul th:if="${!tutoresPorPet[pet.id].isEmpty()}">
+                    <li th:each="tutor : ${tutoresPorPet[pet.id]}">
+                        <span th:text="${tutor.nome}">Tutor</span>
+                        &middot; Tel: <span th:text="${tutor.tel}">11999999999</span>
+                        &middot; CPF: <span th:text="${tutor.cpf}">12345678900</span>
+                    </li>
+                </ul>
+                <p th:if="${tutoresPorPet[pet.id].isEmpty()}" class="vazio">
+                    Nenhum tutor vinculado.
+                    <a th:href="@{/web/pet/{id}/editar(id=${pet.id})}">Vincular tutor</a>
+                </p>
+            </td>
+        </tr>
+    </th:block>
     </tbody>
 </table>
 

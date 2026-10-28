@@ -20,20 +20,39 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="tutor : ${tutores.content}">
-        <td th:text="${tutor.id}">1</td>
-        <td th:text="${tutor.nome}">Nome</td>
-        <td th:text="${tutor.idade}">30</td>
-        <td th:text="${tutor.tel}">11999999999</td>
-        <td th:text="${tutor.cpf}">12345678900</td>
-        <td>
-            <a th:href="@{/web/tutor/{id}/editar(id=${tutor.id})}">Editar</a>
+    <th:block th:each="tutor : ${tutores.content}">
+        <tr>
+            <td th:text="${tutor.id}">1</td>
+            <td>
+                <a href="#" class="expansor" th:attr="data-alvo=${'detalhe-tutor-' + tutor.id}"
+                   title="Clique para ver os pets" th:text="${tutor.nome}">Nome</a>
+            </td>
+            <td th:text="${tutor.idade}">30</td>
+            <td th:text="${tutor.tel}">11999999999</td>
+            <td th:text="${tutor.cpf}">12345678900</td>
+            <td>
+                <a th:href="@{/web/tutor/{id}/editar(id=${tutor.id})}">Editar</a>
 
-            <form th:action="@{/web/tutor/{id}/deletar(id=${tutor.id})}" method="post" style="display:inline;">
-                <button type="submit" onclick="return confirm('Confirma exclusão?')">Excluir</button>
-            </form>
-        </td>
-    </tr>
+                <form th:action="@{/web/tutor/{id}/deletar(id=${tutor.id})}" method="post" style="display:inline;">
+                    <button type="submit" onclick="return confirm('Confirma exclusão?')">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        <tr class="detalhe" hidden th:id="${'detalhe-tutor-' + tutor.id}">
+            <td colspan="6">
+                <strong>Pets de <span th:text="${tutor.nome}">Tutor</span>:</strong>
+                <ul th:if="${!petsPorTutor[tutor.id].isEmpty()}">
+                    <li th:each="pet : ${petsPorTutor[tutor.id]}">
+                        <span th:text="${pet.nome}">Pet</span>
+                        &middot; <span th:text="${pet.especie}">Espécie</span>
+                        <span th:if="${pet.raca != null and !pet.raca.isEmpty()}" th:text="'(' + ${pet.raca} + ')'"></span>
+                        &middot; <span th:text="${pet.idade} + ' ano(s)'">3 ano(s)</span>
+                    </li>
+                </ul>
+                <p th:if="${petsPorTutor[tutor.id].isEmpty()}" class="vazio">Nenhum pet vinculado a este tutor.</p>
+            </td>
+        </tr>
+    </th:block>
     </tbody>
 </table>
 

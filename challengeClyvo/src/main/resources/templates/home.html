@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Início')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: menu}"></div>
+
+<h1>Bem-vindo à Clyvo</h1>
+
+<div class="cards">
+    <a class="card" th:if="${isAdmin}" th:href="@{/web/tutor}">
+        <span class="numero" th:text="${totalTutores}">0</span>
+        <span class="rotulo">Tutores</span>
+    </a>
+    <a class="card" th:if="${isAdmin}" th:href="@{/web/pet}">
+        <span class="numero" th:text="${totalPets}">0</span>
+        <span class="rotulo">Pets</span>
+    </a>
+    <a class="card" th:if="${isAdmin}" th:href="@{/web/veterinario}">
+        <span class="numero" th:text="${totalVeterinarios}">0</span>
+        <span class="rotulo">Veterinários</span>
+    </a>
+    <a class="card destaque" th:href="@{/web/agendamento}">
+        <span class="numero" th:text="${totalAgendados}">0</span>
+        <span class="rotulo">Consultas agendadas</span>
+    </a>
+</div>
+
+<h2 class="secao">Próximos agendamentos</h2>
+
+<table th:if="${!proximos.isEmpty()}">
+    <thead>
+    <tr><th>Data/Hora</th><th>Pet</th><th>Veterinário</th><th>Motivo</th><th>Ações</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="ag : ${proximos}">
+        <td th:text="${#temporals.format(ag.dataHora, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
+        <td th:text="${nomesPets[ag.idPet]}">Pet</td>
+        <td th:text="${nomesVeterinarios[ag.idVeterinario]}">Veterinário</td>
+        <td th:text="${ag.motivo}">Motivo</td>
+        <td><a th:href="@{/web/consulta/agendamento/{id}/realizar(id=${ag.id})}">Realizar Consulta</a></td>
+    </tr>
+    </tbody>
+</table>
+<p th:if="${proximos.isEmpty()}" class="vazio-home">
+    Nenhum agendamento pendente. <a th:href="@{/web/agendamento/novo}">Agendar consulta</a>
+</p>
+</body>
+</html>
