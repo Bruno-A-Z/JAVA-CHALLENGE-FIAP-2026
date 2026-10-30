@@ -19,4 +19,7 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
     Page<Agendamento> findByPetId(Long id, Pageable pageable);
     List<Agendamento> findByDataHoraBetween(LocalDateTime inicio, LocalDateTime fim);
     List<Agendamento> findByVeterinarioIdAndDataHora(long id, LocalDateTime dataHora);
+
+    //adicionado pois ignora agendamentos cancelados para que o vet ou admin possa criar um agendamento sem o conflito
+    boolean existsByVeterinarioIdAndDataHoraAndStatusNot(Long idVeterinario, LocalDateTime dataHora, StatusAgendamento status);
 }
