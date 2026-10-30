@@ -9,11 +9,11 @@ import br.com.fiap.challengeClyvo.exceptions.EntityNotFoundException;
 import br.com.fiap.challengeClyvo.mapper.ConsultaMapper;
 import br.com.fiap.challengeClyvo.repository.AgendamentoRepository;
 import br.com.fiap.challengeClyvo.repository.ConsultaRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Page;
 import java.time.LocalDateTime;
 
 @Service
@@ -26,6 +26,7 @@ public class ConsultaService {
     private AgendamentoRepository agendamentoRepository;
 
     // Realiza uma consulta a partir de um agendamento
+    @Transactional
     public ConsultaResponseDTO realizar(Long id, ConsultaRequestDTO dto) {
         Agendamento agendamento = agendamentoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado."));
