@@ -1,5 +1,6 @@
 package br.com.fiap.challengeClyvo.controllers;
 
+import br.com.fiap.challengeClyvo.assemblers.VeterinarioAssembler;
 import br.com.fiap.challengeClyvo.dto.request.VeterinarioRequestDTO;
 import br.com.fiap.challengeClyvo.dto.response.VeterinarioResponseDTO;
 import br.com.fiap.challengeClyvo.enums.UF;
@@ -8,14 +9,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "Veterinario", description = "Gerenciameno de Veterinarios")
 @RestController
@@ -25,6 +27,12 @@ public class VeterinarioController {
     @Autowired
     private VeterinarioService veterinarioService;
 
+    @Autowired
+    private VeterinarioAssembler veterinarioAssembler;
+
+    @Autowired
+    private PagedResourcesAssembler<VeterinarioResponseDTO> pagedAssembler;
+
     @Operation(summary = "Cadastra um Veterinario")
     @PostMapping
     public ResponseEntity<VeterinarioResponseDTO> salvar(@RequestBody @Valid VeterinarioRequestDTO veterinario) {
@@ -33,35 +41,35 @@ public class VeterinarioController {
 
     @Operation(summary = "Lista Todos os Veterinários")
     @GetMapping
-    public ResponseEntity<Page<VeterinarioResponseDTO>> buscarTodos(
+    public ResponseEntity<PagedModel<EntityModel<VeterinarioResponseDTO>>> buscarTodos(
             @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
-        return ResponseEntity.ok(veterinarioService.buscarTodos(pageable));
+        return ResponseEntity.ok(pagedAssembler.toModel(veterinarioService.buscarTodos(pageable), veterinarioAssembler));
     }
 
     @Operation(summary = "Busca Veterinário pelo ID")
     @GetMapping("/{id}")
-    public ResponseEntity<VeterinarioResponseDTO> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(veterinarioService.buscarPorId(id));
+    public ResponseEntity<EntityModel<VeterinarioResponseDTO>> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(veterinarioAssembler.toModel(veterinarioService.buscarPorId(id)));
     }
 
     @Operation(summary = "Busca Veterinário pelo Numero do CRMV")
     @GetMapping("/crmv/{numeroDeInscricao}")
-    public ResponseEntity<VeterinarioResponseDTO> buscarPorCrmv(@PathVariable int numeroDeInscricao) {
-        return ResponseEntity.ok(veterinarioService.buscarPorCrmv(numeroDeInscricao));
+    public ResponseEntity<EntityModel<VeterinarioResponseDTO>> buscarPorCrmv(@PathVariable int numeroDeInscricao) {
+        return ResponseEntity.ok(veterinarioAssembler.toModel(veterinarioService.buscarPorCrmv(numeroDeInscricao)));
     }
 
     @Operation(summary = "Busca Veterinário pela area")
     @GetMapping("/area/{area}")
-    public ResponseEntity<Page<VeterinarioResponseDTO>> buscarPorArea(
+    public ResponseEntity<PagedModel<EntityModel<VeterinarioResponseDTO>>> buscarPorArea(
             @PathVariable String area,
             @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
-        return ResponseEntity.ok(veterinarioService.buscarPorArea(area, pageable));
+        return ResponseEntity.ok(pagedAssembler.toModel(veterinarioService.buscarPorArea(area, pageable), veterinarioAssembler));
     }
 
     @Operation(summary = "Busca Veterinário pela UF do CRMV")
     @GetMapping("/uf/{uf}")
-    public ResponseEntity<List<VeterinarioResponseDTO>> buscarPorUf(@PathVariable UF uf) {
-        return ResponseEntity.ok(veterinarioService.buscarPorUf(uf));
+    public ResponseEntity<CollectionModel<EntityModel<VeterinarioResponseDTO>>> buscarPorUf(@PathVariable UF uf) {
+        return ResponseEntity.ok(veterinarioAssembler.toCollectionModel(veterinarioService.buscarPorUf(uf)));
     }
 
     @Operation(summary = "Atualiza Veterinário pelo ID")
