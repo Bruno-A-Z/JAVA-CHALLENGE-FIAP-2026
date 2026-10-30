@@ -4,45 +4,77 @@
 <body>
 <div th:replace="~{fragments/layout :: menu}"></div>
 
-<h1>Bem-vindo à Clyvo</h1>
+<main class="home">
 
-<div class="cards">
-    <a class="card" th:if="${isAdmin}" th:href="@{/web/tutor}">
-        <span class="numero" th:text="${totalTutores}">0</span>
-        <span class="rotulo">Tutores</span>
-    </a>
-    <a class="card" th:if="${isAdmin}" th:href="@{/web/pet}">
-        <span class="numero" th:text="${totalPets}">0</span>
-        <span class="rotulo">Pets</span>
-    </a>
-    <a class="card" th:if="${isAdmin}" th:href="@{/web/veterinario}">
-        <span class="numero" th:text="${totalVeterinarios}">0</span>
-        <span class="rotulo">Veterinários</span>
-    </a>
-    <a class="card destaque" th:href="@{/web/agendamento}">
-        <span class="numero" th:text="${totalAgendados}">0</span>
-        <span class="rotulo">Consultas agendadas</span>
-    </a>
-</div>
+    <header class="home-topo">
+        <div>
+            <h1>Bem-vindo à Clyvo</h1>
+            <p class="home-sub">Resumo da clínica e próximos atendimentos.</p>
+        </div>
+        <a class="btn-primario" th:href="@{/web/agendamento/novo}">+ Novo agendamento</a>
+    </header>
 
-<h2 class="secao">Próximos agendamentos</h2>
+    <section class="home-cards" aria-label="Resumo da clínica">
+        <a class="card-stat" th:if="${isAdmin}" th:href="@{/web/tutor}">
+            <span class="icone">👤</span>
+            <span class="numero" th:text="${totalTutores}">0</span>
+            <span class="rotulo">Tutores</span>
+        </a>
+        <a class="card-stat" th:if="${isAdmin}" th:href="@{/web/pet}">
+            <span class="icone">🐾</span>
+            <span class="numero" th:text="${totalPets}">0</span>
+            <span class="rotulo">Pets</span>
+        </a>
+        <a class="card-stat" th:if="${isAdmin}" th:href="@{/web/veterinario}">
+            <span class="icone">🩺</span>
+            <span class="numero" th:text="${totalVeterinarios}">0</span>
+            <span class="rotulo">Veterinários</span>
+        </a>
+        <a class="card-stat" th:href="@{/web/agendamento}">
+            <span class="icone">📅</span>
+            <span class="numero" th:text="${totalAgendados}">0</span>
+            <span class="rotulo">Consultas agendadas</span>
+        </a>
+    </section>
 
-<table th:if="${!proximos.isEmpty()}">
-    <thead>
-    <tr><th>Data/Hora</th><th>Pet</th><th>Veterinário</th><th>Motivo</th><th>Ações</th></tr>
-    </thead>
-    <tbody>
-    <tr th:each="ag : ${proximos}">
-        <td th:text="${#temporals.format(ag.dataHora, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
-        <td th:text="${nomesPets[ag.idPet]}">Pet</td>
-        <td th:text="${nomesVeterinarios[ag.idVeterinario]}">Veterinário</td>
-        <td th:text="${ag.motivo}">Motivo</td>
-        <td><a th:href="@{/web/consulta/agendamento/{id}/realizar(id=${ag.id})}">Realizar Consulta</a></td>
-    </tr>
-    </tbody>
-</table>
-<p th:if="${proximos.isEmpty()}" class="vazio-home">
-    Nenhum agendamento pendente. <a th:href="@{/web/agendamento/novo}">Agendar consulta</a>
-</p>
+    <section>
+        <div class="home-secao-topo">
+            <h2>Próximos agendamentos</h2>
+            <a class="link-discreto" th:href="@{/web/agendamento}">Ver todos &rarr;</a>
+        </div>
+
+        <div class="tabela-card" th:if="${!proximos.isEmpty()}">
+            <table>
+                <thead>
+                <tr>
+                    <th>Data/Hora</th>
+                    <th>Pet</th>
+                    <th>Veterinário</th>
+                    <th>Motivo</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="ag : ${proximos}">
+                    <td th:text="${#temporals.format(ag.dataHora, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
+                    <td th:text="${nomesPets[ag.idPet]}">Pet</td>
+                    <td th:text="${nomesVeterinarios[ag.idVeterinario]}">Veterinário</td>
+                    <td th:text="${ag.motivo}">Motivo</td>
+                    <td>
+                        <a class="btn-secundario"
+                           th:href="@{/web/consulta/agendamento/{id}/realizar(id=${ag.id})}">Realizar consulta</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tabela-card vazio-home" th:if="${proximos.isEmpty()}">
+            <p>Nenhum agendamento pendente.</p>
+            <a class="btn-primario" th:href="@{/web/agendamento/novo}">Agendar agora</a>
+        </div>
+    </section>
+
+</main>
 </body>
 </html>

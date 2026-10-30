@@ -9,6 +9,7 @@
 <body>
 <div th:fragment="menu">
     <nav>
+        <a th:href="@{/web}">Início</a>
         <a th:if="${isAdmin}" th:href="@{/web/tutor}">Tutores</a>
         <a th:if="${isAdmin}" th:href="@{/web/pet}">Pets</a>
         <a th:if="${isAdmin}" th:href="@{/web/veterinario}">Veterinários</a>
@@ -18,7 +19,6 @@
             <button type="submit">Sair</button>
         </form>
     </nav>
-    <a th:href="@{/web}">Início</a>
 </div>
 </body>
 </html>
