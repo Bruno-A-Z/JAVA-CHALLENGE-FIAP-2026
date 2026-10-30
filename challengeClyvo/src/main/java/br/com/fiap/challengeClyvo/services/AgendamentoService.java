@@ -38,11 +38,9 @@ public class AgendamentoService {
         Veterinario vet = veterinarioRepository.findById(dto.getIdVeterinario())
                 .orElseThrow(() -> new EntityNotFoundException("Veterinário não encontrado."));
 
-        // Verifica se o vet já tem agendamento no mesmo horário
-        List<Agendamento> conflitoHorario = agendamentoRepository
-                .findByVeterinarioIdAndDataHora(vet.getId(), dto.getDataHora());
-
-        if (!conflitoHorario.isEmpty()) {
+        // Verifica se o vet já tem agendamento ativo (ignora os com status CANCELADO) no mesmo horário
+        if (agendamentoRepository.existsByVeterinarioIdAndDataHoraAndStatusNot(
+                vet.getId(), dto.getDataHora(), StatusAgendamento.CANCELADO)) {
             throw new IllegalStateException("Veterinário já possui agendamento nesse horário.");
         }
 
