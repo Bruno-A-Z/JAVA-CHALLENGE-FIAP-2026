@@ -23,7 +23,7 @@ O sistema permite cadastrar tutores, pets e veterinários, realizar agendamentos
 | Java       |   17   |
 | Spring Boot | 4.0.6 |
 | Spring Data JPA | 3.x |
-| Oracle Database | 19c |
+| Azure SQL / SQL Server | 2022 |
 | Hibernate | 6.x |
 | SpringDoc OpenAPI (Swagger) | 2.8.8 |
 | Bean Validation | 3.x |
@@ -36,7 +36,7 @@ O sistema permite cadastrar tutores, pets e veterinários, realizar agendamentos
 O projeto segue a arquitetura em camadas:
 
 ```
-Controller → Service → Repository → Database (Oracle)
+Controller → Service → Repository → Database (Azure SQL / SQL Server)
 ```
 
 ```
@@ -217,17 +217,29 @@ erDiagram
 
 - Java 17+
 - Maven 3.x
-- Acesso ao banco Oracle (FIAP) - Mas pode mudar de acordo com sua preferencia no arquivo applicaion.properties
+- Um banco SQL Server (local via `docker compose` ou Azure SQL Database)
 
 ### Configuração
 
-As credenciais do banco já estão configuradas em `src/main/resources/application.properties`:
+Nenhuma credencial fica no código. O `application.properties` lê tudo de variáveis de ambiente:
 
-```properties
-spring.datasource.url=jdbc:oracle:thin:@oracle.fiap.com.br:1521:ORCL
-spring.datasource.username=SEU_RM
-spring.datasource.password=SUA_SENHA
+| Variável | Obrigatória | Descrição |
+|----------|-------------|-----------|
+| `SPRING_DATASOURCE_URL` | Sim | URL JDBC do SQL Server |
+| `SPRING_DATASOURCE_USERNAME` | Sim | Usuário do banco |
+| `SPRING_DATASOURCE_PASSWORD` | Sim | Senha do banco |
+| `JWT_SECRET` | Não | Chave de assinatura do JWT (mínimo 32 caracteres). Tem valor padrão; em produção, defina a sua |
+| `JWT_EXPIRATION_MS` | Não | Expiração do token (padrão 3600000) |
+| `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Não | Login do admin (padrão `admin` / `admin123`) |
+| `VET_USERNAME` / `VET_PASSWORD` | Não | Login do veterinário (padrão `veterinario` / `vet123`) |
+
+Exemplo da URL de conexão (Azure SQL):
+
 ```
+jdbc:sqlserver://<SERVIDOR>.database.windows.net:1433;database=<BANCO>;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+```
+
+As tabelas são criadas automaticamente pelo Hibernate (`ddl-auto=update`). O arquivo `challengeClyvo/script.sql` é apenas uma referência do schema.
 
 ### Executando
 
@@ -243,6 +255,23 @@ cd challengeClyvo
 ```
 
 A API estará disponível em: `http://localhost:8080` e `https://java-challenge-fiap-2026.onrender.com/web/login`
+
+---
+
+## ☁️ Deploy na Azure (GitHub Actions)
+
+O workflow `.github/workflows/master_webapp-clyvo-care.yml` compila o projeto e publica o JAR no Azure Web App a cada push na `master`.
+
+Cadastre em **Settings → Secrets and variables → Actions → New repository secret**:
+
+| Secret | Valor |
+|--------|-------|
+| `SPRING_DATASOURCE_URL` | URL JDBC do Azure SQL |
+| `SPRING_DATASOURCE_USERNAME` | Usuário do banco |
+| `SPRING_DATASOURCE_PASSWORD` | Senha do banco |
+| `AzureAppService_PublishProfile_...` | Criado automaticamente pelo `az webapp deployment github-actions add` ou pelo Deployment Center |
+
+> **Importante:** os GitHub Secrets são usados no *build/teste* do pipeline. Para a aplicação **rodando** no Azure, configure as mesmas variáveis (`SPRING_DATASOURCE_*` e, idealmente, `JWT_SECRET`, `ADMIN_PASSWORD` e `VET_PASSWORD`) em **Web App → Settings → Environment variables**.
 
 ---
 
@@ -336,7 +365,7 @@ docs/
 
 ## ✅ Requisitos Atendidos
 
-- [x] Persistência de dados com Oracle
+- [x] Persistência de dados com Azure SQL Database (SQL Server)
 - [x] Relacionamentos JPA (`@ManyToMany`, `@ManyToOne`, `@OneToOne`, `@Embeddable`)
 - [x] Bean Validation (`@NotNull`, `@NotBlank`, `@Future`, `@Positive`, etc.)
 - [x] Paginação e ordenação de resultados
