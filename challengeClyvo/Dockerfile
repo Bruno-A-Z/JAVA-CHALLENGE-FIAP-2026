@@ -19,8 +19,8 @@ RUN adduser --disabled-password --gecos "" appuser
 USER appuser
 
 # Copia o jar gerado na etapa de build
-COPY --from=build /app/target/challengeClyvo-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/challengeClyvo-0.0.1-SNAPSHOT.war app.war
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.war"]

@@ -38,4 +38,4 @@ jobs:
         app-name: 'webapp-clyvo-care'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_72174a094fff48cb82ccd3935aff0284 }}
-        package: '${{ github.workspace }}/challengeClyvo/target/*.jar'
+        package: '${{ github.workspace }}/challengeClyvo/target/*.war'

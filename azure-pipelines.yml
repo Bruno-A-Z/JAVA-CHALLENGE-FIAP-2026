@@ -39,4 +39,4 @@ steps:
       azureSubscription: $(azureServiceConnection)
       appType: 'webAppLinux'
       appName: $(webAppName)
-      package: '$(System.DefaultWorkingDirectory)/$(workingDir)/target/*.jar'
+      package: '$(System.DefaultWorkingDirectory)/$(workingDir)/target/*.war'
