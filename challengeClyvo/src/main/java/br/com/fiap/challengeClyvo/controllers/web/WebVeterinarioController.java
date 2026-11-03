@@ -2,16 +2,25 @@ package br.com.fiap.challengeClyvo.controllers.web;
 
 import br.com.fiap.challengeClyvo.dto.CrmvDTO;
 import br.com.fiap.challengeClyvo.dto.request.VeterinarioRequestDTO;
+import br.com.fiap.challengeClyvo.dto.response.AgendamentoResponseDTO;
+import br.com.fiap.challengeClyvo.dto.response.VeterinarioResponseDTO;
 import br.com.fiap.challengeClyvo.enums.UF;
+import br.com.fiap.challengeClyvo.services.AgendamentoService;
 import br.com.fiap.challengeClyvo.services.VeterinarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/web/veterinario")
@@ -20,10 +29,28 @@ public class WebVeterinarioController {
     @Autowired
     private VeterinarioService veterinarioService;
 
+    @Autowired
+    private AgendamentoService agendamentoService;
+
+    @Autowired
+    private WebNomeResolver nomeResolver;
+
     @GetMapping
     public String listar(Model model, @RequestParam(defaultValue = "0") int pagina) {
         Pageable pageable = PageRequest.of(pagina, 10);
-        model.addAttribute("veterinarios", veterinarioService.buscarTodos(pageable));
+        Page<VeterinarioResponseDTO> veterinarios = veterinarioService.buscarTodos(pageable);
+
+        // Ultimos agendamentos de cada veterinario da pagina (aparecem ao clicar na linha)
+        Map<Long, List<AgendamentoResponseDTO>> agendamentosPorVet = new HashMap<>();
+        veterinarios.getContent().forEach(v -> agendamentosPorVet.put(v.getId(),
+                agendamentoService.buscarPorVeterinario(v.getId(),
+                        PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "dataHora"))).getContent()));
+
+        List<AgendamentoResponseDTO> todos = agendamentosPorVet.values().stream().flatMap(List::stream).toList();
+
+        model.addAttribute("veterinarios", veterinarios);
+        model.addAttribute("agendamentosPorVet", agendamentosPorVet);
+        model.addAttribute("nomesPets", nomeResolver.nomesDosPets(todos));
         return "veterinario/listar";
     }
 

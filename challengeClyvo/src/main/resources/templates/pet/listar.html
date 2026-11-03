@@ -1,59 +1,107 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Pets')}"></head>
-<body>
+<body class="app">
 <div th:replace="~{fragments/layout :: menu}"></div>
 
-<h1>Pets</h1>
-<a th:href="@{/web/pet/novo}">+ Novo Pet</a>
+<main class="conteudo">
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th><th>Nome</th><th>Espécie</th><th>Raça</th><th>Idade</th><th>Peso</th><th>Ações</th>
-    </tr>
-    </thead>
-    <tbody>
-    <th:block th:each="pet : ${pets.content}">
-        <tr>
-            <td th:text="${pet.id}">1</td>
-            <td>
-                <a href="#" class="expansor" th:attr="data-alvo=${'detalhe-pet-' + pet.id}"
-                   title="Clique para ver os tutores" th:text="${pet.nome}">Nome</a>
-            </td>
-            <td th:text="${pet.especie}">Espécie</td>
-            <td th:text="${pet.raca}">Raça</td>
-            <td th:text="${pet.idade}">3</td>
-            <td th:text="${pet.peso}">10.0</td>
-            <td>
-                <a th:href="@{/web/pet/{id}/editar(id=${pet.id})}">Editar</a>
-                <form th:action="@{/web/pet/{id}/deletar(id=${pet.id})}" method="post" style="display:inline;">
-                    <button type="submit" onclick="return confirm('Confirma exclusão?')">Excluir</button>
-                </form>
-            </td>
-        </tr>
-        <tr class="detalhe" hidden th:id="${'detalhe-pet-' + pet.id}">
-            <td colspan="7">
-                <strong>Tutores de <span th:text="${pet.nome}">Pet</span>:</strong>
-                <ul th:if="${!tutoresPorPet[pet.id].isEmpty()}">
-                    <li th:each="tutor : ${tutoresPorPet[pet.id]}">
-                        <span th:text="${tutor.nome}">Tutor</span>
-                        &middot; Tel: <span th:text="${tutor.tel}">11999999999</span>
-                        &middot; CPF: <span th:text="${tutor.cpf}">12345678900</span>
-                    </li>
-                </ul>
-                <p th:if="${tutoresPorPet[pet.id].isEmpty()}" class="vazio">
-                    Nenhum tutor vinculado.
-                    <a th:href="@{/web/pet/{id}/editar(id=${pet.id})}">Vincular tutor</a>
-                </p>
-            </td>
-        </tr>
-    </th:block>
-    </tbody>
-</table>
+    <header class="cabecalho">
+        <div>
+            <h1>Pets</h1>
+            <p>Clique no nome para ver os tutores e os últimos agendamentos de cada pet.</p>
+        </div>
+        <a class="btn btn-primario" th:href="@{/web/pet/novo}">Novo pet</a>
+    </header>
 
-<div th:if="${!pets.first}"><a th:href="@{/web/pet(pagina=${pets.number - 1})}">Anterior</a></div>
-<span th:text="'Página ' + (${pets.number} + 1) + ' de ' + ${pets.totalPages}"></span>
-<div th:if="${!pets.last}"><a th:href="@{/web/pet(pagina=${pets.number + 1})}">Próxima</a></div>
+    <div class="vazio-bloco" th:if="${pets.content.isEmpty()}">
+        <p>Nenhum pet cadastrado.</p>
+        <span class="dica">Depois de cadastrar o pet, vincule o tutor na tela de edição.</span>
+        <a class="btn btn-primario" th:href="@{/web/pet/novo}">Cadastrar pet</a>
+    </div>
+
+    <div class="tabela-card" th:if="${!pets.content.isEmpty()}">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Espécie</th>
+                <th>Raça</th>
+                <th>Idade</th>
+                <th>Peso</th>
+                <th>Tutores</th>
+                <th class="acoes-col">Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="pet : ${pets.content}">
+                <tr>
+                    <td class="id" th:text="${pet.id}">1</td>
+                    <td>
+                        <a href="#" class="expansor" th:attr="data-alvo=${'detalhe-pet-' + pet.id}"
+                           aria-expanded="false" th:text="${pet.nome}">Nome</a>
+                    </td>
+                    <td th:text="${pet.especie}">Espécie</td>
+                    <td th:text="${pet.raca}">Raça</td>
+                    <td th:text="${pet.idade}">3</td>
+                    <td th:text="${pet.peso != null} ? ${pet.peso} + ' kg' : ''">10.0 kg</td>
+                    <td>
+                        <span th:each="tutor, st : ${tutoresPorPet[pet.id]}"
+                              th:text="${tutor.nome} + (${st.last} ? '' : ', ')">Tutor</span>
+                        <span class="sem-dado" th:if="${tutoresPorPet[pet.id].isEmpty()}">Sem tutor</span>
+                    </td>
+                    <td>
+                        <div class="acoes">
+                            <a class="btn btn-secundario btn-pequeno"
+                               th:href="@{/web/pet/{id}/editar(id=${pet.id})}">Editar</a>
+                            <form th:action="@{/web/pet/{id}/deletar(id=${pet.id})}" method="post">
+                                <button type="submit" class="btn btn-perigo btn-pequeno"
+                                        onclick="return confirm('Confirma exclusão?')">Excluir</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="detalhe" hidden th:id="${'detalhe-pet-' + pet.id}">
+                    <td colspan="8">
+                        <div class="detalhe-grade">
+                            <div>
+                                <h3>Tutores de <span th:text="${pet.nome}">Pet</span></h3>
+                                <ul th:if="${!tutoresPorPet[pet.id].isEmpty()}">
+                                    <li th:each="tutor : ${tutoresPorPet[pet.id]}">
+                                        <span th:text="${tutor.nome}">Tutor</span>
+                                        <small th:text="'Tel: ' + ${tutor.tel}">Tel: 11999999999</small>
+                                        <small th:text="'CPF: ' + ${tutor.cpf}">CPF: 12345678900</small>
+                                    </li>
+                                </ul>
+                                <p th:if="${tutoresPorPet[pet.id].isEmpty()}" class="vazio">
+                                    Nenhum tutor vinculado.
+                                    <a th:href="@{/web/pet/{id}/editar(id=${pet.id})}">Vincular tutor</a>
+                                </p>
+                            </div>
+
+                            <div>
+                                <h3>Últimos agendamentos</h3>
+                                <ul th:if="${!agendamentosPorPet[pet.id].isEmpty()}">
+                                    <li th:each="ag : ${agendamentosPorPet[pet.id]}">
+                                        <span th:text="${#temporals.format(ag.dataHora, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</span>
+                                        <small th:text="'Vet: ' + ${nomesVeterinarios[ag.idVeterinario]}">Vet: Dra. Ana</small>
+                                        <span class="status" th:classappend="${'status-' + ag.status.name().toLowerCase()}"
+                                              th:text="${#strings.capitalize(#strings.toLowerCase(ag.status.name()))}">Agendado</span>
+                                    </li>
+                                </ul>
+                                <p th:if="${agendamentosPorPet[pet.id].isEmpty()}" class="vazio">Nenhum agendamento para este pet.</p>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="~{fragments/layout :: paginacao(${pets}, '/web/pet')}"></div>
+
+</main>
 </body>
 </html>

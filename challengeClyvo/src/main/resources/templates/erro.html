@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Erro')}"></head>
-<body>
+<body class="app">
 <div th:replace="~{fragments/layout :: menu}"></div>
 
-<h1>Não foi possível concluir a operação</h1>
-<p style="color:red;" th:text="${mensagem}">Mensagem de erro</p>
-
-<div><a href="#" onclick="history.back(); return false;">&larr; Voltar</a></div>
+<main class="conteudo pagina-erro">
+    <h1>Não foi possível concluir a operação</h1>
+    <p class="aviso aviso-erro" role="alert" th:text="${mensagem}">Mensagem de erro</p>
+    <a class="btn btn-secundario" href="#" onclick="history.back(); return false;">Voltar e corrigir</a>
+</main>
 </body>
 </html>

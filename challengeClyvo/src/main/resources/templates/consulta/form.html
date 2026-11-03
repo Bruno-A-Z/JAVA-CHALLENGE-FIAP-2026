@@ -1,31 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Realizar Consulta')}"></head>
-<body>
+<body class="app">
 <div th:replace="~{fragments/layout :: menu}"></div>
 
-<h1>Realizar Consulta — Agendamento #<span th:text="${idAgendamento}"></span></h1>
+<main class="conteudo">
 
-<form th:action="@{/web/consulta/agendamento/{id}(id=${idAgendamento})}" th:object="${consulta}" method="post">
+    <a class="link-voltar" th:href="@{/web/agendamento}">Voltar para agendamentos</a>
+    <header class="cabecalho">
+        <div>
+            <h1>Realizar consulta</h1>
+            <p>Registro do agendamento nº <span th:text="${idAgendamento}">1</span>.</p>
+        </div>
+    </header>
 
-    <div>
-        <label for="diagnostico">Diagnóstico</label>
-        <textarea id="diagnostico" th:field="*{diagnostico}"></textarea>
-        <span th:if="${#fields.hasErrors('diagnostico')}" th:errors="*{diagnostico}" style="color:red;"></span>
-    </div>
+    <form class="form-card" th:action="@{/web/consulta/agendamento/{id}(id=${idAgendamento})}"
+          th:object="${consulta}" method="post">
 
-    <div>
-        <label for="tratamento">Tratamento</label>
-        <textarea id="tratamento" th:field="*{tratamento}"></textarea>
-    </div>
+        <div class="form-grade">
+            <div class="campo largo">
+                <label for="diagnostico">Diagnóstico</label>
+                <textarea id="diagnostico" th:field="*{diagnostico}"
+                          th:classappend="${#fields.hasErrors('diagnostico')} ? 'invalido'"></textarea>
+                <span class="erro-campo" th:if="${#fields.hasErrors('diagnostico')}" th:errors="*{diagnostico}"></span>
+            </div>
 
-    <div>
-        <label for="observacoes">Observações</label>
-        <textarea id="observacoes" th:field="*{observacoes}"></textarea>
-    </div>
+            <div class="campo largo">
+                <label for="tratamento">Tratamento</label>
+                <textarea id="tratamento" th:field="*{tratamento}"></textarea>
+            </div>
 
-    <button type="submit">Salvar Consulta</button>
-    <a th:href="@{/web/agendamento}">Cancelar</a>
-</form>
+            <div class="campo largo">
+                <label for="observacoes">Observações</label>
+                <textarea id="observacoes" th:field="*{observacoes}"></textarea>
+            </div>
+        </div>
+
+        <div class="form-acoes">
+            <button type="submit" class="btn btn-primario">Salvar consulta</button>
+            <a class="btn btn-secundario" th:href="@{/web/agendamento}">Cancelar</a>
+        </div>
+    </form>
+
+</main>
 </body>
 </html>

@@ -1,68 +1,82 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Tutores')}"></head>
-<body>
+<body class="app">
 <div th:replace="~{fragments/layout :: menu}"></div>
 
-<h1>Tutores</h1>
+<main class="conteudo">
 
-<a th:href="@{/web/tutor/novo}">+ Novo Tutor</a>
+    <header class="cabecalho">
+        <div>
+            <h1>Tutores</h1>
+            <p>Clique no nome para ver os pets de cada tutor.</p>
+        </div>
+        <a class="btn btn-primario" th:href="@{/web/tutor/novo}">Novo tutor</a>
+    </header>
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Idade</th>
-        <th>Telefone</th>
-        <th>CPF</th>
-        <th>Ações</th>
-    </tr>
-    </thead>
-    <tbody>
-    <th:block th:each="tutor : ${tutores.content}">
-        <tr>
-            <td th:text="${tutor.id}">1</td>
-            <td>
-                <a href="#" class="expansor" th:attr="data-alvo=${'detalhe-tutor-' + tutor.id}"
-                   title="Clique para ver os pets" th:text="${tutor.nome}">Nome</a>
-            </td>
-            <td th:text="${tutor.idade}">30</td>
-            <td th:text="${tutor.tel}">11999999999</td>
-            <td th:text="${tutor.cpf}">12345678900</td>
-            <td>
-                <a th:href="@{/web/tutor/{id}/editar(id=${tutor.id})}">Editar</a>
+    <div class="vazio-bloco" th:if="${tutores.content.isEmpty()}">
+        <p>Nenhum tutor cadastrado.</p>
+        <span class="dica">Cadastre o tutor primeiro para depois vincular os pets a ele.</span>
+        <a class="btn btn-primario" th:href="@{/web/tutor/novo}">Cadastrar tutor</a>
+    </div>
 
-                <form th:action="@{/web/tutor/{id}/deletar(id=${tutor.id})}" method="post" style="display:inline;">
-                    <button type="submit" onclick="return confirm('Confirma exclusão?')">Excluir</button>
-                </form>
-            </td>
-        </tr>
-        <tr class="detalhe" hidden th:id="${'detalhe-tutor-' + tutor.id}">
-            <td colspan="6">
-                <strong>Pets de <span th:text="${tutor.nome}">Tutor</span>:</strong>
-                <ul th:if="${!petsPorTutor[tutor.id].isEmpty()}">
-                    <li th:each="pet : ${petsPorTutor[tutor.id]}">
-                        <span th:text="${pet.nome}">Pet</span>
-                        &middot; <span th:text="${pet.especie}">Espécie</span>
-                        <span th:if="${pet.raca != null and !pet.raca.isEmpty()}" th:text="'(' + ${pet.raca} + ')'"></span>
-                        &middot; <span th:text="${pet.idade} + ' ano(s)'">3 ano(s)</span>
-                    </li>
-                </ul>
-                <p th:if="${petsPorTutor[tutor.id].isEmpty()}" class="vazio">Nenhum pet vinculado a este tutor.</p>
-            </td>
-        </tr>
-    </th:block>
-    </tbody>
-</table>
+    <div class="tabela-card" th:if="${!tutores.content.isEmpty()}">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Idade</th>
+                <th>Telefone</th>
+                <th>CPF</th>
+                <th>Pets</th>
+                <th class="acoes-col">Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="tutor : ${tutores.content}">
+                <tr>
+                    <td class="id" th:text="${tutor.id}">1</td>
+                    <td>
+                        <a href="#" class="expansor" th:attr="data-alvo=${'detalhe-tutor-' + tutor.id}"
+                           aria-expanded="false" th:text="${tutor.nome}">Nome</a>
+                    </td>
+                    <td th:text="${tutor.idade}">30</td>
+                    <td th:text="${tutor.tel}">11999999999</td>
+                    <td th:text="${tutor.cpf}">12345678900</td>
+                    <td th:text="${petsPorTutor[tutor.id].size()}">2</td>
+                    <td>
+                        <div class="acoes">
+                            <a class="btn btn-secundario btn-pequeno"
+                               th:href="@{/web/tutor/{id}/editar(id=${tutor.id})}">Editar</a>
+                            <form th:action="@{/web/tutor/{id}/deletar(id=${tutor.id})}" method="post">
+                                <button type="submit" class="btn btn-perigo btn-pequeno"
+                                        onclick="return confirm('Confirma exclusão?')">Excluir</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="detalhe" hidden th:id="${'detalhe-tutor-' + tutor.id}">
+                    <td colspan="7">
+                        <h3>Pets de <span th:text="${tutor.nome}">Tutor</span></h3>
+                        <ul th:if="${!petsPorTutor[tutor.id].isEmpty()}">
+                            <li th:each="pet : ${petsPorTutor[tutor.id]}">
+                                <a th:href="@{/web/pet/{id}/editar(id=${pet.id})}" th:text="${pet.nome}">Pet</a>
+                                <span th:text="${pet.especie}">Espécie</span>
+                                <span th:if="${pet.raca != null and !pet.raca.isEmpty()}" th:text="${pet.raca}">Raça</span>
+                                <span th:text="${pet.idade} + ' ano(s)'">3 ano(s)</span>
+                            </li>
+                        </ul>
+                        <p th:if="${petsPorTutor[tutor.id].isEmpty()}" class="vazio">Nenhum pet vinculado a este tutor.</p>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
 
-<!-- paginação simples -->
-<div th:if="${!tutores.first}">
-    <a th:href="@{/web/tutor(pagina=${tutores.number - 1})}">Anterior</a>
-</div>
-<span th:text="'Página ' + (${tutores.number} + 1) + ' de ' + ${tutores.totalPages}"></span>
-<div th:if="${!tutores.last}">
-    <a th:href="@{/web/tutor(pagina=${tutores.number + 1})}">Próxima</a>
-</div>
+    <div th:replace="~{fragments/layout :: paginacao(${tutores}, '/web/tutor')}"></div>
+
+</main>
 </body>
 </html>
