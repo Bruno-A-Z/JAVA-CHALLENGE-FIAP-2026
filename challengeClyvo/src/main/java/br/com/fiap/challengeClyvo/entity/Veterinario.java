@@ -7,7 +7,8 @@ import jakarta.validation.constraints.Size;
 
 
 @Entity
-@Table(name = "TB_VET")
+@Table(name = "TB_VET", uniqueConstraints = @UniqueConstraint(
+        name = "UQ_VET_CRMV", columnNames = {"CRMV_UF", "CRMV_NUMINSCRICAO"}))
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, ignoreUnknown = true)
 public class Veterinario {
 
@@ -28,7 +29,7 @@ public class Veterinario {
     private String area;
 
     // Inicio da Identidade/CRMV | Procurando por maneira de deixar com uma formatacao melhor
-    // Colunas CRMV_* vêm do @Embeddable Crmv; a unicidade (UF + nº) está na migration (UQ_VET_CRMV)
+    // Colunas CRMV_* vêm do @Embeddable Crmv; a unicidade (UF + nº) é garantida pela UQ_VET_CRMV no @Table
     @Embedded
     private Crmv crmv;
 
