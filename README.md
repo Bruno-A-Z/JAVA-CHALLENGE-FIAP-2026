@@ -228,7 +228,7 @@ Nenhuma credencial fica no código. O `application.properties` lê tudo de vari�
 | `SPRING_DATASOURCE_URL` | Sim | URL JDBC do SQL Server |
 | `SPRING_DATASOURCE_USERNAME` | Sim | Usuário do banco |
 | `SPRING_DATASOURCE_PASSWORD` | Sim | Senha do banco |
-| `JWT_SECRET` | Sim | Chave de assinatura do JWT (mínimo 32 caracteres) |
+| `JWT_SECRET` | Não | Chave de assinatura do JWT (mínimo 32 caracteres). Tem valor padrão; em produção, defina a sua |
 | `JWT_EXPIRATION_MS` | Não | Expiração do token (padrão 3600000) |
 | `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Não | Login do admin (padrão `admin` / `admin123`) |
 | `VET_USERNAME` / `VET_PASSWORD` | Não | Login do veterinário (padrão `veterinario` / `vet123`) |
@@ -269,10 +269,9 @@ Cadastre em **Settings → Secrets and variables → Actions → New repository 
 | `SPRING_DATASOURCE_URL` | URL JDBC do Azure SQL |
 | `SPRING_DATASOURCE_USERNAME` | Usuário do banco |
 | `SPRING_DATASOURCE_PASSWORD` | Senha do banco |
-| `JWT_SECRET` | Chave JWT (mínimo 32 caracteres) |
 | `AzureAppService_PublishProfile_...` | Criado automaticamente pelo `az webapp deployment github-actions add` ou pelo Deployment Center |
 
-> **Importante:** os GitHub Secrets são usados no *build/teste* do pipeline. Para a aplicação **rodando** no Azure, configure as mesmas variáveis (`SPRING_DATASOURCE_*` e `JWT_SECRET`, e idealmente `ADMIN_PASSWORD` e `VET_PASSWORD`) em **Web App → Settings → Environment variables**.
+> **Importante:** os GitHub Secrets são usados no *build/teste* do pipeline. Para a aplicação **rodando** no Azure, configure as mesmas variáveis (`SPRING_DATASOURCE_*` e, idealmente, `JWT_SECRET`, `ADMIN_PASSWORD` e `VET_PASSWORD`) em **Web App → Settings → Environment variables**.
 
 ---
 
