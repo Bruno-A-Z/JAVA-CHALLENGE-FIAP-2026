@@ -1,28 +1,76 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Consultas')}"></head>
-<body>
+<body class="app">
 <div th:replace="~{fragments/layout :: menu}"></div>
 
-<h1>Consultas</h1>
+<main class="conteudo">
 
-<table>
-    <thead>
-    <tr><th>ID</th><th>Data Realização</th><th>Diagnóstico</th><th>Tratamento</th><th>Observações</th></tr>
-    </thead>
-    <tbody>
-    <tr th:each="c : ${consultas.content}">
-        <td th:text="${c.id}">1</td>
-        <td th:text="${#temporals.format(c.dataRealizacao, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
-        <td th:text="${c.diagnostico}">Diagnóstico</td>
-        <td th:text="${c.tratamento}">Tratamento</td>
-        <td th:text="${c.observacoes}">Observações</td>
-    </tr>
-    </tbody>
-</table>
+    <header class="cabecalho">
+        <div>
+            <h1>Consultas</h1>
+            <p>Histórico clínico: cada consulta mostra o pet, o tutor e o veterinário do agendamento.</p>
+        </div>
+        <a class="btn btn-secundario" th:href="@{/web/agendamento}">Ver agendamentos</a>
+    </header>
 
-<div th:if="${!consultas.first}"><a th:href="@{/web/consulta(pagina=${consultas.number - 1})}">Anterior</a></div>
-<span th:text="'Página ' + (${consultas.number} + 1) + ' de ' + ${consultas.totalPages}"></span>
-<div th:if="${!consultas.last}"><a th:href="@{/web/consulta(pagina=${consultas.number + 1})}">Próxima</a></div>
+    <div class="vazio-bloco" th:if="${consultas.content.isEmpty()}">
+        <p>Nenhuma consulta registrada.</p>
+        <span class="dica">As consultas são registradas a partir de um agendamento.</span>
+        <a class="btn btn-primario" th:href="@{/web/agendamento}">Ir para agendamentos</a>
+    </div>
+
+    <div class="tabela-card" th:if="${!consultas.content.isEmpty()}">
+        <table>
+            <thead>
+            <tr>
+                <th>Realizada em</th>
+                <th>Pet e tutor</th>
+                <th>Veterinário</th>
+                <th>Diagnóstico</th>
+                <th>Tratamento</th>
+                <th>Observações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="c : ${consultas.content}">
+                <tr th:with="tutor=${c.agendamento != null ? nomesTutores[c.agendamento.idPet] : null}">
+                    <td class="nowrap">
+                        <span th:text="${#temporals.format(c.dataRealizacao, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</span>
+                        <span class="sub" th:if="${c.agendamento != null}"
+                              th:text="'Agendamento nº ' + ${c.agendamento.id}">Agendamento nº 1</span>
+                    </td>
+                    <td>
+                        <strong th:text="${c.agendamento != null} ? ${nomesPets[c.agendamento.idPet]} : '-'">Pet</strong>
+                        <span class="sub" th:if="${c.agendamento != null}"
+                              th:text="'Tutor: ' + ${#strings.isEmpty(tutor) ? 'sem tutor' : tutor}">Tutor: Fulano</span>
+                    </td>
+                    <td th:text="${c.agendamento != null} ? ${nomesVeterinarios[c.agendamento.idVeterinario]} : '-'">Veterinário</td>
+                    <td class="texto" th:text="${c.diagnostico}">Diagnóstico</td>
+                    <td class="texto" th:text="${c.tratamento}">Tratamento</td>
+                    <td class="texto">
+                        <span th:text="${c.observacoes}">Observações</span>
+                        <a href="#" class="expansor" th:attr="data-alvo=${'obs-consulta-' + c.id}"
+                           aria-expanded="false">Editar</a>
+                    </td>
+                </tr>
+                <tr class="detalhe" hidden th:id="${'obs-consulta-' + c.id}">
+                    <td colspan="6">
+                        <form class="form-obs" method="post" th:action="@{/web/consulta/{id}/observacoes(id=${c.id})}">
+                            <label th:for="${'observacoes-' + c.id}">Observações da consulta</label>
+                            <textarea name="observacoes" th:id="${'observacoes-' + c.id}"
+                                      th:text="${c.observacoes}"></textarea>
+                            <button type="submit" class="btn btn-primario btn-pequeno">Salvar observações</button>
+                        </form>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="~{fragments/layout :: paginacao(${consultas}, '/web/consulta')}"></div>
+
+</main>
 </body>
 </html>

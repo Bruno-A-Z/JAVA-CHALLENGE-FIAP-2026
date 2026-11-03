@@ -2,42 +2,58 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head(${modoEdicao} ? 'Editar Veterinário' : 'Novo Veterinário')}"></head>
-<body>
+<body class="app">
 <div th:replace="~{fragments/layout :: menu}"></div>
 
-<h1 th:text="${modoEdicao} ? 'Editar Veterinário' : 'Novo Veterinário'">Veterinário</h1>
+<main class="conteudo">
 
-<form th:action="${modoEdicao} ? @{/web/veterinario/{id}(id=${id})} : @{/web/veterinario}"
-      th:object="${veterinario}"
-      method="post">
+    <a class="link-voltar" th:href="@{/web/veterinario}">Voltar para veterinários</a>
+    <header class="cabecalho">
+        <h1 th:text="${modoEdicao} ? 'Editar veterinário' : 'Novo veterinário'">Veterinário</h1>
+    </header>
 
-    <div>
-        <label for="nome">Nome</label>
-        <input type="text" id="nome" th:field="*{nome}">
-        <span th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" style="color:red;"></span>
-    </div>
+    <form class="form-card"
+          th:action="${modoEdicao} ? @{/web/veterinario/{id}(id=${id})} : @{/web/veterinario}"
+          th:object="${veterinario}"
+          method="post">
 
-    <div>
-        <label for="area">Área de atuação</label>
-        <input type="text" id="area" th:field="*{area}">
-        <span th:if="${#fields.hasErrors('area')}" th:errors="*{area}" style="color:red;"></span>
-    </div>
+        <div class="form-grade">
+            <div class="campo">
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" th:field="*{nome}"
+                       th:classappend="${#fields.hasErrors('nome')} ? 'invalido'">
+                <span class="erro-campo" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></span>
+            </div>
 
-    <div>
-        <label for="uf">UF do CRMV</label>
-        <select id="uf" th:field="*{crmv.uf}">
-            <option th:each="uf : ${ufs}" th:value="${uf}" th:text="${uf}"></option>
-        </select>
-    </div>
+            <div class="campo">
+                <label for="area">Área de atuação</label>
+                <input type="text" id="area" th:field="*{area}"
+                       th:classappend="${#fields.hasErrors('area')} ? 'invalido'">
+                <span class="erro-campo" th:if="${#fields.hasErrors('area')}" th:errors="*{area}"></span>
+            </div>
 
-    <div>
-        <label for="numeroDeInscricao">Número de inscrição</label>
-        <input type="number" id="numeroDeInscricao" th:field="*{crmv.numeroDeInscricao}">
-        <span th:if="${#fields.hasErrors('crmv.numeroDeInscricao')}" th:errors="*{crmv.numeroDeInscricao}" style="color:red;"></span>
-    </div>
+            <div class="campo">
+                <label for="uf">UF do CRMV</label>
+                <select id="uf" th:field="*{crmv.uf}">
+                    <option th:each="uf : ${ufs}" th:value="${uf}" th:text="${uf}"></option>
+                </select>
+            </div>
 
-    <button type="submit">Salvar</button>
-    <a th:href="@{/web/veterinario}">Cancelar</a>
-</form>
+            <div class="campo">
+                <label for="numeroDeInscricao">Número de inscrição</label>
+                <input type="number" id="numeroDeInscricao" th:field="*{crmv.numeroDeInscricao}"
+                       th:classappend="${#fields.hasErrors('crmv.numeroDeInscricao')} ? 'invalido'">
+                <span class="erro-campo" th:if="${#fields.hasErrors('crmv.numeroDeInscricao')}"
+                      th:errors="*{crmv.numeroDeInscricao}"></span>
+            </div>
+        </div>
+
+        <div class="form-acoes">
+            <button type="submit" class="btn btn-primario">Salvar veterinário</button>
+            <a class="btn btn-secundario" th:href="@{/web/veterinario}">Cancelar</a>
+        </div>
+    </form>
+
+</main>
 </body>
 </html>
