@@ -7,7 +7,7 @@
 <h1>Pets</h1>
 <a th:href="@{/web/pet/novo}">+ Novo Pet</a>
 
-<table>
+<table th:if="${!pets.empty}">
     <thead>
     <tr>
         <th>ID</th><th>Nome</th><th>Espécie</th><th>Raça</th><th>Idade</th><th>Peso</th><th>Ações</th>
@@ -52,8 +52,10 @@
     </tbody>
 </table>
 
+<p class="vazio-lista" th:if="${pets.empty}">Nenhum pet cadastrado ainda. <a th:href="@{/web/pet/novo}">Cadastrar o primeiro pet</a></p>
+
 <div th:if="${!pets.first}"><a th:href="@{/web/pet(pagina=${pets.number - 1})}">Anterior</a></div>
-<span th:text="'Página ' + (${pets.number} + 1) + ' de ' + ${pets.totalPages}"></span>
+<span th:if="${!pets.empty}" th:text="'Página ' + (${pets.number} + 1) + ' de ' + ${pets.totalPages}"></span>
 <div th:if="${!pets.last}"><a th:href="@{/web/pet(pagina=${pets.number + 1})}">Próxima</a></div>
 </body>
 </html>

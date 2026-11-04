@@ -8,7 +8,7 @@
 
 <a th:href="@{/web/tutor/novo}">+ Novo Tutor</a>
 
-<table>
+<table th:if="${!tutores.empty}">
     <thead>
     <tr>
         <th>ID</th>
@@ -56,11 +56,13 @@
     </tbody>
 </table>
 
+<p class="vazio-lista" th:if="${tutores.empty}">Nenhum tutor cadastrado ainda. <a th:href="@{/web/tutor/novo}">Cadastrar o primeiro tutor</a></p>
+
 <!-- paginação simples -->
 <div th:if="${!tutores.first}">
     <a th:href="@{/web/tutor(pagina=${tutores.number - 1})}">Anterior</a>
 </div>
-<span th:text="'Página ' + (${tutores.number} + 1) + ' de ' + ${tutores.totalPages}"></span>
+<span th:if="${!tutores.empty}" th:text="'Página ' + (${tutores.number} + 1) + ' de ' + ${tutores.totalPages}"></span>
 <div th:if="${!tutores.last}">
     <a th:href="@{/web/tutor(pagina=${tutores.number + 1})}">Próxima</a>
 </div>

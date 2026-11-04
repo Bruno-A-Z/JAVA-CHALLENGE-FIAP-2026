@@ -7,7 +7,7 @@
 <h1>Agendamentos</h1>
 <a th:href="@{/web/agendamento/novo}">+ Novo Agendamento</a>
 
-<table>
+<table th:if="${!agendamentos.empty}">
     <thead>
     <tr><th>ID</th><th>Data/Hora</th><th>Pet</th><th>Veterinário</th><th>Status</th><th>Motivo</th><th>Ações</th></tr>
     </thead>
@@ -31,8 +31,10 @@
     </tbody>
 </table>
 
+<p class="vazio-lista" th:if="${agendamentos.empty}">Nenhum agendamento ainda. <a th:href="@{/web/agendamento/novo}">Criar o primeiro agendamento</a></p>
+
 <div th:if="${!agendamentos.first}"><a th:href="@{/web/agendamento(pagina=${agendamentos.number - 1})}">Anterior</a></div>
-<span th:text="'Página ' + (${agendamentos.number} + 1) + ' de ' + ${agendamentos.totalPages}"></span>
+<span th:if="${!agendamentos.empty}" th:text="'Página ' + (${agendamentos.number} + 1) + ' de ' + ${agendamentos.totalPages}"></span>
 <div th:if="${!agendamentos.last}"><a th:href="@{/web/agendamento(pagina=${agendamentos.number + 1})}">Próxima</a></div>
 </body>
 </html>

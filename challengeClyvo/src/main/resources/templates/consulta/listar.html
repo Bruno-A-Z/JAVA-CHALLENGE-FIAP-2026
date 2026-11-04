@@ -6,7 +6,7 @@
 
 <h1>Consultas</h1>
 
-<table>
+<table th:if="${!consultas.empty}">
     <thead>
     <tr><th>ID</th><th>Data Realização</th><th>Diagnóstico</th><th>Tratamento</th><th>Observações</th></tr>
     </thead>
@@ -21,8 +21,10 @@
     </tbody>
 </table>
 
+<p class="vazio-lista" th:if="${consultas.empty}">Nenhuma consulta realizada ainda. <a th:href="@{/web/agendamento}">Ver agendamentos</a></p>
+
 <div th:if="${!consultas.first}"><a th:href="@{/web/consulta(pagina=${consultas.number - 1})}">Anterior</a></div>
-<span th:text="'Página ' + (${consultas.number} + 1) + ' de ' + ${consultas.totalPages}"></span>
+<span th:if="${!consultas.empty}" th:text="'Página ' + (${consultas.number} + 1) + ' de ' + ${consultas.totalPages}"></span>
 <div th:if="${!consultas.last}"><a th:href="@{/web/consulta(pagina=${consultas.number + 1})}">Próxima</a></div>
 </body>
 </html>

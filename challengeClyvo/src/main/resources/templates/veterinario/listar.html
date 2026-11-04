@@ -8,7 +8,7 @@
 <h1>Veterinários</h1>
 <a th:href="@{/web/veterinario/novo}">+ Novo Veterinário</a>
 
-<table>
+        <table th:if="${!veterinarios.empty}">
     <thead>
     <tr><th>ID</th><th>Nome</th><th>Área</th><th>CRMV</th><th>Ações</th></tr>
     </thead>
@@ -28,8 +28,10 @@
     </tbody>
 </table>
 
+<p class="vazio-lista" th:if="${veterinarios.empty}">Nenhum veterinário cadastrado ainda. <a th:href="@{/web/veterinario/novo}">Cadastrar o primeiro veterinário</a></p>
+
 <div th:if="${!veterinarios.first}"><a th:href="@{/web/veterinario(pagina=${veterinarios.number - 1})}">Anterior</a></div>
-<span th:text="'Página ' + (${veterinarios.number} + 1) + ' de ' + ${veterinarios.totalPages}"></span>
+<span th:if="${!veterinarios.empty}" th:text="'Página ' + (${veterinarios.number} + 1) + ' de ' + ${veterinarios.totalPages}"></span>
 <div th:if="${!veterinarios.last}"><a th:href="@{/web/veterinario(pagina=${veterinarios.number + 1})}">Próxima</a></div>
 </body>
 </html>
