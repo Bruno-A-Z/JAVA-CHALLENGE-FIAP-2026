@@ -1,5 +1,6 @@
 package br.com.fiap.challengeClyvo.exceptions;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,17 +8,20 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 
+@Slf4j
 @RestControllerAdvice(annotations = RestController.class)
 public class GlobalExceptionHandler {
 
 
     @ExceptionHandler({EntityNotFoundException.class, jakarta.persistence.EntityNotFoundException.class})
     public ResponseEntity<Map<String, Object>> handleNotFound(RuntimeException e) {
+        log.warn("Recurso não encontrado: {}", e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(criarResposta(HttpStatus.NOT_FOUND, e.getMessage()));
@@ -26,6 +30,7 @@ public class GlobalExceptionHandler {
     // Trata IllegalStateException — regras de negócio violadas
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalState(IllegalStateException e) {
+        log.warn("Regra de negócio violada: {}", e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(criarResposta(HttpStatus.BAD_REQUEST, e.getMessage()));
@@ -34,6 +39,7 @@ public class GlobalExceptionHandler {
     // Registro referenciado por outros (ex.: pet com agendamentos) não pode ser excluído
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, Object>> handleIntegrity(DataIntegrityViolationException e) {
+        log.warn("Violação de integridade: {}", e.getMostSpecificCause().getMessage());
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(criarResposta(HttpStatus.CONFLICT, "Operação não permitida: o registro está vinculado a outros dados."));
@@ -55,6 +61,7 @@ public class GlobalExceptionHandler {
     // Trata qualquer outra exceção não prevista
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneric(Exception e) {
+        log.error("Erro inesperado na API", e);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(criarResposta(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno no servidor."));

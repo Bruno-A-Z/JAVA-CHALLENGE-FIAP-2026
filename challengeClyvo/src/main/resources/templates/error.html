@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Erro')}"></head>
+<body>
+
+<main class="pagina-erro">
+    <span class="codigo-erro" th:text="${status}">500</span>
+
+    <h1 th:text="${status == 404} ? 'Página não encontrada'
+                 : (${status == 403} ? 'Acesso negado' : 'Algo deu errado')">Algo deu errado</h1>
+
+    <p th:text="${status == 404} ? 'O endereço acessado não existe nesta aplicação.'
+                : (${status == 403} ? 'Seu perfil não tem permissão para acessar este recurso.'
+                                    : 'Ocorreu um erro inesperado. Tente novamente em instantes.')">
+        Ocorreu um erro inesperado. Tente novamente em instantes.
+    </p>
+
+    <a class="btn-primario" th:href="@{/web}">Voltar ao início</a>
+</main>
+
+</body>
+</html>
