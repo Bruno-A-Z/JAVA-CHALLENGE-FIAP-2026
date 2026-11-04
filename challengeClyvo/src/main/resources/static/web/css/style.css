@@ -529,3 +529,64 @@ nav a.ativo {
     margin: 0 0 24px;
     color: var(--cor-texto-suave);
 }
+
+/* ---------- MENSAGEM DE SUCESSO E LISTA VAZIA ---------- */
+.alerta {
+    width: 100%;
+    max-width: 900px;
+    margin: 16px auto 0;
+    padding: 12px 18px;
+    border-radius: var(--radius);
+    text-align: center;
+    font-weight: 600;
+}
+
+.alerta-sucesso {
+    background-color: var(--cor-sucesso-fundo);
+    color: var(--cor-sucesso);
+    border: 1px solid #c3e6cb;
+}
+
+.vazio-lista {
+    width: 100%;
+    max-width: 900px;
+    margin: 24px auto;
+    padding: 32px 24px;
+    background-color: var(--cor-superficie);
+    border: 1px dashed var(--cor-borda);
+    border-radius: var(--radius);
+    color: var(--cor-texto-suave);
+    text-align: center;
+}
+
+.vazio-lista a {
+    color: var(--cor-laranja-escura);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.vazio-lista a:hover {
+    text-decoration: underline;
+}
+
+/* ---------- BUSCA NAS LISTAGENS ---------- */
+body > form.busca {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 900px;
+    margin: 16px auto 0;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+form.busca input[type="text"] {
+    flex: 1;
+}
+
+form.busca button {
+    padding: 10px 18px;
+    margin-right: 0;
+}
