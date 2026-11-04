@@ -3,10 +3,17 @@ package br.com.fiap.challengeClyvo.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "TB_PET")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, ignoreUnknown = true)
@@ -50,74 +57,4 @@ public class Pet {
     )
     @JsonIgnoreProperties("pets")
     private List<Tutor> tutores;
-
-    public Pet(Long id, String nome, String especie, String raca, String cor, Integer idade, Double peso, List<Tutor> tutores) {
-        this.id = id;
-        this.nome = nome;
-        this.especie = especie;
-        this.raca = raca;
-        this.cor = cor;
-        this.idade = idade;
-        this.peso = peso;
-        this.tutores = tutores;
-    }
-
-    public Pet() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getEspecie() {
-        return especie;
-    }
-    public void setEspecie(String especie) {
-        this.especie = especie;
-    }
-
-    public String getRaca() {
-        return raca;
-    }
-    public void setRaca(String raca) {
-        this.raca = raca;
-    }
-
-    public String getCor() {
-        return cor;
-    }
-    public void setCor(String cor) {
-        this.cor = cor;
-    }
-
-    public Integer getIdade() {
-        return idade;
-    }
-    public void setIdade(Integer idade) {
-        this.idade = idade;
-    }
-
-    public Double getPeso() {
-        return peso;
-    }
-    public void setPeso(Double peso) {
-        this.peso = peso;
-    }
-
-    public List<Tutor> getTutores() {
-        return tutores;
-    }
-    public void setTutores(List<Tutor> tutores) {
-        this.tutores = tutores;
-    }
 }

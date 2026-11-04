@@ -6,10 +6,17 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "TB_AGENDAMENTO")
 public class Agendamento {
@@ -46,69 +53,4 @@ public class Agendamento {
     @OneToOne(mappedBy = "agendamento", cascade = CascadeType.ALL)
     @JsonBackReference("consulta-agendamento")
     private Consulta consulta;
-
-
-    public Agendamento(Long id, LocalDateTime dataHora, Pet pet, Veterinario veterinario, StatusAgendamento status, String motivo, Consulta consulta) {
-        this.id = id;
-        this.dataHora = dataHora;
-        this.pet = pet;
-        this.veterinario = veterinario;
-        this.status = status;
-        this.motivo = motivo;
-        this.consulta = consulta;
-    }
-
-    public Agendamento() {
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getDataHora() {
-        return dataHora;
-    }
-    public void setDataHora(LocalDateTime dataHora) {
-        this.dataHora = dataHora;
-    }
-
-    public Pet getPet() {
-        return pet;
-    }
-    public void setPet(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Veterinario getVeterinario() {
-        return veterinario;
-    }
-    public void setVeterinario(Veterinario veterinario) {
-        this.veterinario = veterinario;
-    }
-
-    public StatusAgendamento getStatus() {
-        return status;
-    }
-    public void setStatus(StatusAgendamento status) {
-        this.status = status;
-    }
-
-    public String getMotivo() {
-        return motivo;
-    }
-    public void setMotivo(String motivo) {
-        this.motivo = motivo;
-    }
-
-    public Consulta getConsulta() {
-        return consulta;
-    }
-    public void setConsulta(Consulta consulta) {
-        this.consulta = consulta;
-    }
-
 }

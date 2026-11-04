@@ -4,8 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "TB_VET")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, ignoreUnknown = true)
@@ -31,42 +38,4 @@ public class Veterinario {
     // Colunas CRMV_* vêm do @Embeddable Crmv; a unicidade (UF + nº) está na migration (UQ_VET_CRMV)
     @Embedded
     private Crmv crmv;
-
-    public Veterinario(Long id, String nome, String area, Crmv crmv) {
-        this.id = id;
-        this.nome = nome;
-        this.area = area;
-        this.crmv = crmv;
-    }
-
-    public Veterinario() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getArea() {
-        return area;
-    }
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public Crmv getCrmv() {
-        return crmv;
-    }
-    public void setCrmv(Crmv crmv) {
-        this.crmv = crmv;
-    }
 }
