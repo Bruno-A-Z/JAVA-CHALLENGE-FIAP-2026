@@ -10,7 +10,7 @@ import br.com.fiap.challengeClyvo.mapper.PetMapper;
 import br.com.fiap.challengeClyvo.mapper.TutorMapper;
 import br.com.fiap.challengeClyvo.repository.PetRepository;
 import br.com.fiap.challengeClyvo.repository.TutorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,37 +19,39 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PetService {
 
     public static final int LIMITE_TUTORES = 2;
-
-    @Autowired
-    private PetRepository petRepository;
-
-    @Autowired
-    private TutorRepository tutorRepository;
+    private final PetRepository petRepository;
+    private final TutorRepository tutorRepository;
 
     public PetResponseDTO salvar(PetRequestDTO dto) {
         Pet pet = PetMapper.toEntity(dto);
         return PetMapper.toDTO(petRepository.save(pet));
     }
 
+    @Transactional(readOnly = true)
     public Page<PetResponseDTO> buscarTodos(Pageable pageable) {
         return petRepository.findAll(pageable).map(PetMapper::toDTO);
     }
 
+    @Transactional(readOnly = true)
     public PetResponseDTO buscarPorId(Long id) {
         return PetMapper.toDTO(buscarEntidadePorId(id));
     }
 
+    @Transactional(readOnly = true)
     public Page<PetResponseDTO> buscarPorNome(String nome, Pageable pageable) {
-        return petRepository.findByNome(nome, pageable).map(PetMapper::toDTO);
+        return petRepository.findByNomeContainingIgnoreCase(nome, pageable).map(PetMapper::toDTO);
     }
 
+    @Transactional(readOnly = true)
     public Page<PetResponseDTO> buscarPorEspecie(String especie, Pageable pageable) {
         return petRepository.findByEspecie(especie, pageable).map(PetMapper::toDTO);
     }
 
+    @Transactional(readOnly = true)
     public List<PetResponseDTO> buscarPorTutor(Long id) {
         return petRepository.findByTutoresId(id).stream().map(PetMapper::toDTO).toList();
     }

@@ -9,7 +9,7 @@ import br.com.fiap.challengeClyvo.mapper.PetMapper;
 import br.com.fiap.challengeClyvo.mapper.TutorMapper;
 import br.com.fiap.challengeClyvo.repository.PetRepository;
 import br.com.fiap.challengeClyvo.repository.TutorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,13 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TutorService {
 
-    @Autowired
-    private TutorRepository tutorRepository;
+    private final TutorRepository tutorRepository;
 
-    @Autowired
-    private PetRepository petRepository;
+    private final PetRepository petRepository;
 
     public TutorResponseDTO salvar(TutorRequestDTO dto) {
         if (tutorRepository.findByCpf(dto.getCpf()).isPresent()) {
@@ -33,20 +32,24 @@ public class TutorService {
         return TutorMapper.toDTO(tutorRepository.save(tutor));
     }
 
+    @Transactional(readOnly = true)
     public Page<TutorResponseDTO> buscarTodos(Pageable pageable) {
         return tutorRepository.findAll(pageable).map(TutorMapper::toDTO);
     }
 
+    @Transactional(readOnly = true)
     public TutorResponseDTO buscarPorId(Long id) {
         return TutorMapper.toDTO(buscarEntidadePorId(id));
     }
 
+    @Transactional(readOnly = true)
     public TutorResponseDTO buscarPorCpf(String cpf) {
         Tutor tutor = tutorRepository.findByCpf(cpf)
                 .orElseThrow(() -> new EntityNotFoundException("Tutor não encontrado."));
         return TutorMapper.toDTO(tutor);
     }
 
+    @Transactional(readOnly = true)
     public Page<TutorResponseDTO> buscarPorNome(String nome, Pageable pageable) {
         return tutorRepository.findByNome(nome, pageable).map(TutorMapper::toDTO);
     }

@@ -11,25 +11,22 @@ import br.com.fiap.challengeClyvo.mapper.AgendamentoMapper;
 import br.com.fiap.challengeClyvo.repository.AgendamentoRepository;
 import br.com.fiap.challengeClyvo.repository.PetRepository;
 import br.com.fiap.challengeClyvo.repository.VeterinarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AgendamentoService {
 
-    @Autowired
-    private AgendamentoRepository agendamentoRepository;
-
-    @Autowired
-    private PetRepository petRepository;
-
-    @Autowired
-    private VeterinarioRepository veterinarioRepository;
+    private final AgendamentoRepository agendamentoRepository;
+    private final PetRepository petRepository;
+    private final VeterinarioRepository veterinarioRepository;
 
     public AgendamentoResponseDTO salvar(AgendamentoRequestDTO dto) {
         Pet pet = petRepository.findById(dto.getIdPet())
@@ -49,26 +46,32 @@ public class AgendamentoService {
         return AgendamentoMapper.toDTO(agendamentoRepository.save(agendamento));
     }
 
+    @Transactional(readOnly = true)
     public Page<AgendamentoResponseDTO> buscarTodos(Pageable pageable) {
         return agendamentoRepository.findAll(pageable).map(AgendamentoMapper::toDTO);
     }
 
+    @Transactional(readOnly = true)
     public AgendamentoResponseDTO buscarPorId(Long id) {
         return AgendamentoMapper.toDTO(buscarEntidadePorId(id));
     }
 
+    @Transactional(readOnly = true)
     public Page<AgendamentoResponseDTO> buscarPorStatus(StatusAgendamento status, Pageable pageable) {
         return agendamentoRepository.findByStatus(status, pageable).map(AgendamentoMapper::toDTO);
     }
 
+    @Transactional(readOnly = true)
     public Page<AgendamentoResponseDTO> buscarPorVeterinario(Long id, Pageable pageable) {
         return agendamentoRepository.findByVeterinarioId(id, pageable).map(AgendamentoMapper::toDTO);
     }
 
+    @Transactional(readOnly = true)
     public Page<AgendamentoResponseDTO> buscarPorPet(Long id, Pageable pageable) {
         return agendamentoRepository.findByPetId(id, pageable).map(AgendamentoMapper::toDTO);
     }
 
+    @Transactional(readOnly = true)
     public List<AgendamentoResponseDTO> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim) {
         return agendamentoRepository.findByDataHoraBetween(inicio, fim)
                 .stream().map(AgendamentoMapper::toDTO).toList();
@@ -86,6 +89,7 @@ public class AgendamentoService {
     }
 
     // usado pelo ConsultaService, que precisa da entidade completa
+    @Transactional(readOnly = true)
     Agendamento buscarEntidadePorId(Long id) {
         return agendamentoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado."));
