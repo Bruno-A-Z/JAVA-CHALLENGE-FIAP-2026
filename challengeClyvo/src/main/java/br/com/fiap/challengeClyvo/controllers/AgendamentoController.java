@@ -7,8 +7,9 @@ import br.com.fiap.challengeClyvo.enums.StatusAgendamento;
 import br.com.fiap.challengeClyvo.services.AgendamentoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -21,15 +22,11 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Agendamento", description = "Gerenciamento do Agendadamento de Consultas")
 @RestController
 @RequestMapping("/agendamento")
+@RequiredArgsConstructor
 public class AgendamentoController {
 
-    @Autowired
     private AgendamentoService agendamentoService;
-
-    @Autowired
     private AgendamentoAssembler agendamentoAssembler;
-
-    @Autowired
     private PagedResourcesAssembler<AgendamentoResponseDTO> pagedAssembler;
 
     @Operation(summary = "Cria um Agendamento")
@@ -41,7 +38,7 @@ public class AgendamentoController {
     @Operation(summary = "Lista Todos Agendamentos")
     @GetMapping
     public ResponseEntity<PagedModel<EntityModel<AgendamentoResponseDTO>>> buscarTodos(
-            @PageableDefault(size = 10, sort = "dataHora") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10, sort = "dataHora") Pageable pageable) {
         return ResponseEntity.ok(pagedAssembler.toModel(agendamentoService.buscarTodos(pageable), agendamentoAssembler));
     }
 
@@ -55,7 +52,7 @@ public class AgendamentoController {
     @GetMapping("/status/{status}")
     public ResponseEntity<PagedModel<EntityModel<AgendamentoResponseDTO>>> buscarPorStatus(
             @PathVariable StatusAgendamento status,
-            @PageableDefault(size = 10, sort = "dataHora") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10, sort = "dataHora") Pageable pageable) {
         return ResponseEntity.ok(pagedAssembler.toModel(agendamentoService.buscarPorStatus(status, pageable), agendamentoAssembler));
     }
 
@@ -63,7 +60,7 @@ public class AgendamentoController {
     @GetMapping("/veterinario/{idVet}")
     public ResponseEntity<PagedModel<EntityModel<AgendamentoResponseDTO>>> buscarPorVeterinario(
             @PathVariable Long idVet,
-            @PageableDefault(size = 10, sort = "dataHora") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10, sort = "dataHora") Pageable pageable) {
         return ResponseEntity.ok(pagedAssembler.toModel(agendamentoService.buscarPorVeterinario(idVet, pageable), agendamentoAssembler));
     }
 
@@ -71,7 +68,7 @@ public class AgendamentoController {
     @GetMapping("/pet/{idPet}")
     public ResponseEntity<PagedModel<EntityModel<AgendamentoResponseDTO>>> buscarPorPet(
             @PathVariable Long idPet,
-            @PageableDefault(size = 10, sort = "dataHora") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10, sort = "dataHora") Pageable pageable) {
         return ResponseEntity.ok(pagedAssembler.toModel(agendamentoService.buscarPorPet(idPet, pageable), agendamentoAssembler));
     }
 

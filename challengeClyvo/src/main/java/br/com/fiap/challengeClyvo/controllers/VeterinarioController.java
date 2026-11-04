@@ -7,8 +7,9 @@ import br.com.fiap.challengeClyvo.enums.UF;
 import br.com.fiap.challengeClyvo.services.VeterinarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -22,15 +23,11 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Veterinario", description = "Gerenciameno de Veterinarios")
 @RestController
 @RequestMapping("/veterinario")
+@RequiredArgsConstructor
 public class VeterinarioController {
 
-    @Autowired
     private VeterinarioService veterinarioService;
-
-    @Autowired
     private VeterinarioAssembler veterinarioAssembler;
-
-    @Autowired
     private PagedResourcesAssembler<VeterinarioResponseDTO> pagedAssembler;
 
     @Operation(summary = "Cadastra um Veterinario")
@@ -42,7 +39,7 @@ public class VeterinarioController {
     @Operation(summary = "Lista Todos os Veterinários")
     @GetMapping
     public ResponseEntity<PagedModel<EntityModel<VeterinarioResponseDTO>>> buscarTodos(
-            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
         return ResponseEntity.ok(pagedAssembler.toModel(veterinarioService.buscarTodos(pageable), veterinarioAssembler));
     }
 
@@ -62,7 +59,7 @@ public class VeterinarioController {
     @GetMapping("/area/{area}")
     public ResponseEntity<PagedModel<EntityModel<VeterinarioResponseDTO>>> buscarPorArea(
             @PathVariable String area,
-            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
         return ResponseEntity.ok(pagedAssembler.toModel(veterinarioService.buscarPorArea(area, pageable), veterinarioAssembler));
     }
 

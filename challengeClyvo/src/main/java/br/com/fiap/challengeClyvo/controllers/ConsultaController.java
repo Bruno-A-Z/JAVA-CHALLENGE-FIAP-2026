@@ -6,8 +6,9 @@ import br.com.fiap.challengeClyvo.dto.response.ConsultaResponseDTO;
 import br.com.fiap.challengeClyvo.services.ConsultaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -20,15 +21,11 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Consulta", description = "Gerenciamento de Consultas")
 @RestController
 @RequestMapping("/consulta")
+@RequiredArgsConstructor
 public class ConsultaController {
 
-    @Autowired
     private ConsultaService consultaService;
-
-    @Autowired
     private ConsultaAssembler consultaAssembler;
-
-    @Autowired
     private PagedResourcesAssembler<ConsultaResponseDTO> pagedAssembler;
 
     @Operation(summary = "Atualiza o Status da Consulta para 'Realizada' criando diagnostico e histórico")
@@ -43,7 +40,7 @@ public class ConsultaController {
     @Operation(summary = "Lista todas as Consultas")
     @GetMapping
     public ResponseEntity<PagedModel<EntityModel<ConsultaResponseDTO>>> buscarTodas(
-            @PageableDefault(size = 10, sort = "dataRealizacao") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10, sort = "dataRealizacao") Pageable pageable) {
         return ResponseEntity.ok(pagedAssembler.toModel(consultaService.buscarTodas(pageable), consultaAssembler));
     }
 
@@ -57,7 +54,7 @@ public class ConsultaController {
     @GetMapping("/pet/{idPet}")
     public ResponseEntity<PagedModel<EntityModel<ConsultaResponseDTO>>> buscarPorPet(
             @PathVariable Long idPet,
-            @PageableDefault(size = 10, sort = "dataRealizacao") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10, sort = "dataRealizacao") Pageable pageable) {
         return ResponseEntity.ok(pagedAssembler.toModel(consultaService.buscarPorPet(idPet, pageable), consultaAssembler));
     }
 
@@ -65,7 +62,7 @@ public class ConsultaController {
     @GetMapping("/veterinario/{idVet}")
     public ResponseEntity<PagedModel<EntityModel<ConsultaResponseDTO>>> buscarPorVeterinario(
             @PathVariable Long idVet,
-            @PageableDefault(size = 10, sort = "dataRealizacao") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10, sort = "dataRealizacao") Pageable pageable) {
         return ResponseEntity.ok(pagedAssembler.toModel(consultaService.buscarPorVeterinario(idVet, pageable), consultaAssembler));
     }
 

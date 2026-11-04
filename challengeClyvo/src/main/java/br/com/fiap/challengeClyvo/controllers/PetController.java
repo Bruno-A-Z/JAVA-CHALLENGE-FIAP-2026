@@ -6,8 +6,9 @@ import br.com.fiap.challengeClyvo.dto.response.PetResponseDTO;
 import br.com.fiap.challengeClyvo.services.PetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -21,15 +22,11 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Pet", description = "Gerenciamento de pets")
 @RestController
 @RequestMapping("/pet")
+@RequiredArgsConstructor
 public class PetController {
 
-    @Autowired
     private PetService petService;
-
-    @Autowired
     private PetAssembler petAssembler;
-
-    @Autowired
     private PagedResourcesAssembler<PetResponseDTO> pagedAssembler;
 
     @Operation(summary = "Cria um Pet")
@@ -41,7 +38,7 @@ public class PetController {
     @Operation(summary = "Lista todos os pets")
     @GetMapping
     public ResponseEntity<PagedModel<EntityModel<PetResponseDTO>>> buscarTodos(
-            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
         return ResponseEntity.ok(pagedAssembler.toModel(petService.buscarTodos(pageable), petAssembler));
     }
 
@@ -55,7 +52,7 @@ public class PetController {
     @GetMapping("/nome/{nome}")
     public ResponseEntity<PagedModel<EntityModel<PetResponseDTO>>> buscarPorNome(
             @PathVariable String nome,
-            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
         return ResponseEntity.ok(pagedAssembler.toModel(petService.buscarPorNome(nome, pageable), petAssembler));
     }
 
@@ -63,7 +60,7 @@ public class PetController {
     @GetMapping("/especie/{especie}")
     public ResponseEntity<PagedModel<EntityModel<PetResponseDTO>>> buscarPorEspecie(
             @PathVariable String especie,
-            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
         return ResponseEntity.ok(pagedAssembler.toModel(petService.buscarPorEspecie(especie, pageable), petAssembler));
     }
 

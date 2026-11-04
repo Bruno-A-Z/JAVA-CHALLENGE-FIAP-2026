@@ -6,8 +6,9 @@ import br.com.fiap.challengeClyvo.dto.response.TutorResponseDTO;
 import br.com.fiap.challengeClyvo.services.TutorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -20,15 +21,11 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Tutor", description = "Gerenciamento de tutores")
 @RestController
 @RequestMapping("/tutor")
+@RequiredArgsConstructor
 public class TutorController {
 
-    @Autowired
     private TutorService tutorService;
-
-    @Autowired
     private TutorAssembler tutorAssembler;
-
-    @Autowired
     private PagedResourcesAssembler<TutorResponseDTO> pagedAssembler;
 
     @Operation(summary = "Cria um tutor")
@@ -40,7 +37,7 @@ public class TutorController {
     @Operation(summary = "Lista todos os tutores")
     @GetMapping
     public ResponseEntity<PagedModel<EntityModel<TutorResponseDTO>>> buscarTodos(
-            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
         return ResponseEntity.ok(pagedAssembler.toModel(tutorService.buscarTodos(pageable), tutorAssembler));
     }
 
@@ -60,7 +57,7 @@ public class TutorController {
     @GetMapping("/nome/{nome}")
     public ResponseEntity<PagedModel<EntityModel<TutorResponseDTO>>> buscarPorNome(
             @PathVariable String nome,
-            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
         return ResponseEntity.ok(pagedAssembler.toModel(tutorService.buscarPorNome(nome, pageable), tutorAssembler));
     }
 
