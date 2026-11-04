@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,13 +39,14 @@ public class WebVeterinarioController {
     }
 
     @PostMapping
-    public String salvar(@Valid @ModelAttribute("veterinario") VeterinarioRequestDTO dto, BindingResult result, Model model) {
+    public String salvar(@Valid @ModelAttribute("veterinario") VeterinarioRequestDTO dto, BindingResult result, Model model, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             model.addAttribute("ufs", UF.values());
             model.addAttribute("modoEdicao", false);
             return "veterinario/form";
         }
         veterinarioService.salvar(dto);
+        redirect.addFlashAttribute("sucesso", "Veterinário cadastrado com sucesso.");
         return "redirect:/web/veterinario";
     }
 
@@ -65,7 +67,7 @@ public class WebVeterinarioController {
     }
 
     @PostMapping("/{id}")
-    public String atualizar(@PathVariable Long id, @Valid @ModelAttribute("veterinario") VeterinarioRequestDTO dto, BindingResult result, Model model) {
+    public String atualizar(@PathVariable Long id, @Valid @ModelAttribute("veterinario") VeterinarioRequestDTO dto, BindingResult result, Model model, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             model.addAttribute("ufs", UF.values());
             model.addAttribute("id", id);
@@ -73,12 +75,14 @@ public class WebVeterinarioController {
             return "veterinario/form";
         }
         veterinarioService.atualizar(id, dto);
+        redirect.addFlashAttribute("sucesso", "Veterinário atualizado com sucesso.");
         return "redirect:/web/veterinario";
     }
 
     @PostMapping("/{id}/deletar")
-    public String deletar(@PathVariable Long id) {
+    public String deletar(@PathVariable Long id, RedirectAttributes redirect) {
         veterinarioService.deletar(id);
+        redirect.addFlashAttribute("sucesso", "Veterinário excluído com sucesso.");
         return "redirect:/web/veterinario";
     }
 }

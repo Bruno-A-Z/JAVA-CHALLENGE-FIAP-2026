@@ -9,9 +9,11 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,14 +32,20 @@ public class WebPetController {
     private TutorService tutorService;
 
     @GetMapping
-    public String listar(Model model, @RequestParam(defaultValue = "0") int pagina) {
-        Pageable pageable = PageRequest.of(pagina, 10);
-        Page<PetResponseDTO> pets = petService.buscarTodos(pageable);
+    public String listar(Model model,
+                         @RequestParam(defaultValue = "0") int pagina,
+                         @RequestParam(required = false) String busca) {
+        String termo = busca == null ? "" : busca.trim();
+        Pageable pageable = PageRequest.of(pagina, 10, Sort.by("nome"));
+        Page<PetResponseDTO> pets = termo.isEmpty()
+                ? petService.buscarTodos(pageable)
+                : petService.buscarPorNome(termo, pageable);
 
         // Tutores de cada pet da página (aparecem ao clicar na linha do pet)
         Map<Long, List<TutorResponseDTO>> tutoresPorPet = new HashMap<>();
         pets.getContent().forEach(pet -> tutoresPorPet.put(pet.getId(), petService.buscarTutoresDoPet(pet.getId())));
 
+        model.addAttribute("busca", termo);
         model.addAttribute("pets", pets);
         model.addAttribute("tutoresPorPet", tutoresPorPet);
         return "pet/listar";
@@ -51,12 +59,13 @@ public class WebPetController {
     }
 
     @PostMapping
-    public String salvar(@Valid @ModelAttribute("pet") PetRequestDTO dto, BindingResult result, Model model) {
+    public String salvar(@Valid @ModelAttribute("pet") PetRequestDTO dto, BindingResult result, Model model, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             model.addAttribute("modoEdicao", false);
             return "pet/form";
         }
         petService.salvar(dto);
+        redirect.addFlashAttribute("sucesso", "Pet cadastrado com sucesso.");
         return "redirect:/web/pet";
     }
 
@@ -78,36 +87,41 @@ public class WebPetController {
     }
 
     @PostMapping("/{id}")
-    public String atualizar(@PathVariable Long id, @Valid @ModelAttribute("pet") PetRequestDTO dto, BindingResult result, Model model) {
+    public String atualizar(@PathVariable Long id, @Valid @ModelAttribute("pet") PetRequestDTO dto, BindingResult result, Model model, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             carregarEdicao(model, id);
             return "pet/form";
         }
         petService.atualizar(id, dto);
+        redirect.addFlashAttribute("sucesso", "Pet atualizado com sucesso.");
         return "redirect:/web/pet";
     }
 
     @PostMapping("/{id}/deletar")
-    public String deletar(@PathVariable Long id) {
+    public String deletar(@PathVariable Long id, RedirectAttributes redirect) {
         petService.deletar(id);
+        redirect.addFlashAttribute("sucesso", "Pet excluído com sucesso.");
         return "redirect:/web/pet";
     }
 
     @PostMapping("/{idPet}/tutor")
-    public String vincularTutor(@PathVariable Long idPet, @RequestParam String cpf) {
+    public String vincularTutor(@PathVariable Long idPet, @RequestParam String cpf, RedirectAttributes redirect) {
         petService.adicionarTutorPorCpf(idPet, cpf);
+        redirect.addFlashAttribute("sucesso", "Tutor vinculado ao pet com sucesso.");
         return "redirect:/web/pet/" + idPet + "/editar";
     }
 
     @PostMapping("/{idPet}/tutor/{idTutor}")
-    public String adicionarTutor(@PathVariable Long idPet, @PathVariable Long idTutor) {
+    public String adicionarTutor(@PathVariable Long idPet, @PathVariable Long idTutor, RedirectAttributes redirect) {
         petService.adicionarTutor(idPet, idTutor);
+        redirect.addFlashAttribute("sucesso", "Tutor vinculado ao pet com sucesso.");
         return "redirect:/web/pet/" + idPet + "/editar";
     }
 
     @PostMapping("/{idPet}/tutor/{idTutor}/remover")
-    public String removerTutor(@PathVariable Long idPet, @PathVariable Long idTutor) {
+    public String removerTutor(@PathVariable Long idPet, @PathVariable Long idTutor, RedirectAttributes redirect) {
         petService.removerTutor(idPet, idTutor);
+        redirect.addFlashAttribute("sucesso", "Tutor removido do pet com sucesso.");
         return "redirect:/web/pet/" + idPet + "/editar";
     }
 

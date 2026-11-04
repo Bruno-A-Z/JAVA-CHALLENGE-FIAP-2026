@@ -8,9 +8,11 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,13 +28,19 @@ public class WebTutorController {
     private TutorService tutorService;
 
     @GetMapping
-    public String listar(Model model, @RequestParam(defaultValue = "0") int pagina) {
-        Pageable pageable = PageRequest.of(pagina, 10);
-        Page<TutorResponseDTO> tutores = tutorService.buscarTodos(pageable);
+    public String listar(Model model,
+                         @RequestParam(defaultValue = "0") int pagina,
+                         @RequestParam(required = false) String busca) {
+        String termo = busca == null ? "" : busca.trim();
+        Pageable pageable = PageRequest.of(pagina, 10, Sort.by("nome"));
+        Page<TutorResponseDTO> tutores = termo.isEmpty()
+                ? tutorService.buscarTodos(pageable)
+                : tutorService.buscarPorNome(termo, pageable);
 
         Map<Long, List<PetResponseDTO>> petsPorTutor = new HashMap<>();
         tutores.getContent().forEach(t -> petsPorTutor.put(t.getId(), tutorService.buscarPetsDoTutor(t.getId())));
 
+        model.addAttribute("busca", termo);
         model.addAttribute("tutores", tutores);
         model.addAttribute("petsPorTutor", petsPorTutor);
         return "tutor/listar";
@@ -46,12 +54,13 @@ public class WebTutorController {
     }
 
     @PostMapping
-    public String salvar(@Valid @ModelAttribute("tutor") TutorRequestDTO dto, BindingResult result, Model model) {
+    public String salvar(@Valid @ModelAttribute("tutor") TutorRequestDTO dto, BindingResult result, Model model, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             model.addAttribute("modoEdicao", false);
             return "tutor/form";
         }
         tutorService.salvar(dto);
+        redirect.addFlashAttribute("sucesso", "Tutor cadastrado com sucesso.");
         return "redirect:/web/tutor";
     }
 
@@ -74,7 +83,7 @@ public class WebTutorController {
     }
 
     @PostMapping("/{id}")
-    public String atualizar(@PathVariable Long id, @Valid @ModelAttribute("tutor") TutorRequestDTO dto, BindingResult result, Model model) {
+    public String atualizar(@PathVariable Long id, @Valid @ModelAttribute("tutor") TutorRequestDTO dto, BindingResult result, Model model, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             model.addAttribute("id", id);
             model.addAttribute("modoEdicao", true);
@@ -82,12 +91,14 @@ public class WebTutorController {
             return "tutor/form";
         }
         tutorService.atualizar(id, dto);
+        redirect.addFlashAttribute("sucesso", "Tutor atualizado com sucesso.");
         return "redirect:/web/tutor";
     }
 
     @PostMapping("/{id}/deletar")
-    public String deletar(@PathVariable Long id) {
+    public String deletar(@PathVariable Long id, RedirectAttributes redirect) {
         tutorService.deletar(id);
+        redirect.addFlashAttribute("sucesso", "Tutor excluído com sucesso.");
         return "redirect:/web/tutor";
     }
 }

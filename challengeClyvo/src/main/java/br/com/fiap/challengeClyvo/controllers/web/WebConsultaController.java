@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,18 +34,20 @@ public class WebConsultaController {
     }
 
     @PostMapping("/agendamento/{idAgendamento}")
-    public String realizar(@PathVariable Long idAgendamento, @Valid @ModelAttribute("consulta") ConsultaRequestDTO dto, BindingResult result, Model model) {
+    public String realizar(@PathVariable Long idAgendamento, @Valid @ModelAttribute("consulta") ConsultaRequestDTO dto, BindingResult result, Model model, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             model.addAttribute("idAgendamento", idAgendamento);
             return "consulta/form";
         }
         consultaService.realizar(idAgendamento, dto);
+        redirect.addFlashAttribute("sucesso", "Consulta realizada com sucesso.");
         return "redirect:/web/consulta";
     }
 
     @PostMapping("/{id}/observacoes")
-    public String atualizarObservacoes(@PathVariable Long id, @RequestParam String observacoes) {
+    public String atualizarObservacoes(@PathVariable Long id, @RequestParam String observacoes, RedirectAttributes redirect) {
         consultaService.atualizarObservacoes(id, observacoes);
+        redirect.addFlashAttribute("sucesso", "Observações atualizadas com sucesso.");
         return "redirect:/web/consulta";
     }
 }

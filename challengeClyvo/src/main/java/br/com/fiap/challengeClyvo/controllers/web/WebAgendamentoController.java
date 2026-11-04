@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,19 +53,21 @@ public class WebAgendamentoController {
     }
 
     @PostMapping
-    public String salvar(@Valid @ModelAttribute("agendamento") AgendamentoRequestDTO dto, BindingResult result, Model model) {
+    public String salvar(@Valid @ModelAttribute("agendamento") AgendamentoRequestDTO dto, BindingResult result, Model model, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             model.addAttribute("pets", petService.buscarTodos(PageRequest.of(0, 100)).getContent());
             model.addAttribute("veterinarios", veterinarioService.buscarTodos(PageRequest.of(0, 100)).getContent());
             return "agendamento/form";
         }
         agendamentoService.salvar(dto);
+        redirect.addFlashAttribute("sucesso", "Agendamento criado com sucesso.");
         return "redirect:/web/agendamento";
     }
 
     @PostMapping("/{id}/cancelar")
-    public String cancelar(@PathVariable Long id) {
+    public String cancelar(@PathVariable Long id, RedirectAttributes redirect) {
         agendamentoService.cancelar(id);
+        redirect.addFlashAttribute("sucesso", "Agendamento cancelado com sucesso.");
         return "redirect:/web/agendamento";
     }
 }
