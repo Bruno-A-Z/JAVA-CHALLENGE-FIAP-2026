@@ -2,79 +2,34 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Veterinários')}"></head>
-<body class="app">
+<body>
 <div th:replace="~{fragments/layout :: menu}"></div>
 
-<main class="conteudo">
+<h1>Veterinários</h1>
+<a th:href="@{/web/veterinario/novo}">+ Novo Veterinário</a>
 
-    <header class="cabecalho">
-        <div>
-            <h1>Veterinários</h1>
-            <p>Clique no nome para ver os últimos agendamentos de cada veterinário.</p>
-        </div>
-        <a class="btn btn-primario" th:href="@{/web/veterinario/novo}">Novo veterinário</a>
-    </header>
+<table>
+    <thead>
+    <tr><th>ID</th><th>Nome</th><th>Área</th><th>CRMV</th><th>Ações</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="vet : ${veterinarios.content}">
+        <td th:text="${vet.id}">1</td>
+        <td th:text="${vet.nome}">Nome</td>
+        <td th:text="${vet.area}">Área</td>
+        <td th:text="${vet.crmv.uf} + ' ' + ${vet.crmv.numeroDeInscricao}">SP 12345</td>
+        <td>
+            <a th:href="@{/web/veterinario/{id}/editar(id=${vet.id})}">Editar</a>
+            <form th:action="@{/web/veterinario/{id}/deletar(id=${vet.id})}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Confirma exclusão?')">Excluir</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
-    <div class="vazio-bloco" th:if="${veterinarios.content.isEmpty()}">
-        <p>Nenhum veterinário cadastrado.</p>
-        <span class="dica">É preciso ter um veterinário para criar agendamentos.</span>
-        <a class="btn btn-primario" th:href="@{/web/veterinario/novo}">Cadastrar veterinário</a>
-    </div>
-
-    <div class="tabela-card" th:if="${!veterinarios.content.isEmpty()}">
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Área</th>
-                <th>CRMV</th>
-                <th class="acoes-col">Ações</th>
-            </tr>
-            </thead>
-            <tbody>
-            <th:block th:each="vet : ${veterinarios.content}">
-                <tr>
-                    <td class="id" th:text="${vet.id}">1</td>
-                    <td>
-                        <a href="#" class="expansor" th:attr="data-alvo=${'detalhe-vet-' + vet.id}"
-                           aria-expanded="false" th:text="${vet.nome}">Nome</a>
-                    </td>
-                    <td th:text="${vet.area}">Área</td>
-                    <td th:text="'CRMV-' + ${vet.crmv.uf} + ' ' + ${vet.crmv.numeroDeInscricao}">CRMV-SP 12345</td>
-                    <td>
-                        <div class="acoes">
-                            <a class="btn btn-secundario btn-pequeno"
-                               th:href="@{/web/veterinario/{id}/editar(id=${vet.id})}">Editar</a>
-                            <form th:action="@{/web/veterinario/{id}/deletar(id=${vet.id})}" method="post">
-                                <button type="submit" class="btn btn-perigo btn-pequeno"
-                                        onclick="return confirm('Confirma exclusão?')">Excluir</button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="detalhe" hidden th:id="${'detalhe-vet-' + vet.id}">
-                    <td colspan="5">
-                        <h3>Últimos agendamentos de <span th:text="${vet.nome}">Veterinário</span></h3>
-                        <ul th:if="${!agendamentosPorVet[vet.id].isEmpty()}">
-                            <li th:each="ag : ${agendamentosPorVet[vet.id]}">
-                                <span th:text="${#temporals.format(ag.dataHora, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</span>
-                                <small th:text="'Pet: ' + ${nomesPets[ag.idPet]}">Pet: Rex</small>
-                                <small th:if="${ag.motivo != null and !ag.motivo.isEmpty()}" th:text="${ag.motivo}">Motivo</small>
-                                <span class="status" th:classappend="${'status-' + ag.status.name().toLowerCase()}"
-                                      th:text="${#strings.capitalize(#strings.toLowerCase(ag.status.name()))}">Agendado</span>
-                            </li>
-                        </ul>
-                        <p th:if="${agendamentosPorVet[vet.id].isEmpty()}" class="vazio">Nenhum agendamento para este veterinário.</p>
-                    </td>
-                </tr>
-            </th:block>
-            </tbody>
-        </table>
-    </div>
-
-    <div th:replace="~{fragments/layout :: paginacao(${veterinarios}, '/web/veterinario')}"></div>
-
-</main>
+<div th:if="${!veterinarios.first}"><a th:href="@{/web/veterinario(pagina=${veterinarios.number - 1})}">Anterior</a></div>
+<span th:text="'Página ' + (${veterinarios.number} + 1) + ' de ' + ${veterinarios.totalPages}"></span>
+<div th:if="${!veterinarios.last}"><a th:href="@{/web/veterinario(pagina=${veterinarios.number + 1})}">Próxima</a></div>
 </body>
 </html>

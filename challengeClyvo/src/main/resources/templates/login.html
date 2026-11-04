@@ -2,36 +2,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Login')}"></head>
-<body class="login-pagina">
+<body>
+<h1>Login</h1>
 
-<section class="login-lado">
-    <div class="marca"><span class="marca-nome">Clyvo</span></div>
+<p th:if="${param.erro}" style="color:red;">Usuário ou senha inválidos.</p>
+<p th:if="${param.logout}" style="color:green;">Você saiu do sistema.</p>
+
+<form method="post" th:action="@{/web/login}">
     <div>
-        <h1>Tutores, pets e consultas da clínica.</h1>
-        <p>Entre com seu usuário para ver a agenda e registrar atendimentos.</p>
+        <label for="username">Usuário</label>
+        <input type="text" id="username" name="username" required>
     </div>
-</section>
 
-<main class="login-area">
-    <form class="login-form" method="post" th:action="@{/web/login}">
-        <h2>Entrar</h2>
+    <div>
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" required>
+    </div>
 
-        <p class="aviso aviso-erro" role="alert" th:if="${param.erro}">Usuário ou senha inválidos.</p>
-        <p class="aviso aviso-ok" th:if="${param.logout}">Você saiu do sistema.</p>
-
-        <div class="campo">
-            <label for="username">Usuário</label>
-            <input type="text" id="username" name="username" autocomplete="username" autofocus required>
-        </div>
-
-        <div class="campo">
-            <label for="password">Senha</label>
-            <input type="password" id="password" name="password" autocomplete="current-password" required>
-        </div>
-
-        <button class="btn btn-primario btn-cheio" type="submit">Entrar</button>
-    </form>
-</main>
-
+    <button type="submit">Entrar</button>
+</form>
 </body>
 </html>

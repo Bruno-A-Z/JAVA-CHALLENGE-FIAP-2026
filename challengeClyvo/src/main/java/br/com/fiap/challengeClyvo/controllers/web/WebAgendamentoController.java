@@ -40,7 +40,6 @@ public class WebAgendamentoController {
         model.addAttribute("agendamentos", agendamentos);
         model.addAttribute("nomesPets", nomeResolver.nomesDosPets(agendamentos.getContent()));
         model.addAttribute("nomesVeterinarios", nomeResolver.nomesDosVeterinarios(agendamentos.getContent()));
-        model.addAttribute("nomesTutores", nomeResolver.tutoresDosPets(agendamentos.getContent()));
         return "agendamento/listar";
     }
 

@@ -1,10 +1,8 @@
 package br.com.fiap.challengeClyvo.controllers.web;
 
 import br.com.fiap.challengeClyvo.dto.request.PetRequestDTO;
-import br.com.fiap.challengeClyvo.dto.response.AgendamentoResponseDTO;
 import br.com.fiap.challengeClyvo.dto.response.PetResponseDTO;
 import br.com.fiap.challengeClyvo.dto.response.TutorResponseDTO;
-import br.com.fiap.challengeClyvo.services.AgendamentoService;
 import br.com.fiap.challengeClyvo.services.PetService;
 import br.com.fiap.challengeClyvo.services.TutorService;
 import jakarta.validation.Valid;
@@ -12,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,12 +29,6 @@ public class WebPetController {
     @Autowired
     private TutorService tutorService;
 
-    @Autowired
-    private AgendamentoService agendamentoService;
-
-    @Autowired
-    private WebNomeResolver nomeResolver;
-
     @GetMapping
     public String listar(Model model, @RequestParam(defaultValue = "0") int pagina) {
         Pageable pageable = PageRequest.of(pagina, 10);
@@ -47,18 +38,8 @@ public class WebPetController {
         Map<Long, List<TutorResponseDTO>> tutoresPorPet = new HashMap<>();
         pets.getContent().forEach(pet -> tutoresPorPet.put(pet.getId(), petService.buscarTutoresDoPet(pet.getId())));
 
-        // Ultimos agendamentos de cada pet da pagina (relacao pet <-> agendamento <-> veterinario)
-        Map<Long, List<AgendamentoResponseDTO>> agendamentosPorPet = new HashMap<>();
-        pets.getContent().forEach(pet -> agendamentosPorPet.put(pet.getId(),
-                agendamentoService.buscarPorPet(pet.getId(),
-                        PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "dataHora"))).getContent()));
-
-        List<AgendamentoResponseDTO> todos = agendamentosPorPet.values().stream().flatMap(List::stream).toList();
-
         model.addAttribute("pets", pets);
         model.addAttribute("tutoresPorPet", tutoresPorPet);
-        model.addAttribute("agendamentosPorPet", agendamentosPorPet);
-        model.addAttribute("nomesVeterinarios", nomeResolver.nomesDosVeterinarios(todos));
         return "pet/listar";
     }
 

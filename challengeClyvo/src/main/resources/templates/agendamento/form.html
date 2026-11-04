@@ -1,58 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Novo Agendamento')}"></head>
-<body class="app">
+<body>
 <div th:replace="~{fragments/layout :: menu}"></div>
 
-<main class="conteudo">
+<h1>Novo Agendamento</h1>
 
-    <a class="link-voltar" th:href="@{/web/agendamento}">Voltar para agendamentos</a>
-    <header class="cabecalho">
-        <h1>Novo agendamento</h1>
-    </header>
+<form th:action="@{/web/agendamento}" th:object="${agendamento}" method="post">
 
-    <form class="form-card" th:action="@{/web/agendamento}" th:object="${agendamento}" method="post">
+    <div>
+        <label for="dataHora">Data e Hora</label>
+        <input type="datetime-local" id="dataHora" th:field="*{dataHora}">
+        <span th:if="${#fields.hasErrors('dataHora')}" th:errors="*{dataHora}" style="color:red;"></span>
+    </div>
 
-        <div class="form-grade">
-            <div class="campo">
-                <label for="idPet">Pet</label>
-                <select id="idPet" th:field="*{idPet}"
-                        th:classappend="${#fields.hasErrors('idPet')} ? 'invalido'">
-                    <option th:each="pet : ${pets}" th:value="${pet.id}"
-                            th:text="${pet.nome} + ' (' + ${pet.especie} + ')'"></option>
-                </select>
-                <span class="erro-campo" th:if="${#fields.hasErrors('idPet')}" th:errors="*{idPet}"></span>
-            </div>
+    <div>
+        <label for="idPet">Pet</label>
+        <select id="idPet" th:field="*{idPet}">
+            <option th:each="pet : ${pets}" th:value="${pet.id}" th:text="${pet.nome} + ' (' + ${pet.especie} + ')'"></option>
+        </select>
+        <span th:if="${#fields.hasErrors('idPet')}" th:errors="*{idPet}" style="color:red;"></span>
+    </div>
 
-            <div class="campo">
-                <label for="idVeterinario">Veterinário</label>
-                <select id="idVeterinario" th:field="*{idVeterinario}"
-                        th:classappend="${#fields.hasErrors('idVeterinario')} ? 'invalido'">
-                    <option th:each="vet : ${veterinarios}" th:value="${vet.id}"
-                            th:text="${vet.nome} + ' - ' + ${vet.area}"></option>
-                </select>
-                <span class="erro-campo" th:if="${#fields.hasErrors('idVeterinario')}" th:errors="*{idVeterinario}"></span>
-            </div>
+    <div>
+        <label for="idVeterinario">Veterinário</label>
+        <select id="idVeterinario" th:field="*{idVeterinario}">
+            <option th:each="vet : ${veterinarios}" th:value="${vet.id}" th:text="${vet.nome} + ' - ' + ${vet.area}"></option>
+        </select>
+        <span th:if="${#fields.hasErrors('idVeterinario')}" th:errors="*{idVeterinario}" style="color:red;"></span>
+    </div>
 
-            <div class="campo">
-                <label for="dataHora">Data e hora</label>
-                <input type="datetime-local" id="dataHora" th:field="*{dataHora}"
-                       th:classappend="${#fields.hasErrors('dataHora')} ? 'invalido'">
-                <span class="erro-campo" th:if="${#fields.hasErrors('dataHora')}" th:errors="*{dataHora}"></span>
-            </div>
+    <div>
+        <label for="motivo">Motivo</label>
+        <input type="text" id="motivo" th:field="*{motivo}">
+    </div>
 
-            <div class="campo largo">
-                <label for="motivo">Motivo</label>
-                <input type="text" id="motivo" th:field="*{motivo}">
-            </div>
-        </div>
-
-        <div class="form-acoes">
-            <button type="submit" class="btn btn-primario">Agendar</button>
-            <a class="btn btn-secundario" th:href="@{/web/agendamento}">Cancelar</a>
-        </div>
-    </form>
-
-</main>
+    <button type="submit">Agendar</button>
+    <a th:href="@{/web/agendamento}">Cancelar</a>
+</form>
 </body>
 </html>

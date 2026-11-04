@@ -1,99 +1,80 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head(${modoEdicao} ? 'Editar Pet' : 'Novo Pet')}"></head>
-<body class="app">
+<body>
 <div th:replace="~{fragments/layout :: menu}"></div>
 
-<main class="conteudo">
+<h1 th:text="${modoEdicao} ? 'Editar Pet' : 'Novo Pet'">Pet</h1>
 
-    <a class="link-voltar" th:href="@{/web/pet}">Voltar para pets</a>
-    <header class="cabecalho">
-        <h1 th:text="${modoEdicao} ? 'Editar pet' : 'Novo pet'">Pet</h1>
-    </header>
+<form th:action="${modoEdicao} ? @{/web/pet/{id}(id=${id})} : @{/web/pet}"
+      th:object="${pet}"
+      method="post">
 
-    <form class="form-card"
-          th:action="${modoEdicao} ? @{/web/pet/{id}(id=${id})} : @{/web/pet}"
-          th:object="${pet}"
-          method="post">
+    <div>
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" th:field="*{nome}">
+        <span th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" style="color:red;"></span>
+    </div>
 
-        <div class="form-grade">
-            <div class="campo">
-                <label for="nome">Nome</label>
-                <input type="text" id="nome" th:field="*{nome}"
-                       th:classappend="${#fields.hasErrors('nome')} ? 'invalido'">
-                <span class="erro-campo" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></span>
-            </div>
+    <div>
+        <label for="especie">Espécie</label>
+        <input type="text" id="especie" th:field="*{especie}">
+        <span th:if="${#fields.hasErrors('especie')}" th:errors="*{especie}" style="color:red;"></span>
+    </div>
 
-            <div class="campo">
-                <label for="especie">Espécie</label>
-                <input type="text" id="especie" th:field="*{especie}"
-                       th:classappend="${#fields.hasErrors('especie')} ? 'invalido'">
-                <span class="erro-campo" th:if="${#fields.hasErrors('especie')}" th:errors="*{especie}"></span>
-            </div>
+    <div>
+        <label for="raca">Raça</label>
+        <input type="text" id="raca" th:field="*{raca}">
+    </div>
 
-            <div class="campo">
-                <label for="raca">Raça</label>
-                <input type="text" id="raca" th:field="*{raca}">
-            </div>
+    <div>
+        <label for="cor">Cor</label>
+        <input type="text" id="cor" th:field="*{cor}">
+    </div>
 
-            <div class="campo">
-                <label for="cor">Cor</label>
-                <input type="text" id="cor" th:field="*{cor}">
-            </div>
+    <div>
+        <label for="idade">Idade</label>
+        <input type="number" id="idade" th:field="*{idade}">
+        <span th:if="${#fields.hasErrors('idade')}" th:errors="*{idade}" style="color:red;"></span>
+    </div>
 
-            <div class="campo">
-                <label for="idade">Idade (anos)</label>
-                <input type="number" id="idade" th:field="*{idade}"
-                       th:classappend="${#fields.hasErrors('idade')} ? 'invalido'">
-                <span class="erro-campo" th:if="${#fields.hasErrors('idade')}" th:errors="*{idade}"></span>
-            </div>
+    <div>
+        <label for="peso">Peso</label>
+        <input type="number" step="0.1" id="peso" th:field="*{peso}">
+        <span th:if="${#fields.hasErrors('peso')}" th:errors="*{peso}" style="color:red;"></span>
+    </div>
 
-            <div class="campo">
-                <label for="peso">Peso (kg)</label>
-                <input type="number" step="0.1" id="peso" th:field="*{peso}"
-                       th:classappend="${#fields.hasErrors('peso')} ? 'invalido'">
-                <span class="erro-campo" th:if="${#fields.hasErrors('peso')}" th:errors="*{peso}"></span>
-            </div>
-        </div>
+    <button type="submit">Salvar</button>
+    <a th:href="@{/web/pet}">Cancelar</a>
+</form>
 
-        <div class="form-acoes">
-            <button type="submit" class="btn btn-primario">Salvar pet</button>
-            <a class="btn btn-secundario" th:href="@{/web/pet}">Cancelar</a>
-        </div>
+<!-- Tutores do pet: só faz sentido depois que o pet já existe -->
+<section class="bloco" th:if="${modoEdicao}">
+    <h2>Tutores deste pet</h2>
+
+    <ul th:if="${!tutoresVinculados.isEmpty()}">
+        <li th:each="tutor : ${tutoresVinculados}">
+            <span th:text="${tutor.nome}">Tutor</span>
+            <small th:text="'CPF ' + ${tutor.cpf}">CPF</small>
+            <form th:action="@{/web/pet/{idPet}/tutor/{idTutor}/remover(idPet=${id}, idTutor=${tutor.id})}"
+                  method="post" style="display:inline;">
+                <button type="submit" class="perigo" onclick="return confirm('Remover este tutor do pet?')">Remover</button>
+            </form>
+        </li>
+    </ul>
+    <p th:if="${tutoresVinculados.isEmpty()}" class="vazio">Nenhum tutor vinculado.</p>
+
+    <form th:if="${podeVincular}"
+          th:action="@{/web/pet/{idPet}/tutor(idPet=${id})}" method="post">
+        <label for="cpf">CPF do tutor</label>
+        <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" required>
+        <button type="submit">Vincular</button>
     </form>
-
-    <!-- Tutores do pet: só faz sentido depois que o pet já existe -->
-    <section class="bloco" th:if="${modoEdicao}">
-        <h2>Tutores deste pet</h2>
-
-        <ul th:if="${!tutoresVinculados.isEmpty()}">
-            <li th:each="tutor : ${tutoresVinculados}">
-                <span th:text="${tutor.nome}">Tutor</span>
-                <small th:text="'CPF ' + ${tutor.cpf}">CPF</small>
-                <form th:action="@{/web/pet/{idPet}/tutor/{idTutor}/remover(idPet=${id}, idTutor=${tutor.id})}"
-                      method="post">
-                    <button type="submit" class="btn btn-perigo btn-pequeno"
-                            onclick="return confirm('Remover este tutor do pet?')">Remover</button>
-                </form>
-            </li>
-        </ul>
-        <p th:if="${tutoresVinculados.isEmpty()}" class="vazio">Nenhum tutor vinculado.</p>
-
-        <form class="form-vinculo" th:if="${podeVincular}"
-              th:action="@{/web/pet/{idPet}/tutor(idPet=${id})}" method="post">
-            <div class="campo">
-                <label for="cpf">CPF do tutor</label>
-                <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" required>
-            </div>
-            <button type="submit" class="btn btn-primario">Vincular tutor</button>
-        </form>
-        <p th:if="${!podeVincular}" class="vazio"
-           th:text="'Limite de ' + ${limiteTutores} + ' tutores por pet atingido.'"></p>
-        <p th:if="${podeVincular and tutoresDisponiveis.isEmpty()}" class="vazio">
-            Não há outros tutores cadastrados. <a th:href="@{/web/tutor/novo}">Cadastrar tutor</a>
-        </p>
-    </section>
-
-</main>
+    <p th:if="${!podeVincular}" class="vazio"
+       th:text="'Limite de ' + ${limiteTutores} + ' tutores por pet atingido.'"></p>
+    <p th:if="${podeVincular and tutoresDisponiveis.isEmpty()}" class="vazio">
+        Não há outros tutores cadastrados. <a th:href="@{/web/tutor/novo}">Cadastrar tutor</a>
+    </p>
+</section>
 </body>
 </html>

@@ -54,7 +54,6 @@ public class WebHomeController {
         model.addAttribute("proximos", proximos);
         model.addAttribute("nomesPets", nomeResolver.nomesDosPets(proximos));
         model.addAttribute("nomesVeterinarios", nomeResolver.nomesDosVeterinarios(proximos));
-        model.addAttribute("nomesTutores", nomeResolver.tutoresDosPets(proximos));
         return "home";
     }
 }

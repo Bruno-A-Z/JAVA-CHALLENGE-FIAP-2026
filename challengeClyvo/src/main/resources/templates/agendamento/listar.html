@@ -1,69 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Agendamentos')}"></head>
-<body class="app">
+<body>
 <div th:replace="~{fragments/layout :: menu}"></div>
 
-<main class="conteudo">
+<h1>Agendamentos</h1>
+<a th:href="@{/web/agendamento/novo}">+ Novo Agendamento</a>
 
-    <header class="cabecalho">
-        <div>
-            <h1>Agendamentos</h1>
-            <p>Cada agendamento liga um pet, o tutor dele e um veterinário.</p>
-        </div>
-        <a class="btn btn-primario" th:href="@{/web/agendamento/novo}">Novo agendamento</a>
-    </header>
+<table>
+    <thead>
+    <tr><th>ID</th><th>Data/Hora</th><th>Pet</th><th>Veterinário</th><th>Status</th><th>Motivo</th><th>Ações</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="ag : ${agendamentos.content}">
+        <td th:text="${ag.id}">1</td>
+        <td th:text="${#temporals.format(ag.dataHora, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
+        <td th:text="${nomesPets[ag.idPet]}">Pet</td>
+        <td th:text="${nomesVeterinarios[ag.idVeterinario]}">Veterinário</td>
+        <td><span class="status" th:classappend="${'status-' + ag.status.name().toLowerCase()}" th:text="${ag.status}">AGENDADO</span></td>
+        <td th:text="${ag.motivo}">Motivo</td>
+        <td>
+            <form th:if="${ag.status.name() == 'AGENDADO'}"
+                  th:action="@{/web/agendamento/{id}/cancelar(id=${ag.id})}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Cancelar agendamento?')">Cancelar</button>
+            </form>
+            <a th:if="${ag.status.name() == 'AGENDADO'}"
+               th:href="@{/web/consulta/agendamento/{id}/realizar(id=${ag.id})}">Realizar Consulta</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
-    <div class="vazio-bloco" th:if="${agendamentos.content.isEmpty()}">
-        <p>Nenhum agendamento ainda.</p>
-        <span class="dica">Escolha um pet, um veterinário e o horário para criar o primeiro.</span>
-        <a class="btn btn-primario" th:href="@{/web/agendamento/novo}">Agendar consulta</a>
-    </div>
-
-    <div class="tabela-card" th:if="${!agendamentos.content.isEmpty()}">
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Data/Hora</th>
-                <th>Pet e tutor</th>
-                <th>Veterinário</th>
-                <th>Status</th>
-                <th>Motivo</th>
-                <th class="acoes-col">Ações</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="ag : ${agendamentos.content}" th:with="tutor=${nomesTutores[ag.idPet]}">
-                <td class="id" th:text="${ag.id}">1</td>
-                <td class="nowrap" th:text="${#temporals.format(ag.dataHora, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
-                <td class="pessoa">
-                    <strong th:text="${nomesPets[ag.idPet]}">Pet</strong>
-                    <span class="sub" th:text="'Tutor: ' + ${#strings.isEmpty(tutor) ? 'sem tutor' : tutor}">Tutor: Fulano</span>
-                </td>
-                <td th:text="${nomesVeterinarios[ag.idVeterinario]}">Veterinário</td>
-                <td>
-                    <span class="status" th:classappend="${'status-' + ag.status.name().toLowerCase()}"
-                          th:text="${#strings.capitalize(#strings.toLowerCase(ag.status.name()))}">Agendado</span>
-                </td>
-                <td class="texto" th:text="${ag.motivo}">Motivo</td>
-                <td>
-                    <div class="acoes" th:if="${ag.status.name() == 'AGENDADO'}">
-                        <a class="btn btn-primario btn-pequeno"
-                           th:href="@{/web/consulta/agendamento/{id}/realizar(id=${ag.id})}">Realizar consulta</a>
-                        <form th:action="@{/web/agendamento/{id}/cancelar(id=${ag.id})}" method="post">
-                            <button type="submit" class="btn btn-perigo btn-pequeno"
-                                    onclick="return confirm('Cancelar agendamento?')">Cancelar agendamento</button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div th:replace="~{fragments/layout :: paginacao(${agendamentos}, '/web/agendamento')}"></div>
-
-</main>
+<div th:if="${!agendamentos.first}"><a th:href="@{/web/agendamento(pagina=${agendamentos.number - 1})}">Anterior</a></div>
+<span th:text="'Página ' + (${agendamentos.number} + 1) + ' de ' + ${agendamentos.totalPages}"></span>
+<div th:if="${!agendamentos.last}"><a th:href="@{/web/agendamento(pagina=${agendamentos.number + 1})}">Próxima</a></div>
 </body>
 </html>

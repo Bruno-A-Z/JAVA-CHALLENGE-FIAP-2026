@@ -1,152 +1,348 @@
-# ☁️ Deploy na Azure — Clyvo Care
+# 🐾 Clyvo — Sistema de Gestão Clínica Veterinária
 
-## 📌 Descrição da Solução
-
-A ideia principal do **Clyvo Care** é uma **coleira inteligente para pets** que, por meio da leitura de batimentos cardíacos e outros sinais vitais do animal, ajuda o tutor a entender o estado emocional e físico do pet — se está feliz, triste, estressado ou com fome — permitindo agir antes que isso vire um problema de saúde.
-
-Para sustentar essa proposta, foi desenvolvida uma **API RESTful em Java com Spring Boot**, com persistência em Azure SQL Database, que funciona como o back-end de gestão da solução: centraliza o cadastro de **tutores**, **pets** e **veterinários**, permite criar e gerenciar **agendamentos** de consultas (com controle de status: agendado, realizado ou cancelado) — inclusive os originados a partir de alertas da coleira — e registrar o **histórico clínico** de cada atendimento (diagnóstico, tratamento e observações).
-
-A solução expõe endpoints REST documentados via Swagger/OpenAPI, com suporte a busca por parâmetros, paginação e ordenação de resultados, validação de dados de entrada e tratamento global de exceções — cobrindo todo o fluxo de uma clínica veterinária, do cadastro do tutor até o encerramento da consulta.
-
-## 💼 Descrição dos Benefícios para o Negócio
-
-- **Organização centralizada**: elimina planilhas e controles manuais, unificando tutores, pets, veterinários e agendamentos em um único sistema.
-- **Redução de erros e retrabalho**: validações automáticas e regras de negócio (ex.: impedir agendamentos conflitantes, exigir dados obrigatórios) diminuem falhas de cadastro e de rotina operacional.
-- **Rastreabilidade do histórico clínico**: cada consulta fica vinculada ao seu agendamento, com diagnóstico, tratamento e observações, permitindo consultar rapidamente o histórico de saúde de um pet.
-- **Agilidade no atendimento**: buscas por nome, CPF, espécie, área de atuação ou status de agendamento tornam a rotina da clínica mais rápida para recepcionistas e veterinários.
-- **Escalabilidade e disponibilidade**: hospedagem em nuvem (Azure App Service + Azure SQL Database) permite crescimento do volume de dados e de acessos sem necessidade de infraestrutura própria.
-- **Integração facilitada**: por ser uma API REST documentada (Swagger) e com coleção Postman disponível, o sistema pode ser integrado a outros sistemas (site, app mobile, painéis administrativos) com baixo esforço.
+API RESTful desenvolvida com Java e Spring Boot para gerenciamento de clínicas veterinárias.  
+O sistema permite cadastrar tutores, pets e veterinários, realizar agendamentos de consultas e registrar o histórico clínico dos animais.
 
 ---
 
-## Arquitetura
+## 👥 Equipe - 2TDSPO
 
-<img width="1393" height="755" alt="image" src="https://github.com/user-attachments/assets/d014b145-9cc2-42e2-970a-810e3278481c" />
+|         Nome        |   RM   |
+|---------------------|--------|
+| Bruno A Zanateli     | 563736 |
+| Christian S Freitas | 566098 |
+| Pedro P Biasolli    | 562521 |
+| Rodrigo Tiezzi      | 562975 |
+| Maheus E Souza      | 562532 |
+--------------------------------
 
----
+## 🛠️ Tecnologias Utilizadas
 
-## Variáveis
-
-```bash
-# Gerais
-RESOURCE_GROUP_NAME="rg-clyvo-care"
-LOCATION="southafricanorth"
-
-# Web App
-WEBAPP_NAME="webapp-clyvo-care"
-APP_SERVICE_PLAN="plan-clyvo-care"
-RUNTIME="JAVA:21-java21"
-
-# Banco de Dados (Azure SQL)
-SQL_SERVER_NAME="sqlserver-clyvo-care"
-SQL_DB_NAME="clyvo-caredb"
-SQL_ADMIN_USER="dbadmin"
-SQL_ADMIN_PASSWORD="FIAP@2tdspo2026"
-
-# GitHub
-GITHUB_REPO_NAME="rodrigotiezzi/JAVA-CHALLENGE-FIAP-2026"
-BRANCH="master"
-```
+| Tecnologia | Versão |
+|------------|--------|
+| Java       |   17   |
+| Spring Boot | 4.0.6 |
+| Spring Data JPA | 3.x |
+| Oracle Database | 19c |
+| Hibernate | 6.x |
+| SpringDoc OpenAPI (Swagger) | 2.8.8 |
+| Bean Validation | 3.x |
+| Maven | 3.3.4 |
 
 ---
 
-## Comandos
+## 🏗️ Arquitetura
 
-### 1. Resource Group
+O projeto segue a arquitetura em camadas:
 
-```bash
-az group create --name rg-clyvo-care --location "southafricanorth"
+```
+Controller → Service → Repository → Database (Oracle)
 ```
 
-### 2. Banco de dados (Azure SQL)
-
-```bash
-az sql server create \
-  --name "sqlserver-clyvo-care" \
-  --resource-group "rg-clyvo-care" \
-  --location "southafricanorth" \
-  --admin-user "dbadmin" \
-  --admin-password "FIAP@2tdspo2026"
-
-az sql db create \
-  --resource-group rg-clyvo-care \
-  --server sqlserver-clyvo-care \
-  --name clyvo-caredb \
-  --service-objective Basic
-
-az sql server firewall-rule create \
-  --resource-group rg-clyvo-care \
-  --server sqlserver-clyvo-care \
-  --name AllowAzureServices \
-  --start-ip-address 0.0.0.0 \
-  --end-ip-address 255.255.255.255
+```
+src/
+├── controllers/       # Endpoints REST
+├── services/          # Regras de negócio
+├── repository/        # Acesso ao banco de dados (Spring Data JPA)
+├── model/             # Entidades JPA
+├── enums/             # Enumerações (StatusAgendamento, UF, SufixoCrmv)
+└── exceptions/        # Tratamento global de erros
 ```
 
-### 3. App Service Plan + Web App
+---
 
-```bash
-az appservice plan create \
-  --name plan-clyvo-care \
-  --resource-group rg-clyvo-care \
-  --location southafricanorth \
-  --sku F1 \
-  --is-linux
+## 📊 Diagrama de Classes
 
-az webapp create \
-  --name webapp-clyvo-care \
-  --resource-group rg-clyvo-care \
-  --plan plan-clyvo-care \
-  --runtime "JAVA:21-java21"
+```mermaid
+classDiagram
+    direction TB
 
-az resource update \
-  --resource-group rg-clyvo-care \
-  --namespace Microsoft.Web \
-  --resource-type basicPublishingCredentialsPolicies \
-  --name scm \
-  --parent sites/webapp-clyvo-care \
-  --set properties.allow=true
+    class Pet {
+        +Long id
+        +String nome
+        +String especie
+        +String raca
+        +String cor
+        +Integer idade
+        +Double peso
+        +List~Tutor~ tutores
+    }
+
+    class Tutor {
+        +Long id
+        +String nome
+        +Integer idade
+        +String endereco
+        +String tel
+        +String cpf
+        +List~Pet~ pets
+    }
+
+    class Veterinario {
+        +Long id
+        +String nome
+        +String area
+        +Crmv crmv
+    }
+
+    class Crmv {
+        <<Embeddable>>
+        +String prefixo
+        +UF uf
+        +Integer numeroDeInscricao
+        +SufixoCrmv sufixo
+    }
+
+    class Agendamento {
+        +Long id
+        +LocalDateTime dataHora
+        +Pet pet
+        +Veterinario veterinario
+        +StatusAgendamento status
+        +String motivo
+        +Consulta consulta
+    }
+
+    class Consulta {
+        +Long id
+        +Agendamento agendamento
+        +LocalDateTime dataRealizacao
+        +String diagnostico
+        +String tratamento
+        +String observacoes
+    }
+
+    class StatusAgendamento {
+        <<enumeration>>
+        AGENDADO
+        REALIZADO
+        CANCELADO
+    }
+
+    class UF {
+        <<enumeration>>
+        AC, AL, AM, BA, CE
+        DF, ES, GO, MA, MG
+        MS, MT, PA, PB, PE
+        PI, PR, RJ, RN, RO
+        RR, RS, SC, SE, SP, TO
+    }
+
+    class SufixoCrmv {
+        <<enumeration>>
+        MV
+        ZT
+    }
+
+    Pet "N" <--> "N" Tutor : TB_PET_TUTOR
+    Agendamento "N" --> "1" Pet : id_pet
+    Agendamento "N" --> "1" Veterinario : id_vet
+    Consulta "1" --> "1" Agendamento : id_agendamento
+    Veterinario "1" *-- "1" Crmv : embedded
+    Agendamento --> StatusAgendamento
+    Crmv --> UF
+    Crmv --> SufixoCrmv
 ```
 
-### 4. Variáveis de ambiente do Web App
+---
 
-```bash
-az webapp config appsettings set \
-  --name "webapp-clyvo-care" \
-  --resource-group "rg-clyvo-care" \
-  --settings \
-    SPRING_DATASOURCE_USERNAME="dbadmin" \
-    SPRING_DATASOURCE_PASSWORD="FIAP@2tdspo2026" \
-    SPRING_DATASOURCE_URL="jdbc:sqlserver://sqlserver-clyvo-care.database.windows.net:1433;database=clyvo-caredb;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"
+## 🗄️ DER — Diagrama Entidade-Relacionamento
 
-az webapp restart --name webapp-clyvo-care --resource-group rg-clyvo-care
+```mermaid
+erDiagram
+    TB_TUTOR {
+        NUMBER ID_TUTOR PK
+        VARCHAR NOME
+        NUMBER IDADE
+        VARCHAR ENDERECO
+        VARCHAR NUM_TELEFONE
+        VARCHAR CPF UK
+    }
+
+    TB_PET {
+        NUMBER ID_PET PK
+        VARCHAR NOME
+        VARCHAR ESPECIE
+        VARCHAR RACA
+        VARCHAR COR
+        NUMBER IDADE
+        NUMBER PESO
+    }
+
+    TB_PET_TUTOR {
+        NUMBER ID_PET FK
+        NUMBER ID_TUTOR FK
+    }
+
+    TB_VETERINARIO {
+        NUMBER ID_VET PK
+        VARCHAR NOME
+        VARCHAR AREA
+        VARCHAR CRMV_PREFIXO
+        VARCHAR CRMV_UF
+        NUMBER CRMV_NUMINSCRICAO
+        VARCHAR CRMV_SUFIXO
+    }
+
+    TB_AGENDAMENTO {
+        NUMBER ID_AGENDAMENTO PK
+        TIMESTAMP DT_HORA
+        NUMBER ID_PET FK
+        NUMBER ID_VET FK
+        VARCHAR STATUS
+        VARCHAR MOTIVO
+    }
+
+    TB_CONSULTA {
+        NUMBER ID_CONSULTA PK
+        NUMBER ID_AGENDAMENTO FK
+        TIMESTAMP DT_REALIZACAO
+        VARCHAR DIAGNOSTICO
+        VARCHAR TRATAMENTO
+        VARCHAR OBSERVACOES
+    }
+
+    TB_TUTOR ||--o{ TB_PET_TUTOR : "possui"
+    TB_PET   ||--o{ TB_PET_TUTOR : "pertence a"
+    TB_PET         }o--|| TB_AGENDAMENTO : "é agendado em"
+    TB_VETERINARIO }o--|| TB_AGENDAMENTO : "atende em"
+    TB_AGENDAMENTO ||--o| TB_CONSULTA    : "gera"
 ```
 
-### 5. Conectar o repositório GitHub (CI/CD)
+---
 
-```bash
-az webapp deployment github-actions add \
-  --name webapp-clyvo-care \
-  --resource-group rg-clyvo-care \
-  --repo rodrigotiezzi/JAVA-CHALLENGE-FIAP-2026 \
-  --branch "master" \
-  --login-with-github
+## 🚀 Como Rodar o Projeto
+
+### Pré-requisitos
+
+- Java 17+
+- Maven 3.x
+- Acesso ao banco Oracle (FIAP) - Mas pode mudar de acordo com sua preferencia no arquivo applicaion.properties
+
+### Configuração
+
+As credenciais do banco já estão configuradas em `src/main/resources/application.properties`:
+
+```properties
+spring.datasource.url=jdbc:oracle:thin:@oracle.fiap.com.br:1521:ORCL
+spring.datasource.username=SEU_RM
+spring.datasource.password=SUA_SENHA
 ```
 
+### Executando
 
-Esse comando já cria o workflow `.yml` em `.github/workflows/` e o secret do publish profile automaticamente.
-Dentro do repositório do GitHub, vá em Settings -> Secrets and variables -> Actions.
-Clique em New repository secret.
-Adicione as 3 variáveis (pegue os mesmos valores usados na Azure CLI):
-SPRING_DATASOURCE_URL -> jdbc:sqlserver://sqlserver-clyvo-care.database.windows.net:1433;database=clyvo-caredb;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
-SPRING_DATASOURCE_USERNAME -> dbadmin
-SPRING_DATASOURCE_PASSWORD -> FIAP@2tdspo2026
+```bash
+# Clone o repositório
+git clone https://github.com/XXXXXX/challengeClyvo.git
 
+# Entre na pasta do projeto
+cd challengeClyvo
 
-Agora vamos fazer login! 
-Se so entrarmos na pagina, vamos ter um tela em branco. 
-É necessario digitar na url "/web/login"
-EX:https://webapp-clyvo-care.azurewebsites.net/web/login
+# Execute com Maven
+./mvnw spring-boot:run
+```
 
-O usuario é admin 
-e a senha é admin123
+A API estará disponível em: `http://localhost:8080` e `https://java-challenge-fiap-2026.onrender.com/web/login`
 
+---
+
+## 📖 Documentação da API
+
+Com a aplicação rodando, acesse o Swagger UI:
+
+```
+http://localhost:8080/swagger-ui.html
+```
+
+---
+
+## 📋 Endpoints
+
+### 👤 Tutor `/tutor`
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/tutor` | Lista todos os tutores |
+| GET | `/tutor/{id}` | Busca tutor por ID |
+| GET | `/tutor/nome/{nome}` | Busca tutor por nome |
+| GET | `/tutor/cpf/{cpf}` | Busca tutor por CPF |
+| POST | `/tutor` | Cadastra novo tutor |
+| PUT | `/tutor/{id}` | Atualiza tutor |
+| DELETE | `/tutor/{id}` | Remove tutor |
+
+### 🐾 Pet `/pet`
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/pet` | Lista todos os pets |
+| GET | `/pet/{id}` | Busca pet por ID |
+| GET | `/pet/nome/{nome}` | Busca pet por nome |
+| GET | `/pet/especie/{especie}` | Busca pet por espécie |
+| GET | `/pet/tutor/{idTutor}` | Lista pets de um tutor |
+| POST | `/pet` | Cadastra novo pet |
+| POST | `/pet/{idPet}/tutor/{idTutor}` | Vincula tutor ao pet |
+| PUT | `/pet/{id}` | Atualiza pet |
+| DELETE | `/pet/{id}` | Remove pet |
+| DELETE | `/pet/{idPet}/tutor/{idTutor}` | Desvincula tutor do pet |
+
+### 🩺 Veterinário `/veterinario`
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/veterinario` | Lista todos os veterinários |
+| GET | `/veterinario/{id}` | Busca veterinário por ID |
+| GET | `/veterinario/area/{area}` | Busca por área de atuação |
+| GET | `/veterinario/crmv/{numero}` | Busca por número CRMV |
+| GET | `/veterinario/uf/{uf}` | Busca por UF do CRMV |
+| POST | `/veterinario` | Cadastra novo veterinário |
+| PUT | `/veterinario/{id}` | Atualiza veterinário |
+| DELETE | `/veterinario/{id}` | Remove veterinário |
+
+### 📅 Agendamento `/agendamento`
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/agendamento` | Lista todos os agendamentos |
+| GET | `/agendamento/{id}` | Busca agendamento por ID |
+| GET | `/agendamento/status/{status}` | Busca por status (AGENDADO, REALIZADO, CANCELADO) |
+| GET | `/agendamento/veterinario/{idVet}` | Lista agendamentos de um veterinário |
+| GET | `/agendamento/pet/{idPet}` | Lista agendamentos de um pet |
+| POST | `/agendamento` | Cria novo agendamento |
+| PATCH | `/agendamento/{id}/cancelar` | Cancela um agendamento |
+
+### 🏥 Consulta `/consulta`
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/consulta` | Lista todas as consultas |
+| GET | `/consulta/{id}` | Busca consulta por ID |
+| GET | `/consulta/pet/{idPet}` | Lista consultas de um pet |
+| GET | `/consulta/veterinario/{idVet}` | Lista consultas de um veterinário |
+| POST | `/consulta/agendamento/{idAgendamento}` | Realiza consulta de um agendamento |
+| PATCH | `/consulta/{id}/observacoes` | Atualiza observações da consulta |
+
+---
+
+## 📁 Estrutura de Documentação
+
+```
+docs/
+├── APIClyvoRequisicoes_postman_collection.json   # Coleção Postman com todos os endpoints
+├── diagrama-classes.mermaid                       # Diagrama de Classes
+└── der.mermaid                                    # Diagrama Entidade-Relacionamento
+```
+
+---
+
+## ✅ Requisitos Atendidos
+
+- [x] Persistência de dados com Oracle
+- [x] Relacionamentos JPA (`@ManyToMany`, `@ManyToOne`, `@OneToOne`, `@Embeddable`)
+- [x] Bean Validation (`@NotNull`, `@NotBlank`, `@Future`, `@Positive`, etc.)
+- [x] Paginação e ordenação de resultados
+- [x] Busca com parâmetros
+- [x] Tratamento global de exceções
+- [x] Documentação com Swagger (SpringDoc)
+- [x] Spring JPA Query Methods e JPQL
+- [x] Regras de negócio além do CRUD
+- [x] Exportação de endpoints (Postman)

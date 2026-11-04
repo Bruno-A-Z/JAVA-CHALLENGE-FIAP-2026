@@ -2,48 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head(titulo)">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${titulo} + ' - Clyvo'">Clyvo</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap">
     <link rel="stylesheet" th:href="@{/web/css/style.css}">
     <script th:src="@{/web/js/app.js}" defer></script>
 </head>
 <body>
-
-<!-- Menu lateral (no celular vira barra no topo) -->
-<aside class="lateral" th:fragment="menu">
-    <a class="marca" th:href="@{/web}"><span class="marca-nome">Clyvo</span></a>
-
-    <nav aria-label="Principal">
+<div th:fragment="menu">
+    <nav>
         <a th:href="@{/web}">Início</a>
         <a th:if="${isAdmin}" th:href="@{/web/tutor}">Tutores</a>
         <a th:if="${isAdmin}" th:href="@{/web/pet}">Pets</a>
         <a th:if="${isAdmin}" th:href="@{/web/veterinario}">Veterinários</a>
         <a th:href="@{/web/agendamento}">Agendamentos</a>
         <a th:href="@{/web/consulta}">Consultas</a>
-    </nav>
-
-    <form class="sair" method="post" th:action="@{/web/logout}">
-        <button type="submit">Sair</button>
-    </form>
-</aside>
-
-<!-- Paginação: usada como ~{fragments/layout :: paginacao(${page}, '/web/rota')} -->
-<div th:fragment="paginacao(pg, url)">
-    <nav class="paginacao" aria-label="Paginação" th:if="${pg.totalPages > 1}">
-        <a class="btn btn-secundario btn-pequeno" th:if="${!pg.first}"
-           th:href="@{${url}(pagina=${pg.number - 1})}">Anterior</a>
-        <span class="btn btn-secundario btn-pequeno desabilitado" th:if="${pg.first}" aria-disabled="true">Anterior</span>
-
-        <span class="paginacao-info" th:text="'Página ' + (${pg.number} + 1) + ' de ' + ${pg.totalPages}">Página 1 de 3</span>
-
-        <a class="btn btn-secundario btn-pequeno" th:if="${!pg.last}"
-           th:href="@{${url}(pagina=${pg.number + 1})}">Próxima</a>
-        <span class="btn btn-secundario btn-pequeno desabilitado" th:if="${pg.last}" aria-disabled="true">Próxima</span>
+        <form method="post" th:action="@{/web/logout}" style="display:inline;">
+            <button type="submit">Sair</button>
+        </form>
     </nav>
 </div>
-
 </body>
 </html>
